@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Lapis Terrain Generator")]
-[assembly: AssemblyDescription("Command-line terrain generator for Minecraft")]
+[assembly: AssemblyTitle("Lapis")]
+[assembly: AssemblyDescription("Core libraries for the Lapis terrain generator")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("dotDev Studio")]
-[assembly: AssemblyProduct("Lapis Terrain Generator")]
+[assembly: AssemblyProduct("Lapis")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e73b79f0-f9fd-4906-9fb0-58e6f7881577")]
+[assembly: Guid("f1106c8b-166e-4789-bafd-7dbd0e6a2e53")]
 
 // Version information for an assembly consists of the following four values:
 //
