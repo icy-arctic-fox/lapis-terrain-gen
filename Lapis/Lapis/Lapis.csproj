@@ -40,8 +40,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="IO\NBT\ByteArrayNode.cs" />
+    <Compile Include="IO\NBT\ByteNode.cs" />
+    <Compile Include="IO\NBT\CompoundNode.cs" />
+    <Compile Include="IO\NBT\DoubleNode.cs" />
+    <Compile Include="IO\NBT\FloatNode.cs" />
+    <Compile Include="IO\NBT\IntArrayNode.cs" />
+    <Compile Include="IO\NBT\IntNode.cs" />
+    <Compile Include="IO\NBT\ListNode.cs" />
+    <Compile Include="IO\NBT\LongNode.cs" />
+    <Compile Include="IO\NBT\Node.cs" />
+    <Compile Include="IO\NBT\NodeType.cs" />
+    <Compile Include="IO\NBT\ShortNode.cs" />
+    <Compile Include="IO\NBT\StringNode.cs" />
+    <Compile Include="IO\NBT\Tree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ByteArrayUtility.cs" />
+    <Compile Include="Utility\StringManipulation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
