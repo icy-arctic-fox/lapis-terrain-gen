@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lapis.IO.NBT
 {
@@ -8,7 +9,7 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class CompoundNode : Node, ICollection<Node>
 	{
-		private readonly Dictionary<string, Node> nodes;
+		private readonly Dictionary<string, Node> _nodes;
 
 		/// <summary>
 		/// The type of node
@@ -25,13 +26,13 @@ namespace Lapis.IO.NBT
 		/// <exception cref="NullReferenceException">Thrown if attempting to set the new node to null</exception>
 		public Node this[string name]
 		{
-			get { return nodes[name]; }
+			get { return _nodes[name]; }
 			set
 			{
 				if(null == value)
 					throw new NullReferenceException("The new node to store in the list can't be null.");
 
-				nodes[name] = value;
+				_nodes[name] = value;
 			}
 		}
 
@@ -44,7 +45,7 @@ namespace Lapis.IO.NBT
 		public CompoundNode (string name)
 			: base(name)
 		{
-			this.nodes = new Dictionary<string, Node>();
+			_nodes = new Dictionary<string, Node>();
 		}
 
 		/// <summary>
@@ -62,17 +63,18 @@ namespace Lapis.IO.NBT
 			if(null == nodes)
 				throw new ArgumentNullException("nodes", "The list of nodes can't be null.");
 
-			this.nodes = new Dictionary<string, Node>();
+			_nodes = new Dictionary<string, Node>();
 
-			lock(nodes)
+			var enumerable = nodes as IList<Node> ?? nodes.ToList();
+			lock(enumerable)
 			{
-				foreach(Node node in nodes)
+				foreach(var node in enumerable)
 				{
 					if(null == node)
 						throw new ArgumentException("One or more nodes in the collection are null.");
-					if(this.nodes.ContainsKey(node.Name))
+					if(_nodes.ContainsKey(node.Name))
 						throw new ArgumentException("The node named " + node.Name + " already exists.");
-					this.nodes.Add(node.Name, node);
+					_nodes.Add(node.Name, node);
 				}
 			}
 		}
@@ -84,7 +86,7 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			foreach(Node node in nodes.Values)
+			foreach(var node in _nodes.Values)
 				node.WriteToStream(bw);
 			bw.Write((byte)NodeType.End);
 		}
@@ -99,9 +101,9 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static CompoundNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			CompoundNode compound = new CompoundNode(name);
+			var compound = new CompoundNode(name);
 			Node node;
-			while(null != (node = Node.ReadFromStream(br)))
+			while(null != (node = ReadFromStream(br)))
 				compound.Add(node);
 			return compound;
 		}
@@ -118,7 +120,7 @@ namespace Lapis.IO.NBT
 			if(null == item)
 				throw new ArgumentNullException("item", "The new node being added can't be null.");
 
-			nodes.Add(item.Name, item);
+			_nodes.Add(item.Name, item);
 		}
 
 		/// <summary>
@@ -126,7 +128,7 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public void Clear ()
 		{
-			nodes.Clear();
+			_nodes.Clear();
 		}
 
 		/// <summary>
@@ -141,7 +143,7 @@ namespace Lapis.IO.NBT
 			if(null == item)
 				throw new ArgumentNullException("item", "The item to search for can't be null.");
 
-			return nodes.ContainsValue(item);
+			return _nodes.ContainsValue(item);
 		}
 
 		/// <summary>
@@ -155,7 +157,7 @@ namespace Lapis.IO.NBT
 			if(null == name)
 				throw new ArgumentNullException("name", "The name of the item to search for can't be null.");
 
-			return nodes.ContainsKey(name);
+			return _nodes.ContainsKey(name);
 		}
 
 		/// <summary>
@@ -169,7 +171,7 @@ namespace Lapis.IO.NBT
 			if(null == array)
 				throw new ArgumentNullException("array", "The array to store the nodes in can't be null.");
 
-			nodes.Values.CopyTo(array, arrayIndex);
+			_nodes.Values.CopyTo(array, arrayIndex);
 		}
 
 		/// <summary>
@@ -177,7 +179,7 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public int Count
 		{
-			get { return nodes.Count; }
+			get { return _nodes.Count; }
 		}
 
 		/// <summary>
@@ -201,7 +203,7 @@ namespace Lapis.IO.NBT
 			if(null == item)
 				throw new ArgumentNullException("item", "The node to remove can't be null.");
 
-			return nodes.Remove(item.Name);
+			return _nodes.Remove(item.Name);
 		}
 
 		/// <summary>
@@ -215,7 +217,7 @@ namespace Lapis.IO.NBT
 			if(null == name)
 				throw new ArgumentNullException("name", "The name of the node to remove can't be null.");
 
-			return nodes.Remove(name);
+			return _nodes.Remove(name);
 		}
 
 		/// <summary>
@@ -224,7 +226,7 @@ namespace Lapis.IO.NBT
 		/// <returns>An enumerator</returns>
 		public IEnumerator<Node> GetEnumerator ()
 		{
-			return nodes.Values.GetEnumerator();
+			return _nodes.Values.GetEnumerator();
 		}
 
 		/// <summary>
@@ -233,7 +235,7 @@ namespace Lapis.IO.NBT
 		/// <returns>An enumerator</returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return nodes.Values.GetEnumerator();
+			return _nodes.Values.GetEnumerator();
 		}
 		#endregion
 
@@ -249,13 +251,13 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): ");
-			sb.Append(nodes.Count);
+			sb.Append(_nodes.Count);
 			sb.Append(" entries\n");
 			sb.Append(StringIndent, depth);
 			sb.Append("{\n");
 
 			++depth;
-			foreach(Node node in nodes.Values)
+			foreach(var node in _nodes.Values)
 				node.ToString(sb, depth);
 
 			sb.Append(StringIndent, --depth);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lapis.IO.NBT
 {
@@ -8,8 +9,8 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class ListNode : Node, ICollection<Node>
 	{
-		private readonly List<Node> nodes;
-		private readonly NodeType type;
+		private readonly List<Node> _nodes;
+		private readonly NodeType _type;
 
 		/// <summary>
 		/// The type of node
@@ -25,7 +26,7 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public NodeType ElementType
 		{
-			get { return type; }
+			get { return _type; }
 		}
 
 		/// <summary>
@@ -35,15 +36,15 @@ namespace Lapis.IO.NBT
 		/// <exception cref="InvalidCastException">Thrown if the new node's type does not match the type of the existing nodes</exception>
 		public Node this[int index]
 		{
-			get { return nodes[index]; }
+			get { return _nodes[index]; }
 			set
 			{
 				if(null == value)
 					throw new NullReferenceException("The new node to store in the list can't be null.");
-				if(value.Type != type)
-					throw new InvalidCastException("The new node does not match the type of the existing nodes in the list. Expected: " + type + ", got: " + value.Type);
+				if(value.Type != _type)
+					throw new InvalidCastException("The new node does not match the type of the existing nodes in the list. Expected: " + _type + ", got: " + value.Type);
 
-				nodes[index] = value;
+				_nodes[index] = value;
 			}
 		}
 
@@ -57,8 +58,8 @@ namespace Lapis.IO.NBT
 		public ListNode (string name, NodeType type)
 			: base(name)
 		{
-			this.nodes = new List<Node>();
-			this.type = type;
+			_nodes = new List<Node>();
+			_type = type;
 		}
 
 		/// <summary>
@@ -77,16 +78,17 @@ namespace Lapis.IO.NBT
 			if(null == nodes)
 				throw new ArgumentNullException("nodes", "The list of nodes can't be null.");
 
-			this.nodes = new List<Node>();
-			this.type = type;
+			_nodes = new List<Node>();
+			_type = type;
 
-			lock(nodes)
+			var enumerable = nodes as IList<Node> ?? nodes.ToList();
+			lock(enumerable)
 			{
-				foreach(Node node in nodes)
+				foreach(var node in enumerable)
 				{
 					if(node.Type != type)
 						throw new InvalidCastException("One of the nodes provided doesn't match the expected node type. Expected: " + type + ", got: " + node.Type);
-					this.nodes.Add(node);
+					_nodes.Add(node);
 				}
 			}
 		}
@@ -98,9 +100,9 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write((byte)type);
-			bw.Write(nodes.Count);
-			foreach(Node node in nodes)
+			bw.Write((byte)_type);
+			bw.Write(_nodes.Count);
+			foreach(var node in _nodes)
 				node.WritePayload(bw);
 		}
 
@@ -114,14 +116,14 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static ListNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			NodeType type = (NodeType)br.ReadByte();
-			int count     = br.ReadInt32();
+			var type  = (NodeType)br.ReadByte();
+			var count = br.ReadInt32();
 
-			ListNode list = new ListNode(name, type);
-			NodePayloadReader reader = DecodeNodeType(type);
-			for(int i = 0; i < count; ++i)
+			var list   = new ListNode(name, type);
+			var reader = DecodeNodeType(type);
+			for(var i = 0; i < count; ++i)
 			{
-				Node node = reader(br, name);
+				var node = reader(br, name);
 				list.Add(node);
 			}
 			return list;
@@ -139,10 +141,10 @@ namespace Lapis.IO.NBT
 		{
 			if(null == item)
 				throw new ArgumentNullException("item", "The new node being added can't be null.");
-			if(item.Type != type)
-				throw new InvalidCastException("The new node's type doesn't match the other nodes' type. Expected: " + type + ", got: " + item.Type);
+			if(item.Type != _type)
+				throw new InvalidCastException("The new node's type doesn't match the other nodes' type. Expected: " + _type + ", got: " + item.Type);
 
-			nodes.Add(item);
+			_nodes.Add(item);
 		}
 
 		/// <summary>
@@ -150,7 +152,7 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public void Clear ()
 		{
-			nodes.Clear();
+			_nodes.Clear();
 		}
 
 		/// <summary>
@@ -165,7 +167,7 @@ namespace Lapis.IO.NBT
 			if(null == item)
 				throw new ArgumentNullException("item", "The item to search for can't be null.");
 
-			return nodes.Contains(item);
+			return _nodes.Contains(item);
 		}
 
 		/// <summary>
@@ -179,7 +181,7 @@ namespace Lapis.IO.NBT
 			if(null == array)
 				throw new ArgumentNullException("array", "The array to store the nodes in can't be null.");
 
-			nodes.CopyTo(array, arrayIndex);
+			_nodes.CopyTo(array, arrayIndex);
 		}
 
 		/// <summary>
@@ -187,7 +189,7 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public int Count
 		{
-			get { return nodes.Count; }
+			get { return _nodes.Count; }
 		}
 
 		/// <summary>
@@ -211,7 +213,7 @@ namespace Lapis.IO.NBT
 			if(null == item)
 				throw new ArgumentNullException("item", "The node to remove can't be null.");
 
-			return nodes.Remove(item);
+			return _nodes.Remove(item);
 		}
 
 		/// <summary>
@@ -220,7 +222,7 @@ namespace Lapis.IO.NBT
 		/// <returns>An enumerator</returns>
 		public IEnumerator<Node> GetEnumerator ()
 		{
-			return nodes.GetEnumerator();
+			return _nodes.GetEnumerator();
 		}
 
 		/// <summary>
@@ -229,7 +231,7 @@ namespace Lapis.IO.NBT
 		/// <returns>An enumerator</returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return nodes.GetEnumerator();
+			return _nodes.GetEnumerator();
 		}
 		#endregion
 
@@ -245,7 +247,7 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): ");
-			sb.Append(nodes.Count);
+			sb.Append(_nodes.Count);
 			sb.Append(" entries of type ");
 			sb.Append(ElementType);
 			sb.Append('\n');
@@ -253,7 +255,7 @@ namespace Lapis.IO.NBT
 			sb.Append("{\n");
 
 			++depth;
-			foreach(Node node in nodes)
+			foreach(var node in _nodes)
 				node.ToString(sb, depth);
 
 			sb.Append(StringIndent, --depth);

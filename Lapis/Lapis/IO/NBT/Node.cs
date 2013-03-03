@@ -14,9 +14,9 @@ namespace Lapis.IO.NBT
 		/// <summary>
 		/// Character to use for indenting in ToString()
 		/// </summary>
-		protected internal const char StringIndent = ' ';
+		protected const char StringIndent = ' ';
 
-		private readonly string name;
+		private readonly string _name;
 
 		/// <summary>
 		/// The type of node
@@ -30,7 +30,7 @@ namespace Lapis.IO.NBT
 		/// <remarks>Node names cannot be null and cannot be changed after being set.</remarks>
 		public string Name
 		{
-			get { return name; }
+			get { return _name; }
 		}
 
 		/// <summary>
@@ -43,10 +43,10 @@ namespace Lapis.IO.NBT
 		{
 			if(null == name)
 				throw new ArgumentNullException("name", "The name of the node can't be null.");
-			if(name.Length > short.MaxValue)
-				throw new ArgumentOutOfRangeException("name.Length", "The name of the node can't be longer than " + short.MaxValue + " characters.");
+			if(name.Length > Int16.MaxValue)
+				throw new ArgumentOutOfRangeException("name", "The name of the node can't be longer than " + Int16.MaxValue + " characters.");
 
-			this.name = name;
+			_name = name;
 		}
 
 		#region Serialization
@@ -78,9 +78,9 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		private void writeHeader (BinaryWriter bw)
 		{
-			byte type    = (byte)Type;
-			short length = (short)name.Length;
-			byte[] temp  = name.GetBytes(length);
+			var type   = (byte)Type;
+			var length = (short)_name.Length;
+			var temp   = _name.GetBytes(length);
 
 			bw.Write(type);
 			bw.Write(length);
@@ -101,18 +101,18 @@ namespace Lapis.IO.NBT
 		internal static Node ReadFromStream (BinaryReader br)
 		{
 			if(null == br)
-				throw new ArgumentNullException("The stream reader can't be null.");
+				throw new ArgumentNullException("br", "The stream reader can't be null.");
 
 			// Read header
-			NodeType type = (NodeType)br.ReadByte();
+			var type = (NodeType)br.ReadByte();
 			if(NodeType.End == type)
 				return null;
-			short length  = br.ReadInt16();
-			string name   = br.ReadBytes(length).ToUtf8String();
+			var length = br.ReadInt16();
+			var name   = br.ReadBytes(length).ToUtf8String();
 
 			// Read payload
-			NodePayloadReader reader = DecodeNodeType(type);
-			Node node = reader(br, name);
+			var reader = DecodeNodeType(type);
+			var node   = reader(br, name);
 
 			return node;
 		}
@@ -160,9 +160,9 @@ namespace Lapis.IO.NBT
 		/// <returns>A string</returns>
 		public override string ToString ()
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 			ToString(sb, 0);
-			string result = sb.ToString();
+			var result = sb.ToString();
 			return result;
 		}
 
