@@ -8,7 +8,7 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class StringNode : Node
 	{
-		private string value;
+		private string _value;
 
 		/// <summary>
 		/// The type of node
@@ -25,13 +25,13 @@ namespace Lapis.IO.NBT
 		/// <exception cref="NullReferenceException">Thrown if attempting to set the new value to null</exception>
 		public string Value
 		{
-			get { return value; }
+			get { return _value; }
 			set
 			{
 				if(null == value)
 					throw new NullReferenceException("The new string to put in the node can't be null.");
 
-				this.value = value;
+				_value = value;
 			}
 		}
 
@@ -49,10 +49,10 @@ namespace Lapis.IO.NBT
 		{
 			if(null == value)
 				throw new ArgumentNullException("value", "The string to put in the node can't be null.");
-			if(value.Length > short.MaxValue)
-				throw new ArgumentOutOfRangeException("value.Length", "The string to put in the node can't be longer than " + short.MaxValue + " characters.");
+			if(value.Length > Int16.MaxValue)
+				throw new ArgumentOutOfRangeException("value", "The string to put in the node can't be longer than " + Int16.MaxValue + " characters.");
 
-			this.value = value;
+			_value = value;
 		}
 
 		#region Serialization
@@ -62,8 +62,8 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			short length = (short)value.Length;
-			byte[] temp  = value.GetBytes(length);
+			var length = (short)_value.Length;
+			var temp   = _value.GetBytes(length);
 
 			bw.Write(length);
 			bw.Write(temp);
@@ -79,8 +79,8 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static StringNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			short length = br.ReadInt16();
-			string value = br.ReadBytes(length).ToUtf8String();
+			var length = br.ReadInt16();
+			var value  = br.ReadBytes(length).ToUtf8String();
 			return new StringNode(name, value);
 		}
 		#endregion
@@ -97,7 +97,7 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): ");
-			sb.Append(value);
+			sb.Append(_value);
 			sb.Append('\n');
 		}
 	}

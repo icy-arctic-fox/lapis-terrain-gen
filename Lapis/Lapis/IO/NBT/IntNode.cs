@@ -7,7 +7,7 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class IntNode : Node
 	{
-		private int value;
+		private int _value;
 
 		/// <summary>
 		/// The type of node
@@ -23,8 +23,8 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public int Value
 		{
-			get { return value; }
-			set { this.value = value; }
+			get { return _value; }
+			set { _value = value; }
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace Lapis.IO.NBT
 		public IntNode (string name, int value)
 			: base(name)
 		{
-			this.value = value;
+			_value = value;
 		}
 
 		#region Serialization
@@ -47,7 +47,7 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(value);
+			bw.Write(_value);
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static IntNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			int value = br.ReadInt32();
+			var value = br.ReadInt32();
 			return new IntNode(name, value);
 		}
 		#endregion
@@ -77,7 +77,7 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): ");
-			sb.Append(value);
+			sb.Append(_value);
 			sb.Append('\n');
 		}
 	}
