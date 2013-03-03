@@ -21,6 +21,15 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Value of the node represented as a string
+		/// </summary>
+		/// <remarks>This property produces the string: # elements</remarks>
+		public override string StringValue
+		{
+			get { return _nodes.Count + " elements"; }
+		}
+
+		/// <summary>
 		/// Node represented by a name
 		/// </summary>
 		/// <exception cref="NullReferenceException">Thrown if attempting to set the new node to null</exception>

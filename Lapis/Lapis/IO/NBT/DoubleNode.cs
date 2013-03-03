@@ -28,6 +28,14 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Value of the node represented as a string
+		/// </summary>
+		public override string StringValue
+		{
+			get { return _value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
+		}
+
+		/// <summary>
 		/// Creates a new double-precision floating point node
 		/// </summary>
 		/// <param name="name">Name of the node</param>
@@ -64,21 +72,5 @@ namespace Lapis.IO.NBT
 			return new DoubleNode(name, value);
 		}
 		#endregion
-
-		/// <summary>
-		/// Recursive method that appends the node's string form to a builder
-		/// </summary>
-		/// <param name="sb">Builder that contains the node strings</param>
-		/// <param name="depth">Depth into the node structure (number of times to indent)</param>
-		protected internal override void ToString (System.Text.StringBuilder sb, int depth)
-		{
-			sb.Append(StringIndent, depth);
-			sb.Append(Type);
-			sb.Append("(\"");
-			sb.Append(Name);
-			sb.Append("\"): ");
-			sb.Append(_value);
-			sb.Append('\n');
-		}
 	}
 }
