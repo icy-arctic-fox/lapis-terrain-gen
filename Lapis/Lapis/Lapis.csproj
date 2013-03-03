@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\Endian.cs" />
+    <Compile Include="IO\EndianBinaryReader.cs" />
+    <Compile Include="IO\EndianBinaryWriter.cs" />
     <Compile Include="IO\NBT\ByteArrayNode.cs" />
     <Compile Include="IO\NBT\ByteNode.cs" />
     <Compile Include="IO\NBT\CompoundNode.cs" />
