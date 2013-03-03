@@ -22,6 +22,15 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Value of the node represented as a string
+		/// </summary>
+		/// <remarks>This property produces the string: # elements</remarks>
+		public override string StringValue
+		{
+			get { return _nodes.Count + " elements"; }
+		}
+
+		/// <summary>
 		/// The node type of each element in the list
 		/// </summary>
 		public NodeType ElementType

@@ -20,6 +20,15 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Value of the node represented as a string
+		/// </summary>
+		/// <remarks>This property produces the string: # bytes</remarks>
+		public override string StringValue
+		{
+			get { return _data.Length + " bytes"; }
+		}
+
+		/// <summary>
 		/// Raw bytes contained in the node
 		/// </summary>
 		/// <exception cref="NullReferenceException">Thrown if an attempt is made to provide a null reference when updating the field</exception>

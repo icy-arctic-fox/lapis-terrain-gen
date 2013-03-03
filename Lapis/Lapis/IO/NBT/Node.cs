@@ -34,6 +34,11 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Value of the node represented as a string
+		/// </summary>
+		public abstract string StringValue { get; }
+
+		/// <summary>
 		/// Creates a new node
 		/// </summary>
 		/// <param name="name">Name of the node</param>
@@ -172,6 +177,15 @@ namespace Lapis.IO.NBT
 		/// <param name="sb">Builder that contains the node strings</param>
 		/// <param name="depth">Depth into the node structure (number of times to indent)</param>
 		/// <remarks>This is far more optimal than calling the default ToString() multiple times.</remarks>
-		protected internal abstract void ToString (StringBuilder sb, int depth);
+		protected internal virtual void ToString (StringBuilder sb, int depth)
+		{
+			sb.Append(StringIndent, depth);
+			sb.Append(Type);
+			sb.Append("(\"");
+			sb.Append(Name);
+			sb.Append("\"): ");
+			sb.Append(StringValue);
+			sb.Append('\n');
+		}
 	}
 }
