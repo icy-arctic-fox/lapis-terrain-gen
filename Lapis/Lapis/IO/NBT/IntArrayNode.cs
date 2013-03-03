@@ -1,5 +1,4 @@
 ﻿using System;
-using Lapis.Utility;
 
 namespace Lapis.IO.NBT
 {
@@ -8,7 +7,7 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class IntArrayNode : Node
 	{
-		private int[] data;
+		private int[] _data;
 
 		/// <summary>
 		/// The type of node
@@ -26,7 +25,7 @@ namespace Lapis.IO.NBT
 		/// <remarks>Updating the contents of this field will copy the integers.</remarks>
 		public int[] Data
 		{
-			get { return data; }
+			get { return _data; }
 			set
 			{
 				if(null == value)
@@ -34,8 +33,8 @@ namespace Lapis.IO.NBT
 
 				lock(value)
 				{
-					data = new int[value.Length];
-					copy(value, this.data);
+					_data = new int[value.Length];
+					copy(value, _data);
 				}
 			}
 		}
@@ -57,8 +56,8 @@ namespace Lapis.IO.NBT
 
 			lock(data)
 			{
-				this.data = new int[data.Length];
-				copy(data, this.data);
+				_data = new int[data.Length];
+				copy(data, _data);
 			}
 		}
 
@@ -69,9 +68,9 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			int length = data.Length;
+			var length = _data.Length;
 			bw.Write(length);
-			foreach(int i in data)
+			foreach(var i in _data)
 				bw.Write(i);
 		}
 
@@ -85,9 +84,9 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static IntArrayNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			int length = br.ReadInt32();
-			int[] data = new int[length];
-			for(int i = 0; i < length; ++i)
+			var length = br.ReadInt32();
+			var data   = new int[length];
+			for(var i = 0; i < length; ++i)
 				data[i] = br.ReadInt32();
 			return new IntArrayNode(name, data);
 		}
@@ -105,7 +104,7 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): [");
-			sb.Append(data.Length);
+			sb.Append(_data.Length);
 			sb.Append(" integers]\n");
 		}
 
@@ -123,21 +122,20 @@ namespace Lapis.IO.NBT
 		{
 			if(0 > count)	// Calculate where to stop
 				count = Math.Min(src.Length - srcStart, dest.Length - destStart);
-			int end = destStart + count;
 
 #if !DEBUG
 			unsafe
 			{
 				fixed(int* pSrc = src, pDest = dest)
 				{
-					int* ps = pSrc + srcStart;
-					int* pd = pDest + destStart;
+					var ps = pSrc + srcStart;
+					var pd = pDest + destStart;
 #if X64
-					int stop = count / 8;
+					var stop = count / 8;
 #else
-					int stop = count / 4;
+					var stop = count / 4;
 #endif
-					for(int i = 0; i < stop; ++i)
+					for(var i = 0; i < stop; ++i)
 					{
 #if X64
 						*((long*)pd) = *((long*)ps);
@@ -146,13 +144,13 @@ namespace Lapis.IO.NBT
 					}
 					stop = count % 8;
 #else
-						*((int*)pd) = *((int*)ps);
+						*pd = *ps;
 						pd += 4;
 						ps += 4;
 					}
 					stop = count % 4;
 #endif
-					for(int i = 0; i < stop; ++i)
+					for(var i = 0; i < stop; ++i)
 					{
 						*pd = *ps;
 						++pd;

@@ -8,7 +8,7 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class ByteArrayNode : Node
 	{
-		private byte[] data;
+		private byte[] _data;
 
 		/// <summary>
 		/// The type of node
@@ -26,7 +26,7 @@ namespace Lapis.IO.NBT
 		/// <remarks>Updating the contents of this field will copy the bytes.</remarks>
 		public byte[] Data
 		{
-			get { return data; }
+			get { return _data; }
 			set
 			{
 				if(null == value)
@@ -34,8 +34,8 @@ namespace Lapis.IO.NBT
 
 				lock(value)
 				{
-					data = new byte[value.Length];
-					value.Copy(data);
+					_data = new byte[value.Length];
+					value.Copy(_data);
 				}
 			}
 		}
@@ -57,8 +57,8 @@ namespace Lapis.IO.NBT
 
 			lock(data)
 			{
-				this.data = new byte[data.Length];
-				data.Copy(this.data);
+				_data = new byte[data.Length];
+				data.Copy(_data);
 			}
 		}
 
@@ -69,9 +69,9 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			int length = data.Length;
+			var length = _data.Length;
 			bw.Write(length);
-			bw.Write(data);
+			bw.Write(_data);
 		}
 
 		/// <summary>
@@ -84,8 +84,8 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static ByteArrayNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			int length  = br.ReadInt32();
-			byte[] data = br.ReadBytes(length);
+			var length = br.ReadInt32();
+			var data   = br.ReadBytes(length);
 			return new ByteArrayNode(name, data);
 		}
 		#endregion
@@ -102,7 +102,7 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): [");
-			sb.Append(data.Length);
+			sb.Append(_data.Length);
 			sb.Append(" bytes]\n");
 		}
 	}

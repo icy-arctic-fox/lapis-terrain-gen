@@ -7,7 +7,7 @@ namespace Lapis.IO.NBT
 	/// </summary>
 	public class ByteNode : Node
 	{
-		private byte value;
+		private byte _value;
 
 		/// <summary>
 		/// The type of node
@@ -23,8 +23,8 @@ namespace Lapis.IO.NBT
 		/// </summary>
 		public byte Value
 		{
-			get { return value; }
-			set { this.value = value; }
+			get { return _value; }
+			set { _value = value; }
 		}
 
 		/// <summary>
@@ -33,8 +33,8 @@ namespace Lapis.IO.NBT
 		/// <remarks>Non-zero is true.</remarks>
 		public bool BooleanValue
 		{
-			get { return value != 0; }
-			set { this.value = (byte)(value ? 1 : 0); }
+			get { return _value != 0; }
+			set { _value = (byte)(value ? 1 : 0); }
 		}
 
 		/// <summary>
@@ -47,7 +47,7 @@ namespace Lapis.IO.NBT
 		public ByteNode (string name, byte value)
 			: base(name)
 		{
-			this.value = value;
+			_value = value;
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace Lapis.IO.NBT
 		public ByteNode (string name, bool value)
 			: base(name)
 		{
-			this.value = (byte)(value ? 1 : 0);
+			_value = (byte)(value ? 1 : 0);
 		}
 
 		#region Serialization
@@ -70,7 +70,7 @@ namespace Lapis.IO.NBT
 		/// <param name="bw">Stream writer</param>
 		protected internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(value);
+			bw.Write(_value);
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace Lapis.IO.NBT
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
 		internal static ByteNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
-			byte value = br.ReadByte();
+			var value = br.ReadByte();
 			return new ByteNode(name, value);
 		}
 		#endregion
@@ -100,7 +100,7 @@ namespace Lapis.IO.NBT
 			sb.Append("(\"");
 			sb.Append(Name);
 			sb.Append("\"): ");
-			sb.Append(value);
+			sb.Append(_value);
 			sb.Append('\n');
 		}
 	}
