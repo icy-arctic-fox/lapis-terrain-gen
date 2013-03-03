@@ -80,7 +80,7 @@ namespace Lapis.IO.NBT
 		internal static StringNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
 			short length = br.ReadInt16();
-			string value = br.ReadBytes(length).ToUTF8String();
+			string value = br.ReadBytes(length).ToUtf8String();
 			return new StringNode(name, value);
 		}
 		#endregion

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Lapis.Utility
 {
@@ -23,21 +20,20 @@ namespace Lapis.Utility
 		{
 			if(0 > count)	// Calculate where to stop
 				count = Math.Min(src.Length - srcStart, dest.Length - destStart);
-			int end = destStart + count;
 
 #if !DEBUG
 			unsafe
 			{
 				fixed(byte* pSrc = src, pDest = dest)
 				{
-					byte* ps = pSrc + srcStart;
-					byte* pd = pDest + destStart;
+					var ps = pSrc + srcStart;
+					var pd = pDest + destStart;
 #if X64
-					int stop = count / 8;
+					var stop = count / 8;
 #else
-					int stop = count / 4;
+					var stop = count / 4;
 #endif
-					for(int i = 0; i < stop; ++i)
+					for(var i = 0; i < stop; ++i)
 					{
 #if X64
 						*((long*)pd) = *((long*)ps);
@@ -52,7 +48,7 @@ namespace Lapis.Utility
 					}
 					stop = count % 4;
 #endif
-					for(int i = 0; i < stop; ++i)
+					for(var i = 0; i < stop; ++i)
 					{
 						*pd = *ps;
 						++pd;

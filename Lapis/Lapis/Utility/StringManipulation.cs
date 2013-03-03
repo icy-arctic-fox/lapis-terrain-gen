@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace Lapis.Utility
 {
@@ -17,7 +14,7 @@ namespace Lapis.Utility
 		/// <returns>An array of bytes that contains the original string</returns>
 		public static byte[] GetBytes (this string value)
 		{
-			byte[] bytes = System.Text.UTF8Encoding.UTF8.GetBytes(value);
+			var bytes = Encoding.UTF8.GetBytes(value);
 			return bytes;
 		}
 
@@ -32,9 +29,9 @@ namespace Lapis.Utility
 		/// <returns>An array of bytes that contains the original string</returns>
 		public static byte[] GetBytes (this string value, int length)
 		{
-			byte[] temp = System.Text.UTF8Encoding.UTF8.GetBytes(value);
-			byte[] bytes = new byte[length];
-			ByteArrayUtility.Copy(temp, bytes);
+			var temp  = Encoding.UTF8.GetBytes(value);
+			var bytes = new byte[length];
+			temp.Copy(bytes);
 			return bytes;
 		}
 
@@ -45,17 +42,17 @@ namespace Lapis.Utility
 		/// <param name="bytes">Array of bytes to pull the value from</param>
 		/// <param name="offset">Offset into the array that the value starts at (default is 0)</param>
 		/// <returns>The extracted value</returns>
-		public static string ToUTF8String (this byte[] bytes, int offset = 0)
+		public static string ToUtf8String (this byte[] bytes, int offset = 0)
 		{
 			string value;
 			if(0 < offset)
 			{
-				byte[] temp = new byte[bytes.Length - offset];
-				ByteArrayUtility.Copy(bytes, temp, offset, 0);
-				value = System.Text.UTF8Encoding.UTF8.GetString(temp);
+				var temp = new byte[bytes.Length - offset];
+				bytes.Copy(temp, offset);
+				value = Encoding.UTF8.GetString(temp);
 			}
 			else
-				value = System.Text.UTF8Encoding.UTF8.GetString(bytes);
+				value = Encoding.UTF8.GetString(bytes);
 			value = value.TrimEnd('\0');
 			return value;
 		}

@@ -108,7 +108,7 @@ namespace Lapis.IO.NBT
 			if(NodeType.End == type)
 				return null;
 			short length  = br.ReadInt16();
-			string name   = br.ReadBytes(length).ToUTF8String();
+			string name   = br.ReadBytes(length).ToUtf8String();
 
 			// Read payload
 			NodePayloadReader reader = DecodeNodeType(type);
