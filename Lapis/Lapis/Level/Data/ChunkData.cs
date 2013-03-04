@@ -393,12 +393,12 @@ namespace Lapis.Level.Data
 
 		private Node constructBiomesNode ()
 		{
-			return _biomes.GetNbtNode(BiomesNodeName);
+			return _biomes.ConstructNbtNode(BiomesNodeName);
 		}
 
 		private Node constructHeightMapNode ()
 		{
-			return _heightMap.GetNBTNode(HeightMapNodeName);
+			return _heightMap.ConstructNbtNode(HeightMapNodeName);
 		}
 
 		private Node constructEntitiesNode ()
