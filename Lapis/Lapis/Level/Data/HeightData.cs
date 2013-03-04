@@ -1,7 +1,6 @@
 ﻿using System;
 using Lapis.IO;
 using Lapis.IO.NBT;
-using Lapis.Utility;
 
 namespace Lapis.Level.Data
 {
@@ -11,12 +10,11 @@ namespace Lapis.Level.Data
 	/// <remarks>This class is not tied to any active world data.
 	/// The purpose of this class is for creating chunks, load chunk data from disk, and save chunk data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
-	public sealed class HeightData
+	public sealed class HeightData : ISerializable
 	{
 		private const string DefaultNodeName = "HeightMap";
 
-		private readonly int[] data;
-		private int max;
+		private readonly int[] _data;
 
 		/// <summary>
 		/// The height of the highest block an index (0 - 255)
@@ -25,12 +23,12 @@ namespace Lapis.Level.Data
 		/// <returns>The height of the block at the given cell index</returns>
 		public int this[byte index]
 		{
-			get { return data[index]; }
+			get { return _data[index]; }
 			set
 			{
-				data[index] = value;
-				if(value > max)
-					max = value;
+				_data[index] = value;
+				if(value > Maximum)
+					Maximum = value;
 			}
 		}
 
@@ -45,26 +43,23 @@ namespace Lapis.Level.Data
 		{
 			get
 			{
-				byte index = CalculateIndex(cx, cz);
-				return data[index];
+				var index = CalculateIndex(cx, cz);
+				return _data[index];
 			}
 
 			set
 			{
-				byte index = CalculateIndex(cx, cz);
-				data[index] = value;
-				if(value > max)
-					max = value;
+				var index = CalculateIndex(cx, cz);
+				_data[index] = value;
+				if(value > Maximum)
+					Maximum = value;
 			}
 		}
 
 		/// <summary>
 		/// Maximum height in the entire chunk
 		/// </summary>
-		public int Maximum
-		{
-			get { return max; }
-		}
+		public int Maximum { get; private set; }
 
 		/// <summary>
 		/// Creates new height map for a chunk
@@ -72,8 +67,8 @@ namespace Lapis.Level.Data
 		/// <remarks>The data will be set to 0</remarks>
 		public HeightData ()
 		{
-			data = new int[Chunk.Size * Chunk.Size];
-			max  = 0;
+			_data = new int[Chunk.Size * Chunk.Size];
+			Maximum  = 0;
 		}
 
 		/// <summary>
@@ -82,10 +77,10 @@ namespace Lapis.Level.Data
 		/// <param name="initialHeight">Height to set for the entire chunk</param>
 		public HeightData (int initialHeight)
 		{
-			data = new int[Chunk.Size * Chunk.Size];
-			for(int i = 0; i < data.Length; ++i)
-				data[i] = initialHeight;
-			max = initialHeight;
+			_data = new int[Chunk.Size * Chunk.Size];
+			for(var i = 0; i < _data.Length; ++i)
+				_data[i] = initialHeight;
+			Maximum = initialHeight;
 		}
 
 		/// <summary>
@@ -102,7 +97,7 @@ namespace Lapis.Level.Data
 			if(Chunk.Size <= cz)
 				throw new ArgumentOutOfRangeException("cz", "The z-value of the block coordinate can't be at or above " + Chunk.Size);
 
-			byte index = (byte)(cz * Chunk.Size + cx);
+			var index = (byte)(cz * Chunk.Size + cx);
 			return index;
 		}
 
@@ -117,7 +112,7 @@ namespace Lapis.Level.Data
 			if(null == bw)
 				throw new ArgumentNullException("bw", "The stream writer can't be null.");
 
-			Node node = GetNBTNode(DefaultNodeName);
+			var node = ConstructNbtNode(DefaultNodeName);
 			new Tree(node).WriteToStream(bw);
 		}
 
@@ -132,8 +127,8 @@ namespace Lapis.Level.Data
 			if(null == br)
 				throw new ArgumentNullException("br", "The stream reader can't be null.");
 
-			Tree nbt = Tree.ReadFromStream(br);
-			return new HeightData(nbt.Root);
+			var tree = Tree.ReadFromStream(br);
+			return new HeightData(tree.Root);
 		}
 
 		/// <summary>
@@ -141,9 +136,9 @@ namespace Lapis.Level.Data
 		/// </summary>
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node containing the height map</returns>
-		public Node GetNBTNode (string name)
+		public Node ConstructNbtNode (string name)
 		{
-			return new IntArrayNode(name, data);
+			return new IntArrayNode(name, _data);
 		}
 
 		/// <summary>
@@ -154,12 +149,12 @@ namespace Lapis.Level.Data
 		/// <exception cref="FormatException">Thrown if the format of the data contained in <paramref name="node"/> is incorrect for a height map</exception>
 		public HeightData (Node node)
 		{
-			IntArrayNode iaNode = validateNode(node);
-			this.data = validateIntArray(iaNode);
+			var iaNode = validateNode(node);
+			_data = validateIntArray(iaNode);
 		}
 
 		#region Validation
-		private IntArrayNode validateNode (Node node)
+		private static IntArrayNode validateNode (Node node)
 		{
 			if(null == node)
 				throw new ArgumentNullException("node", "The node containing the height map can't be null.");
@@ -168,7 +163,7 @@ namespace Lapis.Level.Data
 			return (IntArrayNode)node;
 		}
 
-		private int[] validateIntArray (IntArrayNode node)
+		private static int[] validateIntArray (IntArrayNode node)
 		{
 			if(node.Data.Length != Chunk.Size * Chunk.Size)
 				throw new FormatException("The length of the height map is not valid. Expected: " + (Chunk.Size * Chunk.Size) + ", got: " + node.Data.Length);
