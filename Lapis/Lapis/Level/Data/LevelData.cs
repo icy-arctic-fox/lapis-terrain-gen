@@ -1,5 +1,4 @@
 ﻿using System;
-using Lapis.Blocks;
 using Lapis.IO;
 using Lapis.IO.NBT;
 using Lapis.Utility;
@@ -12,35 +11,20 @@ namespace Lapis.Level.Data
 	/// <remarks>This class is not tied to any active world data.
 	/// The purpose of this class is for creating levels, loading level data from disk, and saving level data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
-	public class LevelData
+	public class LevelData : ISerializable
 	{
-		private bool
-			initialized = false,
-			hardcore    = false,
-			cheats      = false,
-			mapFeatures = false,
-			raining     = false,
-			storm       = false;
-		private int
-			spawnX = 0,
-			spawnY = 65,
-			spawnZ = 0;
-		private int
-			rainTime = 0,
-			stormTime = 0;
-		private long
-			lastPlayed = Timestamp.Now,
-			size       = 0;
-		private long
-			gameTicks = 0,
-			time      = 0;
-		private GameMode mode = GameMode.Survival;
-		private Dimension? dimension = null;
+		private bool _initialized, _hardcore, _cheats, _mapFeatures, _raining, _storm;
+		private int _spawnX, _spawnY = 65, _spawnZ;
+		private int _rainTime, _stormTime;
+		private long _lastPlayed = Timestamp.Now, _size;
+		private long _gameTicks, _time;
+		private GameMode _mode = GameMode.Survival;
+		private Dimension? _dimension;
 
 		// Required fields
-		private readonly string name, generatorName, generatorOptions;
-		private readonly int generatorVersion;
-		private readonly long seed;
+		private readonly string _name, _generatorName, _generatorOptions;
+		private readonly int _generatorVersion;
+		private readonly long _seed;
 
 		// TODO: Implement player compound
 		// TODO: Implement game rules
@@ -52,8 +36,8 @@ namespace Lapis.Level.Data
 		/// <remarks>If this is false, the world should be re-initialized on the next load.</remarks>
 		public bool Initialized
 		{
-			get { return initialized; }
-			set { initialized = value; }
+			get { return _initialized; }
+			set { _initialized = value; }
 		}
 
 		/// <summary>
@@ -63,7 +47,7 @@ namespace Lapis.Level.Data
 		/// It can contain spaces and symbols.</remarks>
 		public string Name
 		{
-			get { return name; }
+			get { return _name; }
 		}
 
 		/// <summary>
@@ -71,7 +55,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public string GeneratorName
 		{
-			get { return generatorName; }
+			get { return _generatorName; }
 		}
 
 		/// <summary>
@@ -82,7 +66,7 @@ namespace Lapis.Level.Data
 		/// an older version can be used to maintain consistency in the level.</remarks>
 		public int GeneratorVersion
 		{
-			get { return generatorVersion; }
+			get { return _generatorVersion; }
 		}
 
 		/// <summary>
@@ -90,7 +74,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public string GeneratorOptions
 		{
-			get { return generatorOptions; }
+			get { return _generatorOptions; }
 		}
 
 		/// <summary>
@@ -98,7 +82,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public long Seed
 		{
-			get { return seed; }
+			get { return _seed; }
 		}
 
 		/// <summary>
@@ -106,7 +90,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public bool HasDimension
 		{
-			get { return dimension.HasValue; }
+			get { return _dimension.HasValue; }
 		}
 
 		/// <summary>
@@ -115,8 +99,8 @@ namespace Lapis.Level.Data
 		/// <remarks>If the level data does not define a dimension, this will be DimensionType.Normal.</remarks>
 		public Dimension Dimension
 		{
-			get { return dimension.GetValueOrDefault(Dimension.Normal); }
-			set { dimension = new Dimension?(value); }
+			get { return _dimension.GetValueOrDefault(Dimension.Normal); }
+			set { _dimension = value; }
 		}
 
 		/// <summary>
@@ -126,8 +110,8 @@ namespace Lapis.Level.Data
 		/// The structures that can be generated depends on the generator being used.</remarks>
 		public bool MapFeatures
 		{
-			get { return mapFeatures; }
-			set { mapFeatures = value; }
+			get { return _mapFeatures; }
+			set { _mapFeatures = value; }
 		}
 
 		/// <summary>
@@ -137,7 +121,7 @@ namespace Lapis.Level.Data
 		/// This value is automatically updated when an NBT structure is generated (about to save).</remarks>
 		public long LastPlayed
 		{
-			get { return lastPlayed; }
+			get { return _lastPlayed; }
 		}
 
 		/// <summary>
@@ -145,8 +129,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public long DiskUsage
 		{
-			get { return size; }
-			set { size = value; }
+			get { return _size; }
+			set { _size = value; }
 		}
 
 		/// <summary>
@@ -154,8 +138,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public bool Cheats
 		{
-			get { return cheats; }
-			set { cheats = value; }
+			get { return _cheats; }
+			set { _cheats = value; }
 		}
 
 		/// <summary>
@@ -164,8 +148,8 @@ namespace Lapis.Level.Data
 		/// <remarks>If a player dies in hardcore, they cannot return to this level (or world/server).</remarks>
 		public bool Hardcore
 		{
-			get { return hardcore; }
-			set { hardcore = value; }
+			get { return _hardcore; }
+			set { _hardcore = value; }
 		}
 
 		/// <summary>
@@ -173,8 +157,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public GameMode Mode
 		{
-			get { return mode; }
-			set { mode = value; }
+			get { return _mode; }
+			set { _mode = value; }
 		}
 
 		/// <summary>
@@ -182,8 +166,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public long Age
 		{
-			get { return gameTicks; }
-			set { gameTicks = value; }
+			get { return _gameTicks; }
+			set { _gameTicks = value; }
 		}
 
 		/// <summary>
@@ -191,8 +175,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public long Time
 		{
-			get { return time; }
-			set { time = value; }
+			get { return _time; }
+			set { _time = value; }
 		}
 
 		/// <summary>
@@ -201,8 +185,8 @@ namespace Lapis.Level.Data
 		/// <remarks>This is a global position within the level/realm of a block where the player's head will be.</remarks>
 		public int SpawnX
 		{
-			get { return spawnX; }
-			set { spawnX = value; }
+			get { return _spawnX; }
+			set { _spawnX = value; }
 		}
 
 		/// <summary>
@@ -211,8 +195,8 @@ namespace Lapis.Level.Data
 		/// <remarks>This is a global position within the level/realm of a block where the player's head will be.</remarks>
 		public int SpawnY
 		{
-			get { return spawnY; }
-			set { spawnY = value; }
+			get { return _spawnY; }
+			set { _spawnY = value; }
 		}
 
 		/// <summary>
@@ -221,8 +205,8 @@ namespace Lapis.Level.Data
 		/// <remarks>This is a global position within the level/realm of a block where the player's head will be.</remarks>
 		public int SpawnZ
 		{
-			get { return spawnZ; }
-			set { spawnZ = value; }
+			get { return _spawnZ; }
+			set { _spawnZ = value; }
 		}
 
 		/// <summary>
@@ -230,8 +214,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public bool Downfall
 		{
-			get { return raining; }
-			set { raining = value; }
+			get { return _raining; }
+			set { _raining = value; }
 		}
 
 		/// <summary>
@@ -240,8 +224,8 @@ namespace Lapis.Level.Data
 		/// <remarks>When this value hits 0, Downfall should be toggled.</remarks>
 		public int DownfallTime
 		{
-			get { return rainTime; }
-			set { rainTime = value; }
+			get { return _rainTime; }
+			set { _rainTime = value; }
 		}
 
 		/// <summary>
@@ -250,8 +234,8 @@ namespace Lapis.Level.Data
 		/// <remarks>Thunderstorms decrease lighting enough that hostile mobs will spawn in the day.</remarks>
 		public bool IsThunderstorm
 		{
-			get { return storm; }
-			set { storm = false; }
+			get { return _storm; }
+			set { _storm = value; }
 		}
 
 		/// <summary>
@@ -260,8 +244,8 @@ namespace Lapis.Level.Data
 		/// <remarks>When this value hits 0, IsThunderstorm should be toggled.</remarks>
 		public int ThunderstormTime
 		{
-			get { return stormTime; }
-			set { stormTime = value; }
+			get { return _stormTime; }
+			set { _stormTime = value; }
 		}
 		#endregion
 
@@ -281,10 +265,10 @@ namespace Lapis.Level.Data
 			if(null == generatorName)
 				throw new ArgumentNullException("generatorName", "The name of the generator to use can't be null.");
 
-			this.name             = name;
-			this.generatorName    = generatorName;
-			this.generatorVersion = generatorVersion;
-			this.generatorOptions = (null == generatorOptions) ? string.Empty : generatorOptions;
+			_name             = name;
+			_generatorName    = generatorName;
+			_generatorVersion = generatorVersion;
+			_generatorOptions = generatorOptions ?? string.Empty;
 		}
 
 		#region Serialization
@@ -414,9 +398,9 @@ namespace Lapis.Level.Data
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="bw"/> is null</exception>
 		public void WriteToStream (System.IO.BinaryWriter bw)
 		{
-			Node node = GetNBTNode(RootNodeName);
-			Tree nbt   = new Tree(node);
-			nbt.WriteToStream(bw);
+			var node = ConstructNbtNode(RootNodeName);
+			var tree = new Tree(node);
+			tree.WriteToStream(bw);
 		}
 
 		/// <summary>
@@ -427,8 +411,8 @@ namespace Lapis.Level.Data
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null</exception>
 		public static LevelData ReadFromStream (System.IO.BinaryReader br)
 		{
-			Tree nbt = Tree.ReadFromStream(br);
-			return new LevelData(nbt.Root);
+			var tree = Tree.ReadFromStream(br);
+			return new LevelData(tree.Root);
 		}
 
 		/// <summary>
@@ -437,9 +421,9 @@ namespace Lapis.Level.Data
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node that contains the level data</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
-		public Node GetNBTNode (string name)
+		public Node ConstructNbtNode (string name)
 		{
-			CompoundNode root = new CompoundNode(name);
+			var root = new CompoundNode(name);
 			ConstructNode(root);
 			return root;
 		}
@@ -452,15 +436,15 @@ namespace Lapis.Level.Data
 		/// <exception cref="FormatException">Thrown if the format of the level data contained in <paramref name="node"/> is invalid</exception>
 		public LevelData (Node node)
 		{
-			CompoundNode rootNode = validateLevelNode(node);
-			validateVersionNode(rootNode);	// It is important to check the version first
+			var rootNode = validateLevelNode(node);
+			validateVersionNode(rootNode); // It is important to check the version first
 
 			// Required nodes
-			name             = validateLevelNameNode(rootNode);
-			seed             = validateSeedNode(rootNode);
-			generatorName    = validateGeneratorNameNode(rootNode);
-			generatorVersion = validateGeneratorVersionNode(rootNode);
-			generatorOptions = validateGeneratorOptionsNode(rootNode);
+			_name             = validateLevelNameNode(rootNode);
+			_seed             = validateSeedNode(rootNode);
+			_generatorName    = validateGeneratorNameNode(rootNode);
+			_generatorVersion = validateGeneratorVersionNode(rootNode);
+			_generatorOptions = validateGeneratorOptionsNode(rootNode);
 
 			// Not required "repairable" nodes
 			validateInitializedNode(rootNode);
@@ -521,112 +505,112 @@ namespace Lapis.Level.Data
 
 		private Node constructLevelNameNode ()
 		{
-			return new StringNode(LevelNameNodeName, name);
+			return new StringNode(LevelNameNodeName, _name);
 		}
 
 		private Node constructSeedNode ()
 		{
-			return new LongNode(SeedNodeName, seed);
+			return new LongNode(SeedNodeName, _seed);
 		}
 
 		private Node constructGeneratorNameNode ()
 		{
-			return new StringNode(GeneratorNameNodeName, generatorName);
+			return new StringNode(GeneratorNameNodeName, _generatorName);
 		}
 
 		private Node constructGeneratorVersionNode ()
 		{
-			return new IntNode(GeneratorVersionNodeName, generatorVersion);
+			return new IntNode(GeneratorVersionNodeName, _generatorVersion);
 		}
 
 		private Node constructGeneratorOptionsNode ()
 		{
-			return new StringNode(GeneratorOptionsNodeName, generatorOptions);
+			return new StringNode(GeneratorOptionsNodeName, _generatorOptions);
 		}
 
 		private Node constructInitializedNode ()
 		{
-			return new ByteNode(InitializedNodeName, initialized);
+			return new ByteNode(InitializedNodeName, _initialized);
 		}
 
 		private Node constructMapFeaturesNode ()
 		{
-			return new ByteNode(MapFeaturesNodeName, mapFeatures);
+			return new ByteNode(MapFeaturesNodeName, _mapFeatures);
 		}
 
 		private Node constructLastPlayedNode ()
 		{
-			return new LongNode(LastPlayedNodeName, lastPlayed);
+			return new LongNode(LastPlayedNodeName, _lastPlayed);
 		}
 
 		private Node constructDiskUsageNode ()
 		{
-			return new LongNode(DiskUsageNodeName, size);
+			return new LongNode(DiskUsageNodeName, _size);
 		}
 
 		private Node constructCheatsNode ()
 		{
-			return new ByteNode(CheatsNodeName, cheats);
+			return new ByteNode(CheatsNodeName, _cheats);
 		}
 
 		private Node constructHardcoreNode ()
 		{
-			return new ByteNode(HardcoreNodeName, hardcore);
+			return new ByteNode(HardcoreNodeName, _hardcore);
 		}
 
 		private Node constructModeNode ()
 		{
-			return new IntNode(ModeNodeName, (int)mode);
+			return new IntNode(ModeNodeName, (int)_mode);
 		}
 
 		private Node constructAgeNode ()
 		{
-			return new LongNode(AgeNodeName, gameTicks);
+			return new LongNode(AgeNodeName, _gameTicks);
 		}
 
 		private Node constructTimeNode ()
 		{
-			return new LongNode(TimeNodeName, time);
+			return new LongNode(TimeNodeName, _time);
 		}
 
 		private Node constructSpawnXNode ()
 		{
-			return new IntNode(SpawnXNodeName, spawnX);
+			return new IntNode(SpawnXNodeName, _spawnX);
 		}
 
 		private Node constructSpawnYNode ()
 		{
-			return new IntNode(SpawnYNodeName, spawnY);
+			return new IntNode(SpawnYNodeName, _spawnY);
 		}
 
 		private Node constructSpawnZNode ()
 		{
-			return new IntNode(SpawnZNodeName, spawnZ);
+			return new IntNode(SpawnZNodeName, _spawnZ);
 		}
 
 		private Node constructDownfallNode ()
 		{
-			return new ByteNode(DownfallNodeName, raining);
+			return new ByteNode(DownfallNodeName, _raining);
 		}
 
 		private Node constructDownfallTimeNode ()
 		{
-			return new IntNode(DownfallTimeNodeName, rainTime);
+			return new IntNode(DownfallTimeNodeName, _rainTime);
 		}
 
 		private Node constructIsThunderstormNode ()
 		{
-			return new ByteNode(IsThunderstormNodeName, storm);
+			return new ByteNode(IsThunderstormNodeName, _storm);
 		}
 
 		private Node constructThunderstormTimeNode ()
 		{
-			return new IntNode(ThunderstormTimeNodeName, stormTime);
+			return new IntNode(ThunderstormTimeNodeName, _stormTime);
 		}
 		#endregion
 
 		#region Validation
-		private CompoundNode validateLevelNode (Node node)
+		private static CompoundNode validateLevelNode (Node node)
 		{
 			if(null == node)
 				throw new ArgumentNullException("node", "The node that contains the level data can't be null.");
@@ -635,63 +619,63 @@ namespace Lapis.Level.Data
 			return (CompoundNode)node;
 		}
 
-		private void validateVersionNode (CompoundNode rootNode)
+		private static void validateVersionNode (CompoundNode rootNode)
 		{
 			if(!rootNode.Contains(VersionNodeName))
 				throw new FormatException("The level NBT does not contain a version node.");
-			Node tempNode = rootNode[VersionNodeName];
+			var tempNode = rootNode[VersionNodeName];
 			if(tempNode.Type != NodeType.Int)
 				throw new FormatException("The version node must be an integer node.");
-			int version = ((IntNode)tempNode).Value;
+			var version = ((IntNode)tempNode).Value;
 			if(LevelVersion != version)
 				throw new FormatException("The version of the level data is not supported. Expected: " + LevelVersion + " got: " + version);
 		}
 
-		private string validateLevelNameNode (CompoundNode rootNode)
+		private static string validateLevelNameNode (CompoundNode rootNode)
 		{
 			if(!rootNode.Contains(LevelNameNodeName))
 				throw new FormatException("The level NBT does not contain a level name node.");
-			Node tempNode = rootNode[LevelNameNodeName];
+			var tempNode = rootNode[LevelNameNodeName];
 			if(tempNode.Type != NodeType.String)
 				throw new FormatException("The level name node must be a string node.");
 			return ((StringNode)tempNode).Value;
 		}
 
-		private long validateSeedNode (CompoundNode rootNode)
+		private static long validateSeedNode (CompoundNode rootNode)
 		{
 			if(!rootNode.Contains(SeedNodeName))
 				throw new FormatException("The level NBT does not contain a random seed node.");
-			Node tempNode = rootNode[SeedNodeName];
+			var tempNode = rootNode[SeedNodeName];
 			if(tempNode.Type != NodeType.Long)
 				throw new FormatException("The random seed node must be a long node.");
 			return ((LongNode)tempNode).Value;
 		}
 
-		private string validateGeneratorNameNode (CompoundNode rootNode)
+		private static string validateGeneratorNameNode (CompoundNode rootNode)
 		{
 			if(!rootNode.Contains(GeneratorNameNodeName))
 				throw new FormatException("The level NBT does not contain a generator name node.");
-			Node tempNode = rootNode[GeneratorNameNodeName];
+			var tempNode = rootNode[GeneratorNameNodeName];
 			if(tempNode.Type != NodeType.String)
 				throw new FormatException("The generator name name node must be a string node.");
 			return ((StringNode)tempNode).Value;
 		}
 
-		private int validateGeneratorVersionNode (CompoundNode rootNode)
+		private static int validateGeneratorVersionNode (CompoundNode rootNode)
 		{
 			if(!rootNode.Contains(GeneratorVersionNodeName))
 				throw new FormatException("The level NBT does not contain a generator version node.");
-			Node tempNode = rootNode[GeneratorVersionNodeName];
+			var tempNode = rootNode[GeneratorVersionNodeName];
 			if(tempNode.Type != NodeType.Int)
 				throw new FormatException("The generator version node must be an integer node.");
 			return ((IntNode)tempNode).Value;
 		}
 
-		private string validateGeneratorOptionsNode (CompoundNode rootNode)
+		private static string validateGeneratorOptionsNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(GeneratorOptionsNodeName))
 			{
-				Node tempNode = rootNode[GeneratorOptionsNodeName];
+				var tempNode = rootNode[GeneratorOptionsNodeName];
 				if(tempNode.Type == NodeType.String)
 					return ((StringNode)tempNode).Value;
 			}
@@ -702,9 +686,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(InitializedNodeName))
 			{
-				Node tempNode = rootNode[InitializedNodeName];
+				var tempNode = rootNode[InitializedNodeName];
 				if(tempNode.Type == NodeType.Byte)
-					initialized = ((ByteNode)tempNode).BooleanValue;
+					_initialized = ((ByteNode)tempNode).BooleanValue;
 			}
 		}
 
@@ -714,7 +698,7 @@ namespace Lapis.Level.Data
 			{
 				Node tempNode = rootNode[MapFeaturesNodeName];
 				if(tempNode.Type == NodeType.Byte)
-					mapFeatures = ((ByteNode)tempNode).BooleanValue;
+					_mapFeatures = ((ByteNode)tempNode).BooleanValue;
 			}
 		}
 
@@ -722,9 +706,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(LastPlayedNodeName))
 			{
-				Node tempNode = rootNode[LastPlayedNodeName];
+				var tempNode = rootNode[LastPlayedNodeName];
 				if(tempNode.Type == NodeType.Long)
-					lastPlayed = ((LongNode)tempNode).Value;
+					_lastPlayed = ((LongNode)tempNode).Value;
 			}
 		}
 
@@ -732,9 +716,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(DiskUsageNodeName))
 			{
-				Node tempNode = rootNode[DiskUsageNodeName];
+				var tempNode = rootNode[DiskUsageNodeName];
 				if(tempNode.Type == NodeType.Long)
-					size = ((LongNode)tempNode).Value;
+					_size = ((LongNode)tempNode).Value;
 			}
 		}
 
@@ -742,9 +726,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(CheatsNodeName))
 			{
-				Node tempNode = rootNode[CheatsNodeName];
+				var tempNode = rootNode[CheatsNodeName];
 				if(tempNode.Type == NodeType.Byte)
-					cheats = ((ByteNode)tempNode).BooleanValue;
+					_cheats = ((ByteNode)tempNode).BooleanValue;
 			}
 		}
 
@@ -752,9 +736,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(HardcoreNodeName))
 			{
-				Node tempNode = rootNode[HardcoreNodeName];
+				var tempNode = rootNode[HardcoreNodeName];
 				if(tempNode.Type == NodeType.Byte)
-					hardcore = ((ByteNode)tempNode).BooleanValue;
+					_hardcore = ((ByteNode)tempNode).BooleanValue;
 			}
 		}
 
@@ -762,11 +746,11 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(ModeNodeName))
 			{
-				Node tempNode = rootNode[ModeNodeName];
+				var tempNode = rootNode[ModeNodeName];
 				if(tempNode.Type == NodeType.Int)
 				{
-					int value = ((IntNode)tempNode).Value;
-					mode = (GameMode)value;
+					var value = ((IntNode)tempNode).Value;
+					_mode = (GameMode)value;
 				}
 			}
 		}
@@ -775,9 +759,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(AgeNodeName))
 			{
-				Node tempNode = rootNode[AgeNodeName];
+				var tempNode = rootNode[AgeNodeName];
 				if(tempNode.Type == NodeType.Long)
-					gameTicks = ((LongNode)tempNode).Value;
+					_gameTicks = ((LongNode)tempNode).Value;
 			}
 		}
 
@@ -785,9 +769,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(TimeNodeName))
 			{
-				Node tempNode = rootNode[TimeNodeName];
+				var tempNode = rootNode[TimeNodeName];
 				if(tempNode.Type == NodeType.Long)
-					time = ((LongNode)tempNode).Value;
+					_time = ((LongNode)tempNode).Value;
 			}
 		}
 
@@ -795,9 +779,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(SpawnXNodeName))
 			{
-				Node tempNode = rootNode[SpawnXNodeName];
+				var tempNode = rootNode[SpawnXNodeName];
 				if(tempNode.Type == NodeType.Int)
-					spawnX = ((IntNode)tempNode).Value;
+					_spawnX = ((IntNode)tempNode).Value;
 			}
 		}
 
@@ -805,9 +789,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(SpawnYNodeName))
 			{
-				Node tempNode = rootNode[SpawnYNodeName];
+				var tempNode = rootNode[SpawnYNodeName];
 				if(tempNode.Type == NodeType.Int)
-					spawnY = ((IntNode)tempNode).Value;
+					_spawnY = ((IntNode)tempNode).Value;
 			}
 		}
 
@@ -815,9 +799,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(SpawnZNodeName))
 			{
-				Node tempNode = rootNode[SpawnZNodeName];
+				var tempNode = rootNode[SpawnZNodeName];
 				if(tempNode.Type == NodeType.Int)
-					spawnZ = ((IntNode)tempNode).Value;
+					_spawnZ = ((IntNode)tempNode).Value;
 			}
 		}
 
@@ -825,9 +809,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(DownfallNodeName))
 			{
-				Node tempNode = rootNode[DownfallNodeName];
+				var tempNode = rootNode[DownfallNodeName];
 				if(tempNode.Type == NodeType.Byte)
-					raining = ((ByteNode)tempNode).BooleanValue;
+					_raining = ((ByteNode)tempNode).BooleanValue;
 			}
 		}
 
@@ -835,9 +819,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(DownfallTimeNodeName))
 			{
-				Node tempNode = rootNode[DownfallTimeNodeName];
+				var tempNode = rootNode[DownfallTimeNodeName];
 				if(tempNode.Type == NodeType.Int)
-					rainTime = ((IntNode)tempNode).Value;
+					_rainTime = ((IntNode)tempNode).Value;
 			}
 		}
 
@@ -845,9 +829,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(IsThunderstormNodeName))
 			{
-				Node tempNode = rootNode[IsThunderstormNodeName];
+				var tempNode = rootNode[IsThunderstormNodeName];
 				if(tempNode.Type == NodeType.Byte)
-					storm = ((ByteNode)tempNode).BooleanValue;
+					_storm = ((ByteNode)tempNode).BooleanValue;
 			}
 		}
 
@@ -855,9 +839,9 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(ThunderstormTimeNodeName))
 			{
-				Node tempNode = rootNode[ThunderstormTimeNodeName];
+				var tempNode = rootNode[ThunderstormTimeNodeName];
 				if(tempNode.Type == NodeType.Int)
-					stormTime = ((IntNode)tempNode).Value;
+					_stormTime = ((IntNode)tempNode).Value;
 			}
 		}
 		#endregion
