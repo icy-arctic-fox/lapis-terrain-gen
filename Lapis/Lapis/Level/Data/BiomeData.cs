@@ -1,4 +1,5 @@
 ﻿using System;
+using Lapis.IO;
 using Lapis.IO.NBT;
 
 namespace Lapis.Level.Data
@@ -9,7 +10,7 @@ namespace Lapis.Level.Data
 	/// <remarks>This class is not tied to any active world data.
 	/// The purpose of this class is for creating chunks, load chunk data from disk, and save chunk data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
-	public sealed class BiomeData
+	public sealed class BiomeData : ISerializable
 	{
 		private const string DefaultNodeName = "BiomeData";
 
@@ -96,7 +97,7 @@ namespace Lapis.Level.Data
 			if(null == bw)
 				throw new ArgumentNullException("bw", "The stream writer can't be null.");
 
-			var node = GetNbtNode(DefaultNodeName);
+			var node = ConstructNbtNode(DefaultNodeName);
 			new Tree(node).WriteToStream(bw);
 		}
 
@@ -120,7 +121,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node containing the biome data</returns>
-		public Node GetNbtNode (string name)
+		public Node ConstructNbtNode (string name)
 		{
 			var bytes = _data.GetBytes();
 			return new ByteArrayNode(name, bytes);
