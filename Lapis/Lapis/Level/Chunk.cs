@@ -1,5 +1,6 @@
 ﻿using System;
 using Lapis.Blocks;
+using Lapis.Level.Data;
 
 namespace Lapis.Level
 {
@@ -31,7 +32,7 @@ namespace Lapis.Level
 		#endregion
 
 		private readonly Realm realm;
-//		private readonly ChunkData data;
+		private readonly ChunkData data;
 
 		#region Properties
 		/// <summary>
@@ -66,18 +67,18 @@ namespace Lapis.Level
 		/// <summary>
 		/// X-position of the chunk within the realm
 		/// </summary>
-/*		public int ChunkX
+		public int ChunkX
 		{
 			get { return data.ChunkX; }
-		}*/
+		}
 
 		/// <summary>
 		/// Z-position of the chunk within the realm
 		/// </summary>
-/*		public int ChunkZ
+		public int ChunkZ
 		{
 			get { return data.ChunkZ; }
-		}*/
+		}
 		#endregion
 
 		#region Cleanup
@@ -103,8 +104,8 @@ namespace Lapis.Level
 		/// <param name="disposing">True if we should clean up all of our own resources (code called Dispose) or false if we should only cleanup ourselves (GC called Dispose)</param>
 		private void Dispose (bool disposing)
 		{
-/*			if(!disposing)
-				realm.FreeChunk(ChunkX, ChunkZ);*/
+			if(!disposing)
+				realm.FreeChunk(ChunkX, ChunkZ);
 		}
 		#endregion
 	}

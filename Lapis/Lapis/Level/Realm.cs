@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Lapis.IO;
+using Lapis.Level.Data;
 using Lapis.Spatial;
 using Lapis.Utility;
 using P = System.IO.Path;
@@ -12,7 +13,7 @@ namespace Lapis.Level
 	/// A realm within the world.
 	/// Contains and manages chunks.
 	/// </summary>
-	/// <remarks>Realms can have a different ID numbers, which are used for directory names (i.e.: realm5).
+	/// <remarks>Realms can have a different ID numbers, which are used for directory names (i.e.: DIM1 and realm5).
 	/// However, realms must have a vanilla dimension type.
 	/// The dimension type is used to be compatible with vanilla Minecraft.</remarks>
 	public sealed class Realm
@@ -27,14 +28,14 @@ namespace Lapis.Level
 		private readonly World world;
 		private readonly Dimension dimension;
 		private readonly int id;
-//		private readonly LevelData level;
+		private readonly LevelData level;
 		private readonly string diskName, path, levelFilePath, regionPath;
 
 		#region Properties
 		/// <summary>
 		/// ID number of the realm
 		/// </summary>
-		/// <remarks>For vanilla Minecraft compatible realms, this will just be an integer value of a DimensionType.</remarks>
+		/// <remarks>For vanilla Minecraft compatible realms, this will just be an integer value of a dimension.</remarks>
 		public int ID
 		{
 			get { return id; }

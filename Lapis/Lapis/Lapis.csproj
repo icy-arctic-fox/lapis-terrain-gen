@@ -63,8 +63,15 @@
     <Compile Include="IO\NBT\ShortNode.cs" />
     <Compile Include="IO\NBT\StringNode.cs" />
     <Compile Include="IO\NBT\Tree.cs" />
+    <Compile Include="Level\BiomeType.cs" />
     <Compile Include="Level\Chunk.cs" />
+    <Compile Include="Level\Data\BiomeData.cs" />
+    <Compile Include="Level\Data\ChunkData.cs" />
+    <Compile Include="Level\Data\HeightData.cs" />
+    <Compile Include="Level\Data\LevelData.cs" />
+    <Compile Include="Level\Data\LevelDataUtility.cs" />
     <Compile Include="Level\Dimension.cs" />
+    <Compile Include="Level\GameMode.cs" />
     <Compile Include="Level\Realm.cs" />
     <Compile Include="Level\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,9 +81,7 @@
     <Compile Include="Utility\StringManipulation.cs" />
     <Compile Include="Utility\Timestamp.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Level\Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

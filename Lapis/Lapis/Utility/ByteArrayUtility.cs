@@ -380,6 +380,53 @@ namespace Lapis.Utility
 			}
 		}
 
+		#region Nibble
+		/// <summary>
+		/// Gets a nibble (4 bits) from an array of bytes
+		/// </summary>
+		/// <param name="data">Array of bytes</param>
+		/// <param name="index">Index of the nibble</param>
+		/// <returns>The value of the nibble at the given index</returns>
+		public static byte GetNibble (this byte[] data, int index)
+		{
+			if(null == data)
+				throw new ArgumentNullException("data", "The byte array can't be null.");
+			if(0 > index || index >= data.Length * 2)
+				throw new IndexOutOfRangeException("The index of the nibble is out of range.");
+
+			var pos = index / 2;
+			var val = data[pos];
+			if(0 == (index % 2)) // First half of the byte
+				val &= 0x0f;
+			else // Second half of the byte
+				val >>= 4;
+			return val;
+		}
+
+		/// <summary>
+		/// Stores a nibble (4 bits) into an array of bytes
+		/// </summary>
+		/// <param name="data">Array of bytes</param>
+		/// <param name="index">Index of the nibble</param>
+		/// <param name="value">Value of the nibble to store</param>
+		public static void SetNibble (this byte[] data, int index, byte value)
+		{
+			if(null == data)
+				throw new ArgumentNullException("data", "The byte array can't be null.");
+			if(0 > index || index >= data.Length * 2)
+				throw new IndexOutOfRangeException("The index of the nibble is out of range.");
+
+			value  &= 0x0f;
+			var pos = index / 2;
+			var val = data[pos];
+			if(0 == (index % 2)) // First half of the byte
+				val = (byte)((val & 0xf0) | value);
+			else // Second half of the byte
+				val = (byte)((value << 4) | val & 0x0f);
+			data[pos] = val;
+		}
+		#endregion
+
 		/// <summary>
 		/// Checks if the bytes need to be flipped based on the desired endian and the system's architecture.
 		/// </summary>
