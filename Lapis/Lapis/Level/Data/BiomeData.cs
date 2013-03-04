@@ -1,7 +1,5 @@
 ﻿using System;
-using Lapis.IO;
 using Lapis.IO.NBT;
-using Lapis.Utility;
 
 namespace Lapis.Level.Data
 {
@@ -15,7 +13,7 @@ namespace Lapis.Level.Data
 	{
 		private const string DefaultNodeName = "BiomeData";
 
-		private readonly BiomeType[] data;
+		private readonly BiomeType[] _data;
 
 		/// <summary>
 		/// The biome type at an index (0 - 255)
@@ -24,8 +22,8 @@ namespace Lapis.Level.Data
 		/// <returns>The biome type at the given cell index</returns>
 		public BiomeType this[byte index]
 		{
-			get { return data[index]; }
-			set { data[index] = value; }
+			get { return _data[index]; }
+			set { _data[index] = value; }
 		}
 
 		/// <summary>
@@ -39,14 +37,14 @@ namespace Lapis.Level.Data
 		{
 			get
 			{
-				byte index = CalculateIndex(bx, bz);
-				return data[index];
+				var index = CalculateIndex(bx, bz);
+				return _data[index];
 			}
 
 			set
 			{
-				byte index = CalculateIndex(bx, bz);
-				data[index] = value;
+				var index = CalculateIndex(bx, bz);
+				_data[index] = value;
 			}
 		}
 
@@ -56,7 +54,7 @@ namespace Lapis.Level.Data
 		/// <remarks>The data will be set to BiomeType.Ocean</remarks>
 		public BiomeData ()
 		{
-			data = new BiomeType[Chunk.Size * Chunk.Size];
+			_data = new BiomeType[Chunk.Size * Chunk.Size];
 		}
 
 		/// <summary>
@@ -65,8 +63,8 @@ namespace Lapis.Level.Data
 		/// <param name="initialType">Biome type to set for the entire chunk</param>
 		public BiomeData (BiomeType initialType)
 		{
-			data = new BiomeType[Chunk.Size * Chunk.Size];
-			data.Fill(initialType);
+			_data = new BiomeType[Chunk.Size * Chunk.Size];
+			_data.Fill(initialType);
 		}
 
 		/// <summary>
@@ -83,7 +81,7 @@ namespace Lapis.Level.Data
 			if(Chunk.Size <= bz)
 				throw new ArgumentOutOfRangeException("bz", "The z-value of the block coordinate can't be at or above " + Chunk.Size);
 
-			byte index = (byte)(bz * Chunk.Size + bx);
+			var index = (byte)(bz * Chunk.Size + bx);
 			return index;
 		}
 
@@ -98,7 +96,7 @@ namespace Lapis.Level.Data
 			if(null == bw)
 				throw new ArgumentNullException("bw", "The stream writer can't be null.");
 
-			Node node = GetNBTNode(DefaultNodeName);
+			var node = GetNbtNode(DefaultNodeName);
 			new Tree(node).WriteToStream(bw);
 		}
 
@@ -113,8 +111,8 @@ namespace Lapis.Level.Data
 			if(null == br)
 				throw new ArgumentNullException("br", "The stream reader can't be null.");
 
-			Tree nbt = Tree.ReadFromStream(br);
-			return new BiomeData(nbt.Root);
+			var tree = Tree.ReadFromStream(br);
+			return new BiomeData(tree.Root);
 		}
 
 		/// <summary>
@@ -122,9 +120,9 @@ namespace Lapis.Level.Data
 		/// </summary>
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node containing the biome data</returns>
-		public Node GetNBTNode (string name)
+		public Node GetNbtNode (string name)
 		{
-			byte[] bytes = LevelDataUtility.GetBytes(data);
+			var bytes = _data.GetBytes();
 			return new ByteArrayNode(name, bytes);
 		}
 
@@ -136,13 +134,13 @@ namespace Lapis.Level.Data
 		/// <exception cref="FormatException">Thrown if the format of the data contained in <paramref name="node"/> is incorrect for biome data</exception>
 		public BiomeData (Node node)
 		{
-			ByteArrayNode baNode = validateNode(node);
-			byte[] bytes = validateByteArray(baNode);
-			data = LevelDataUtility.ToBiomeTypes(bytes);
+			var baNode = validateNode(node);
+			var bytes  = validateByteArray(baNode);
+			_data = bytes.ToBiomeTypes();
 		}
 
 		#region Validation
-		private ByteArrayNode validateNode (Node node)
+		private static ByteArrayNode validateNode (Node node)
 		{
 			if(null == node)
 				throw new ArgumentNullException("node", "The node containing the biome data can't be null.");
@@ -151,7 +149,7 @@ namespace Lapis.Level.Data
 			return (ByteArrayNode)node;
 		}
 
-		private byte[] validateByteArray (ByteArrayNode node)
+		private static byte[] validateByteArray (ByteArrayNode node)
 		{
 			if(node.Data.Length != Chunk.Size * Chunk.Size)
 				throw new FormatException("The length of the biome data is not valid. Expected: " + (Chunk.Size * Chunk.Size) + ", got: " + node.Data.Length);
