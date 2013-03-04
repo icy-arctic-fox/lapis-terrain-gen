@@ -76,6 +76,7 @@
     <Compile Include="Level\Data\LevelDataUtility.cs" />
     <Compile Include="Level\Dimension.cs" />
     <Compile Include="Level\GameMode.cs" />
+    <Compile Include="Level\Generation\ITerrainGenerator.cs" />
     <Compile Include="Level\Realm.cs" />
     <Compile Include="Level\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
