@@ -124,7 +124,7 @@ namespace Lapis.Level.Data
 		/// <returns>An NBT node containing the biome data</returns>
 		public Node GetNBTNode (string name)
 		{
-			byte[] bytes = LevelDataUtility.ToBytes(data);
+			byte[] bytes = LevelDataUtility.GetBytes(data);
 			return new ByteArrayNode(name, bytes);
 		}
 

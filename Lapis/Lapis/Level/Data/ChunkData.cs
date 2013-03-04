@@ -428,7 +428,7 @@ namespace Lapis.Level.Data
 		{
 			CompoundNode chunkSection    = new CompoundNode(ChunkSectionNodeName);
 			ByteNode yPosNode            = new ByteNode(YPositionNodeName, (byte)level);
-			ByteArrayNode blocksNode     = new ByteArrayNode(BlockTypesNodeName, blockTypes[level].ToBytes());
+			ByteArrayNode blocksNode     = new ByteArrayNode(BlockTypesNodeName, blockTypes[level].GetBytes());
 			ByteArrayNode dataNode       = new ByteArrayNode(BlockDataNodeName, blockData[level]);
 			ByteArrayNode skyLightNode   = new ByteArrayNode(SkyLightNodeName, skyLight[level]);
 			ByteArrayNode blockLightNode = new ByteArrayNode(BlockLightNodeName, blockLight[level]);
