@@ -1,6 +1,5 @@
 ﻿using System;
 using Lapis.Blocks;
-using Lapis.IO;
 using Lapis.IO.NBT;
 using Lapis.Utility;
 
@@ -16,19 +15,19 @@ namespace Lapis.Level.Data
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
 	public class ChunkData
 	{
-		private const int SectionLength      = Chunk.SectionHeight * Chunk.Size * Chunk.Size;
-		private const int HalfSectionLength  = SectionLength / 2;
+		private const int SectionLength     = Chunk.SectionHeight * Chunk.Size * Chunk.Size;
+		private const int HalfSectionLength = SectionLength / 2;
 
-		private bool terrainPopulated = false;
-		private readonly int cx, cz;
-		private long lastUpdate;
-		private readonly BlockType[][] blockTypes = new BlockType[Chunk.SectionCount][];
+		private bool _terrainPopulated;
+		private readonly int _cx, _cz;
+		private long _lastUpdate;
+		private readonly BlockType[][] _blockTypes = new BlockType[Chunk.SectionCount][];
 		private readonly byte[][]
-			blockData  = new byte[Chunk.SectionCount][],
-			skyLight   = new byte[Chunk.SectionCount][],
-			blockLight = new byte[Chunk.SectionCount][];
-		private readonly BiomeData biomes;
-		private readonly HeightData heightMap;
+			_blockData  = new byte[Chunk.SectionCount][],
+			_skyLight   = new byte[Chunk.SectionCount][],
+			_blockLight = new byte[Chunk.SectionCount][];
+		private readonly BiomeData _biomes;
+		private readonly HeightData _heightMap;
 
 		// TODO: Add TileTicks support
 		// TODO: Add TileEntities support
@@ -39,8 +38,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public bool TerrainPopulated
 		{
-			get { return terrainPopulated; }
-			set { terrainPopulated = value; }
+			get { return _terrainPopulated; }
+			set { _terrainPopulated = value; }
 		}
 
 		/// <summary>
@@ -48,7 +47,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public int ChunkX
 		{
-			get { return cx; }
+			get { return _cx; }
 		}
 
 		/// <summary>
@@ -56,7 +55,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public int ChunkZ
 		{
-			get { return cz; }
+			get { return _cz; }
 		}
 
 		/// <summary>
@@ -65,8 +64,8 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public long LastUpdate
 		{
-			get { return lastUpdate; }
-			set { lastUpdate = value; }
+			get { return _lastUpdate; }
+			set { _lastUpdate = value; }
 		}
 
 		/// <summary>
@@ -74,7 +73,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public BiomeData Biomes
 		{
-			get { return biomes; }
+			get { return _biomes; }
 		}
 
 		/// <summary>
@@ -82,7 +81,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public HeightData HeightMap
 		{
-			get { return heightMap; }
+			get { return _heightMap; }
 		}
 		#endregion
 
@@ -93,27 +92,25 @@ namespace Lapis.Level.Data
 		/// <param name="cz">Z-position of the chunk within the realm</param>
 		public ChunkData (int cx, int cz)
 		{
-			this.cx          = cx;
-			this.cz          = cz;
-			lastUpdate       = 0;
-			biomes           = new BiomeData();
-			heightMap        = new HeightData();
+			_cx         = cx;
+			_cz         = cz;
+			_lastUpdate = 0;
+			_biomes     = new BiomeData();
+			_heightMap  = new HeightData();
 
-			for(int i = 0; i < Chunk.SectionCount; ++i)
+			for(var i = 0; i < Chunk.SectionCount; ++i)
 			{
-				blockTypes[i] = new BlockType[SectionLength];
-				blockData[i]  = new byte[HalfSectionLength];
-				blockLight[i] = new byte[HalfSectionLength];
-				skyLight[i]   = new byte[HalfSectionLength];
+				_blockTypes[i] = new BlockType[SectionLength];
+				_blockData[i]  = new byte[HalfSectionLength];
+				_blockLight[i] = new byte[HalfSectionLength];
+				_skyLight[i]   = new byte[HalfSectionLength];
 			}
 		}
 
-		private static void checkBounds (byte bx, byte by, byte bz)
+		private static void checkBounds (byte bx, byte bz)
 		{
 			if(Chunk.Size <= bx)
 				throw new ArgumentOutOfRangeException("bx", "The x-position of the block must be less than " + Chunk.Size);
-//			if(Chunk.Height <= by)
-//				throw new ArgumentOutOfRangeException("by", "The y-position of the block must be less than " + Chunk.Height);
 			if(Chunk.Size <= bz)
 				throw new ArgumentOutOfRangeException("bz", "The z-position of the block must be less than " + Chunk.Size);
 		}
@@ -127,7 +124,7 @@ namespace Lapis.Level.Data
 		/// <returns>Flattened index of the block</returns>
 		private static int calculateIndex (byte bx, byte by, byte bz)
 		{
-			int index = by + Chunk.Size * (bx + Chunk.Size * bz);
+			var index = by + Chunk.Size * (bx + Chunk.Size * bz);
 			return index;
 		}
 
@@ -141,7 +138,7 @@ namespace Lapis.Level.Data
 		/// <returns>The block's type</returns>
 		public BlockType GetBlockType (byte bx, byte by, byte bz)
 		{
-			return getBlock<BlockType>(bx, by, bz, blockTypes);
+			return getBlock(bx, by, bz, _blockTypes);
 		}
 
 		/// <summary>
@@ -153,7 +150,7 @@ namespace Lapis.Level.Data
 		/// <param name="type">New block type</param>
 		public void SetBlockType (byte bx, byte by, byte bz, BlockType type)
 		{
-			setBlock<BlockType>(bx, by, bz, blockTypes, type);
+			setBlock(bx, by, bz, _blockTypes, type);
 		}
 
 		/// <summary>
@@ -165,7 +162,7 @@ namespace Lapis.Level.Data
 		/// <returns>The block's data</returns>
 		public byte GetBlockData (byte bx, byte by, byte bz)
 		{
-			return getBlockNibble(bx, by, bz, blockData);
+			return getBlockNibble(bx, by, bz, _blockData);
 		}
 
 		/// <summary>
@@ -177,7 +174,7 @@ namespace Lapis.Level.Data
 		/// <param name="data">New block data</param>
 		public void SetBlockData (byte bx, byte by, byte bz, byte data)
 		{
-			setBlockNibble(bx, by, bz, blockData, data);
+			setBlockNibble(bx, by, bz, _blockData, data);
 		}
 
 		/// <summary>
@@ -189,7 +186,7 @@ namespace Lapis.Level.Data
 		/// <returns>The amount of block light (0 - 15)</returns>
 		public byte GetBlockLight (byte bx, byte by, byte bz)
 		{
-			return getBlockNibble(bx, by, bz, blockLight);
+			return getBlockNibble(bx, by, bz, _blockLight);
 		}
 
 		/// <summary>
@@ -201,7 +198,7 @@ namespace Lapis.Level.Data
 		/// <param name="value">New block light amount (0 - 15)</param>
 		public void SetBlockLight (byte bx, byte by, byte bz, byte value)
 		{
-			setBlockNibble(bx, by, bz, blockLight, value);
+			setBlockNibble(bx, by, bz, _blockLight, value);
 		}
 
 		/// <summary>
@@ -213,7 +210,7 @@ namespace Lapis.Level.Data
 		/// <returns>The amount of sky light (0 - 15)</returns>
 		public byte GetSkyLight (byte bx, byte by, byte bz)
 		{
-			return getBlockNibble(bx, by, bz, skyLight);
+			return getBlockNibble(bx, by, bz, _skyLight);
 		}
 
 		/// <summary>
@@ -225,50 +222,50 @@ namespace Lapis.Level.Data
 		/// <param name="value">New sky light amount (0 - 15)</param>
 		public void SetSkyLight (byte bx, byte by, byte bz, byte value)
 		{
-			setBlockNibble(bx, by, bz, skyLight, value);
+			setBlockNibble(bx, by, bz, _skyLight, value);
 		}
 
 		#region Block get/set utility
 		private static T getBlock<T> (byte bx, byte by, byte bz, T[][] blocks)
 		{
-			checkBounds(bx, by, bz);
+			checkBounds(bx, bz);
 
-			int section = by / Chunk.Size;
-			byte secBy  = (byte)(by % Chunk.Size);
-			int index   = calculateIndex(bx, secBy, bz);
+			var section = by / Chunk.Size;
+			var secBy   = (byte)(by % Chunk.Size);
+			var index   = calculateIndex(bx, secBy, bz);
 
 			return blocks[section][index];
 		}
 
 		private static void setBlock<T> (byte bx, byte by, byte bz, T[][] blocks, T value)
 		{
-			checkBounds(bx, by, bz);
+			checkBounds(bx, bz);
 
-			int section = by / Chunk.Size;
-			byte newBy  = (byte)(by % Chunk.Size);
-			int index   = calculateIndex(bx, newBy, bz);
+			var section = by / Chunk.Size;
+			var newBy   = (byte)(by % Chunk.Size);
+			var index   = calculateIndex(bx, newBy, bz);
 
 			blocks[section][index] = value;
 		}
 
 		private static byte getBlockNibble (byte bx, byte by, byte bz, byte[][] blocks)
 		{
-			checkBounds(bx, by, bz);
+			checkBounds(bx, bz);
 
-			int section = by / Chunk.Size;
-			byte secBy  = (byte)(by % Chunk.Size);
-			int index   = calculateIndex(bx, secBy, bz);
+			var section = by / Chunk.Size;
+			var secBy   = (byte)(by % Chunk.Size);
+			var index   = calculateIndex(bx, secBy, bz);
 
 			return blocks[section].GetNibble(index);
 		}
 
 		private static void setBlockNibble (byte bx, byte by, byte bz, byte[][] blocks, byte value)
 		{
-			checkBounds(bx, by, bz);
+			checkBounds(bx, bz);
 
-			int section = by / Chunk.Size;
-			byte secBy  = (byte)(by % Chunk.Size);
-			int index   = calculateIndex(bx, secBy, bz);
+			var section = by / Chunk.Size;
+			var secBy   = (byte)(by % Chunk.Size);
+			var index   = calculateIndex(bx, secBy, bz);
 
 			blocks[section].SetNibble(index, value);
 		}
@@ -303,9 +300,9 @@ namespace Lapis.Level.Data
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="bw"/> is null</exception>
 		public void WriteToStream (System.IO.BinaryWriter bw)
 		{
-			Node node = GetNBTNode(RootNodeName);
-			Tree nbt   = new Tree(node);
-			nbt.WriteToStream(bw);
+			var node = GetNbtNode(RootNodeName);
+			var tree = new Tree(node);
+			tree.WriteToStream(bw);
 		}
 
 		/// <summary>
@@ -316,8 +313,8 @@ namespace Lapis.Level.Data
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null</exception>
 		public static ChunkData ReadFromStream (System.IO.BinaryReader br)
 		{
-			Tree nbt = Tree.ReadFromStream(br);
-			return new ChunkData(nbt.Root);
+			var tree = Tree.ReadFromStream(br);
+			return new ChunkData(tree.Root);
 		}
 
 		/// <summary>
@@ -326,9 +323,9 @@ namespace Lapis.Level.Data
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node that contains the chunk data</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
-		public Node GetNBTNode (string name)
+		public Node GetNbtNode (string name)
 		{
-			CompoundNode root = new CompoundNode(name);
+			var root = new CompoundNode(name);
 			ConstructNode(root);
 			return root;
 		}
@@ -341,15 +338,15 @@ namespace Lapis.Level.Data
 		/// <exception cref="FormatException">Thrown if the format of the chunk data contained in <paramref name="node"/> is invalid</exception>
 		public ChunkData (Node node)
 		{
-			CompoundNode rootNode = validateLevelNode(node);
+			var rootNode = validateLevelNode(node);
 
 			// Not required "repairable" fields
-			terrainPopulated = validateTerrainPopulatedNode(rootNode);
-			cx               = validateChunkXNode(rootNode);
-			cz               = validateChunkZNode(rootNode);
-			lastUpdate       = validateLastUpdateNode(rootNode);
-			biomes           = validateBiomesNode(rootNode);
-			heightMap        = validateHeightMapNode(rootNode);
+			_terrainPopulated = validateTerrainPopulatedNode(rootNode);
+			_cx               = validateChunkXNode(rootNode);
+			_cz               = validateChunkZNode(rootNode);
+			_lastUpdate       = validateLastUpdateNode(rootNode);
+			_biomes           = validateBiomesNode(rootNode);
+			_heightMap        = validateHeightMapNode(rootNode);
 			validateSectionsNode(rootNode);
 		}
 
@@ -375,32 +372,32 @@ namespace Lapis.Level.Data
 
 		private Node constructTerrainPopulatedNode ()
 		{
-			return new ByteNode(TerrainPopulatedNodeName, terrainPopulated);
+			return new ByteNode(TerrainPopulatedNodeName, _terrainPopulated);
 		}
 
 		private Node constructChunkXNode ()
 		{
-			return new IntNode(ChunkXNodeName, cx);
+			return new IntNode(ChunkXNodeName, _cx);
 		}
 
 		private Node constructChunkZNode ()
 		{
-			return new IntNode(ChunkZNodeName, cz);
+			return new IntNode(ChunkZNodeName, _cz);
 		}
 
 		private Node constructLastUpdateNode ()
 		{
-			return new LongNode(LastUpdateNodeName, lastUpdate);
+			return new LongNode(LastUpdateNodeName, _lastUpdate);
 		}
 
 		private Node constructBiomesNode ()
 		{
-			return biomes.GetNbtNode(BiomesNodeName);
+			return _biomes.GetNbtNode(BiomesNodeName);
 		}
 
 		private Node constructHeightMapNode ()
 		{
-			return heightMap.GetNBTNode(HeightMapNodeName);
+			return _heightMap.GetNBTNode(HeightMapNodeName);
 		}
 
 		private Node constructEntitiesNode ()
@@ -417,21 +414,21 @@ namespace Lapis.Level.Data
 
 		private Node constructSectionsNode ()
 		{
-			ListNode chunkSections = new ListNode(SectionsNodeName, NodeType.Compound);
-			int sectionCount = (heightMap.Maximum / Chunk.SectionHeight) + 1;
-			for(int i = 0; i < sectionCount; ++i)
+			var chunkSections = new ListNode(SectionsNodeName, NodeType.Compound);
+			var sectionCount  = (_heightMap.Maximum / Chunk.SectionHeight) + 1;
+			for(var i = 0; i < sectionCount; ++i)
 				chunkSections.Add(constructChunkSectionNode(i));
 			return chunkSections;
 		}
 
 		private Node constructChunkSectionNode (int level)
 		{
-			CompoundNode chunkSection    = new CompoundNode(ChunkSectionNodeName);
-			ByteNode yPosNode            = new ByteNode(YPositionNodeName, (byte)level);
-			ByteArrayNode blocksNode     = new ByteArrayNode(BlockTypesNodeName, blockTypes[level].GetBytes());
-			ByteArrayNode dataNode       = new ByteArrayNode(BlockDataNodeName, blockData[level]);
-			ByteArrayNode skyLightNode   = new ByteArrayNode(SkyLightNodeName, skyLight[level]);
-			ByteArrayNode blockLightNode = new ByteArrayNode(BlockLightNodeName, blockLight[level]);
+			var chunkSection   = new CompoundNode(ChunkSectionNodeName);
+			var yPosNode       = new ByteNode(YPositionNodeName, (byte)level);
+			var blocksNode     = new ByteArrayNode(BlockTypesNodeName, _blockTypes[level].GetBytes());
+			var dataNode       = new ByteArrayNode(BlockDataNodeName, _blockData[level]);
+			var skyLightNode   = new ByteArrayNode(SkyLightNodeName, _skyLight[level]);
+			var blockLightNode = new ByteArrayNode(BlockLightNodeName, _blockLight[level]);
 
 			chunkSection.Add(yPosNode);
 			chunkSection.Add(blocksNode);
@@ -444,7 +441,7 @@ namespace Lapis.Level.Data
 		#endregion
 
 		#region Validation
-		private CompoundNode validateLevelNode (Node node)
+		private static CompoundNode validateLevelNode (Node node)
 		{
 			if(null == node)
 				throw new ArgumentNullException("node", "The node that contains the chunk data can't be null.");
@@ -453,55 +450,55 @@ namespace Lapis.Level.Data
 			return (CompoundNode)node;
 		}
 
-		private bool validateTerrainPopulatedNode (CompoundNode rootNode)
+		private static bool validateTerrainPopulatedNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(TerrainPopulatedNodeName))
 			{
-				Node tempNode = rootNode[TerrainPopulatedNodeName];
+				var tempNode = rootNode[TerrainPopulatedNodeName];
 				if(tempNode.Type == NodeType.Byte)
 					return ((ByteNode)tempNode).BooleanValue;
 			}
 			return false;
 		}
 
-		private int validateChunkXNode (CompoundNode rootNode)
+		private static int validateChunkXNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(ChunkXNodeName))
 			{
-				Node tempNode = rootNode[ChunkXNodeName];
+				var tempNode = rootNode[ChunkXNodeName];
 				if(tempNode.Type == NodeType.Int)
 					return ((IntNode)tempNode).Value;
 			}
 			return 0;
 		}
 
-		private int validateChunkZNode (CompoundNode rootNode)
+		private static int validateChunkZNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(ChunkZNodeName))
 			{
-				Node tempNode = rootNode[ChunkZNodeName];
+				var tempNode = rootNode[ChunkZNodeName];
 				if(tempNode.Type == NodeType.Int)
 					return ((IntNode)tempNode).Value;
 			}
 			return 0;
 		}
 
-		private long validateLastUpdateNode (CompoundNode rootNode)
+		private static long validateLastUpdateNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(LastUpdateNodeName))
 			{
-				Node tempNode = rootNode[LastUpdateNodeName];
+				var tempNode = rootNode[LastUpdateNodeName];
 				if(tempNode.Type == NodeType.Long)
 					return ((LongNode)tempNode).Value;
 			}
 			return Timestamp.Now;
 		}
 
-		private BiomeData validateBiomesNode (CompoundNode rootNode)
+		private static BiomeData validateBiomesNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(BiomesNodeName))
 			{
-				Node node = rootNode[BiomesNodeName];
+				var node = rootNode[BiomesNodeName];
 				try
 				{
 					return new BiomeData(node);
@@ -511,11 +508,11 @@ namespace Lapis.Level.Data
 			return new BiomeData();
 		}
 
-		private HeightData validateHeightMapNode (CompoundNode rootNode)
+		private static HeightData validateHeightMapNode (CompoundNode rootNode)
 		{
 			if(rootNode.Contains(HeightMapNodeName))
 			{
-				Node node = rootNode[HeightMapNodeName];
+				var node = rootNode[HeightMapNodeName];
 				try
 				{
 					return new HeightData(node);
@@ -529,25 +526,25 @@ namespace Lapis.Level.Data
 		{
 			if(rootNode.Contains(SectionsNodeName))
 			{
-				Node tempNode = rootNode[SectionsNodeName];
+				var tempNode = rootNode[SectionsNodeName];
 				if(tempNode.Type == NodeType.List)
 				{
-					ListNode node = (ListNode)tempNode;
+					var node = (ListNode)tempNode;
 					if(node.ElementType == NodeType.Compound)
 					{
 						// Retrieve existing data from NBT
-						foreach(Node chunkSection in node)
+						foreach(var chunkSection in node)
 							validateChunkSectionNode((CompoundNode)chunkSection);
 
 						// Create empty data for any remaining chunks
-						for(int i = 0; i < Chunk.SectionCount; ++i)
+						for(var i = 0; i < Chunk.SectionCount; ++i)
 						{
-							if(null == blockTypes[i])
+							if(null == _blockTypes[i])
 							{
-								blockTypes[i] = new BlockType[SectionLength];
-								blockData[i]  = new byte[HalfSectionLength];
-								blockLight[i] = new byte[HalfSectionLength];
-								skyLight[i]   = new byte[HalfSectionLength];	// TODO: Possible problem here with setting light to 0
+								_blockTypes[i] = new BlockType[SectionLength];
+								_blockData[i]  = new byte[HalfSectionLength];
+								_blockLight[i] = new byte[HalfSectionLength];
+								_skyLight[i]   = new byte[HalfSectionLength];	// TODO: Possible problem here with setting light to 0
 							}
 						}
 					}
@@ -560,15 +557,15 @@ namespace Lapis.Level.Data
 			int? yPos = validateYPositionNode(chunkSection);
 			if(yPos.HasValue)
 			{
-				int y = yPos.Value;
-				blockTypes[y] = validateBlockTypesNode(chunkSection);
-				blockData[y]  = validateBlockDataNode(chunkSection);
-				skyLight[y]   = validateSkyLightNode(chunkSection);
-				blockLight[y] = validateBlockLightNode(chunkSection);
+				var y = yPos.Value;
+				_blockTypes[y] = validateBlockTypesNode(chunkSection);
+				_blockData[y]  = validateBlockDataNode(chunkSection);
+				_skyLight[y]   = validateSkyLightNode(chunkSection);
+				_blockLight[y] = validateBlockLightNode(chunkSection);
 			}
 		}
 
-		private byte? validateYPositionNode (CompoundNode chunkSection)
+		private static byte? validateYPositionNode (CompoundNode chunkSection)
 		{
 			if(chunkSection.Contains(YPositionNodeName))
 			{
@@ -579,14 +576,14 @@ namespace Lapis.Level.Data
 			return null;
 		}
 
-		private BlockType[] validateBlockTypesNode (CompoundNode chunkSection)
+		private static BlockType[] validateBlockTypesNode (CompoundNode chunkSection)
 		{
 			if(chunkSection.Contains(BlockTypesNodeName))
 			{
-				Node tempNode = chunkSection[BlockTypesNodeName];
+				var tempNode = chunkSection[BlockTypesNodeName];
 				if(tempNode.Type == NodeType.ByteArray)
 				{
-					ByteArrayNode node = (ByteArrayNode)tempNode;
+					var node = (ByteArrayNode)tempNode;
 					if(node.Data.Length == SectionLength)
 						return node.Data.ToBlockTypes();
 				}
@@ -594,14 +591,14 @@ namespace Lapis.Level.Data
 			return new BlockType[SectionLength];
 		}
 
-		private byte[] validateBlockDataNode (CompoundNode chunkSection)
+		private static byte[] validateBlockDataNode (CompoundNode chunkSection)
 		{
 			if(chunkSection.Contains(BlockDataNodeName))
 			{
-				Node tempNode = chunkSection[BlockDataNodeName];
+				var tempNode = chunkSection[BlockDataNodeName];
 				if(tempNode.Type == NodeType.ByteArray)
 				{
-					ByteArrayNode node = (ByteArrayNode)tempNode;
+					var node = (ByteArrayNode)tempNode;
 					if(node.Data.Length == HalfSectionLength)
 						return node.Data;
 				}
@@ -609,14 +606,14 @@ namespace Lapis.Level.Data
 			return new byte[HalfSectionLength];
 		}
 
-		private byte[] validateSkyLightNode (CompoundNode chunkSection)
+		private static byte[] validateSkyLightNode (CompoundNode chunkSection)
 		{
 			if(chunkSection.Contains(SkyLightNodeName))
 			{
-				Node tempNode = chunkSection[SkyLightNodeName];
+				var tempNode = chunkSection[SkyLightNodeName];
 				if(tempNode.Type == NodeType.ByteArray)
 				{
-					ByteArrayNode node = (ByteArrayNode)tempNode;
+					var node = (ByteArrayNode)tempNode;
 					if(node.Data.Length == HalfSectionLength)
 						return node.Data;
 				}
@@ -624,14 +621,14 @@ namespace Lapis.Level.Data
 			return new byte[HalfSectionLength];
 		}
 
-		private byte[] validateBlockLightNode (CompoundNode chunkSection)
+		private static byte[] validateBlockLightNode (CompoundNode chunkSection)
 		{
 			if(chunkSection.Contains(BlockLightNodeName))
 			{
-				Node tempNode = chunkSection[BlockLightNodeName];
+				var tempNode = chunkSection[BlockLightNodeName];
 				if(tempNode.Type == NodeType.ByteArray)
 				{
-					ByteArrayNode node = (ByteArrayNode)tempNode;
+					var node = (ByteArrayNode)tempNode;
 					if(node.Data.Length == HalfSectionLength)
 						return node.Data;
 				}
