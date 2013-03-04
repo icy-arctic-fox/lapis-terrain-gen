@@ -63,12 +63,19 @@
     <Compile Include="IO\NBT\ShortNode.cs" />
     <Compile Include="IO\NBT\StringNode.cs" />
     <Compile Include="IO\NBT\Tree.cs" />
+    <Compile Include="Level\Chunk.cs" />
+    <Compile Include="Level\Dimension.cs" />
+    <Compile Include="Level\Realm.cs" />
+    <Compile Include="Level\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spatial\XZCoordinate.cs" />
     <Compile Include="Utility\ByteArrayUtility.cs" />
     <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\StringManipulation.cs" />
     <Compile Include="Utility\Timestamp.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Level\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
