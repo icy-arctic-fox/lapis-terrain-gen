@@ -1,5 +1,6 @@
 ﻿using System;
 using Lapis.Blocks;
+using Lapis.IO;
 using Lapis.IO.NBT;
 using Lapis.Utility;
 
@@ -13,7 +14,7 @@ namespace Lapis.Level.Data
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).
 	/// This class will verify the validity of NBT nodes it requires, but will not fix them if they are wrong.
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
-	public class ChunkData
+	public class ChunkData : ISerializable
 	{
 		private const int SectionLength     = Chunk.SectionHeight * Chunk.Size * Chunk.Size;
 		private const int HalfSectionLength = SectionLength / 2;
@@ -300,7 +301,7 @@ namespace Lapis.Level.Data
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="bw"/> is null</exception>
 		public void WriteToStream (System.IO.BinaryWriter bw)
 		{
-			var node = GetNbtNode(RootNodeName);
+			var node = ConstructNbtNode(RootNodeName);
 			var tree = new Tree(node);
 			tree.WriteToStream(bw);
 		}
@@ -323,7 +324,7 @@ namespace Lapis.Level.Data
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node that contains the chunk data</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
-		public Node GetNbtNode (string name)
+		public Node ConstructNbtNode (string name)
 		{
 			var root = new CompoundNode(name);
 			ConstructNode(root);
