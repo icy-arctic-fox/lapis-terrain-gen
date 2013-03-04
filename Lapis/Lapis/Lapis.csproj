@@ -46,9 +46,12 @@
   <ItemGroup>
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockType.cs" />
+    <Compile Include="IO\AnvilFile.cs" />
+    <Compile Include="IO\AnvilFileManager.cs" />
     <Compile Include="IO\Endian.cs" />
     <Compile Include="IO\EndianBinaryReader.cs" />
     <Compile Include="IO\EndianBinaryWriter.cs" />
+    <Compile Include="IO\IChunkProvider.cs" />
     <Compile Include="IO\ISerializable.cs" />
     <Compile Include="IO\NBT\ByteArrayNode.cs" />
     <Compile Include="IO\NBT\ByteNode.cs" />
