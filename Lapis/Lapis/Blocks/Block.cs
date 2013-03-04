@@ -1,5 +1,7 @@
 ﻿namespace Lapis.Blocks
 {
+	// TODO: Re-implement features in this class
+
 	/// <summary>
 	/// Base block data
 	/// </summary>
