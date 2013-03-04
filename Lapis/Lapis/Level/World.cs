@@ -11,13 +11,13 @@ namespace Lapis.Level
 	/// </summary>
 	public sealed class World
 	{
-		private readonly string name, diskName, path;
+		private readonly string _name, _diskName, _path;
 
 		/// <summary>
 		/// All realms that the world contains (knows about)
 		/// </summary>
 		/// <remarks>The values in the dictionary will be null if the realm isn't loaded.</remarks>
-		private readonly Dictionary<int, Realm> realms;
+		private readonly Dictionary<int, Realm> _realms;
 
 		#region Properties
 		/// <summary>
@@ -49,9 +49,9 @@ namespace Lapis.Level
 		/// <summary>
 		/// Checks if the world has a realm
 		/// </summary>
-		/// <param name="realmID">ID number of the realm to look for</param>
+		/// <param name="realmId">ID number of the realm to look for</param>
 		/// <returns>True if the the realm is in the world or false if it isn't</returns>
-		public bool ContainsRealm (int realmID)
+		public bool ContainsRealm (int realmId)
 		{
 			throw new NotImplementedException();
 		}
@@ -59,9 +59,9 @@ namespace Lapis.Level
 		/// <summary>
 		/// Loads a realm into memory (if it isn't already)
 		/// </summary>
-		/// <param name="realmID">ID number of the realm</param>
+		/// <param name="realmId">ID number of the realm</param>
 		/// <returns>The loaded realm</returns>
-		public Realm LoadRealm (int realmID)
+		public Realm LoadRealm (int realmId)
 		{
 			throw new NotImplementedException();
 		}
@@ -69,7 +69,7 @@ namespace Lapis.Level
 		/// <summary>
 		/// ID numbers of realms present in the world
 		/// </summary>
-		public IEnumerable<int> RealmIDs
+		public IEnumerable<int> RealmIds
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -85,9 +85,9 @@ namespace Lapis.Level
 		/// <summary>
 		/// Access to realms contained in the world
 		/// </summary>
-		/// <param name="realmID">ID number of the realm</param>
+		/// <param name="realmId">ID number of the realm</param>
 		/// <returns>A realm</returns>
-		public Realm this[int realmID]
+		public Realm this[int realmId]
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -104,7 +104,7 @@ namespace Lapis.Level
 		#endregion
 
 		#region World management
-		private static readonly Dictionary<string, World> loadedWorlds;
+		private static readonly Dictionary<string, World> _loadedWorlds;
 
 		/// <summary>
 		/// Unloads the current world from memory

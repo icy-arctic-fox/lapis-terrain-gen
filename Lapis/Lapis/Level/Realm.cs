@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Lapis.IO;
 using Lapis.Level.Data;
 using Lapis.Spatial;
 using Lapis.Utility;
@@ -23,22 +22,22 @@ namespace Lapis.Level
 		private const string LevelDataFilename = "level.dat";
 		private const string RegionDirectory   = "region";
 
-		private static readonly string DirectorySeparator = P.DirectorySeparatorChar.ToString();
+		private static readonly string _directorySeparator = P.DirectorySeparatorChar.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-		private readonly World world;
-		private readonly Dimension dimension;
-		private readonly int id;
-		private readonly LevelData level;
-		private readonly string diskName, path, levelFilePath, regionPath;
+		private readonly World _world;
+		private readonly Dimension _dimension;
+		private readonly int _id;
+		private readonly LevelData _level;
+		private readonly string _diskName, _path, _levelFilePath, _regionPath;
 
 		#region Properties
 		/// <summary>
 		/// ID number of the realm
 		/// </summary>
 		/// <remarks>For vanilla Minecraft compatible realms, this will just be an integer value of a dimension.</remarks>
-		public int ID
+		public int Id
 		{
-			get { return id; }
+			get { return _id; }
 		}
 
 		/// <summary>
@@ -47,7 +46,7 @@ namespace Lapis.Level
 		/// <remarks>This is used for compatibility with vanilla Minecraft.</remarks>
 		public Dimension Dimension
 		{
-			get { return dimension; }
+			get { return _dimension; }
 		}
 
 		/// <summary>
@@ -55,7 +54,7 @@ namespace Lapis.Level
 		/// </summary>
 		public string DiskName
 		{
-			get { return diskName; }
+			get { return _diskName; }
 		}
 
 		/// <summary>
@@ -63,7 +62,7 @@ namespace Lapis.Level
 		/// </summary>
 		public string Path
 		{
-			get { return path; }
+			get { return _path; }
 		}
 
 		/// <summary>
@@ -71,7 +70,7 @@ namespace Lapis.Level
 		/// </summary>
 		public World World
 		{
-			get { return world; }
+			get { return _world; }
 		}
 
 		/// <summary>
@@ -79,7 +78,7 @@ namespace Lapis.Level
 		/// </summary>
 		public bool IsOverworld
 		{
-			get { return (int)Dimension.Normal == id; }
+			get { return (int)Dimension.Normal == _id; }
 		}
 
 		/// <summary>
@@ -87,7 +86,7 @@ namespace Lapis.Level
 		/// </summary>
 		public bool IsNether
 		{
-			get { return (int)Dimension.Nether == id; }
+			get { return (int)Dimension.Nether == _id; }
 		}
 
 		/// <summary>
@@ -95,7 +94,7 @@ namespace Lapis.Level
 		/// </summary>
 		public bool IsTheEnd
 		{
-			get { return (int)Dimension.End == id; }
+			get { return (int)Dimension.End == _id; }
 		}
 
 		/// <summary>
@@ -111,26 +110,27 @@ namespace Lapis.Level
 		}
 		#endregion
 
-		private Realm (World world, int realmID)
+		private Realm (World world, int realmId, Dimension dimension)
 		{
 			if(null == world)
 				throw new ArgumentNullException("world", "The world that the realm belongs to can't be null.");
 
-			this.world = world;
-			this.id = realmID;
+			_world     = world;
+			_id        = realmId;
+			_dimension = dimension;
 
 			if(IsOverworld)
 			{// No special directory for the overworld
-				diskName = string.Empty;
-				path = world.Path;
+				_diskName = string.Empty;
+				_path     = world.Path;
 			}
 			else
 			{// Sub-directory for the realm
-				diskName = DimensionPrefix + realmID;
-				path = string.Join(DirectorySeparator, world.Path, diskName);
+				_diskName = DimensionPrefix + realmId;
+				_path     = string.Join(_directorySeparator, world.Path, _diskName);
 			}
-			levelFilePath = string.Join(DirectorySeparator, path, LevelDataFilename);
-			regionPath = string.Join(DirectorySeparator, path, RegionDirectory);
+			_levelFilePath = string.Join(_directorySeparator, _path, LevelDataFilename);
+			_regionPath    = string.Join(_directorySeparator, _path, RegionDirectory);
 		}
 
 		#region Creation and loading
@@ -150,12 +150,12 @@ namespace Lapis.Level
 		/// Creates a new custom realm
 		/// </summary>
 		/// <param name="world">World that the realm belongs to</param>
-		/// <param name="realmID">ID number of the realm</param>
+		/// <param name="realmId">ID number of the realm</param>
 		/// <param name="dimension">Dimension type for the realm</param>
 		/// <returns>A new realm</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
 		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
-		internal static Realm Create (World world, int realmID, Dimension dimension = Dimension.Normal)
+		internal static Realm Create (World world, int realmId, Dimension dimension = Dimension.Normal)
 		{
 			throw new NotImplementedException();
 		}
@@ -164,10 +164,10 @@ namespace Lapis.Level
 		/// Loads a realm from disk
 		/// </summary>
 		/// <param name="world">World that the realm belongs to</param>
-		/// <param name="realmID">ID number of the realm</param>
+		/// <param name="realmId">ID number of the realm</param>
 		/// <returns>The loaded realm</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
-		internal static Realm Load (World world, int realmID)
+		internal static Realm Load (World world, int realmId)
 		{
 			throw new NotImplementedException();
 		}
@@ -182,7 +182,7 @@ namespace Lapis.Level
 		/// <remarks>Chunks will not be disposed when removed from the cache.
 		/// This is because they may be in use elsewhere still and we don't want an ObjectDisposedException to be thrown.
 		/// The garbage collector will take care of those chunks as soon as they are released.</remarks>
-		private readonly Cache<XZCoordinate, Chunk> chunkCache = new Cache<XZCoordinate, Chunk>(false);
+		private readonly Cache<XZCoordinate, Chunk> _chunkCache = new Cache<XZCoordinate, Chunk>(false);
 
 		/// <summary>
 		/// Maintains a list of active chunks
@@ -191,11 +191,11 @@ namespace Lapis.Level
 		/// After all references (not ChunkRefs) have been removed, garbage collection will cleanup the chunk.
 		/// At that point, the weak reference to the chunk is removed from this collection.
 		/// This collection is needed because the same Chunk object has to be retrieved for multiple GetChunk() calls.</remarks>
-		private readonly Dictionary<XZCoordinate, WeakReference> activeChunks = new Dictionary<XZCoordinate, WeakReference>();
+		private readonly Dictionary<XZCoordinate, WeakReference> _activeChunks = new Dictionary<XZCoordinate, WeakReference>();
 
-		// Both the chunkCache and activeChunks collections are needed.
-		// The chunkCache collection prevents chunks from being unloaded when they might be referenced again soon.
-		// The activeChunks collection tracks chunks that are actively being held in memory.
+		// Both the _chunkCache and _activeChunks collections are needed.
+		// The _chunkCache collection prevents chunks from being unloaded when they might be referenced again soon.
+		// The _activeChunks collection tracks chunks that are actively being held in memory.
 		// They are used together to prevent early disposal of chunks that are still active (but not in the cache),
 		// and to serve the same chunk object if it's already in memory.
 
@@ -208,9 +208,9 @@ namespace Lapis.Level
 		/// <remarks>If the chunk doesn't exist, it will be generated and populated</remarks>
 		public Chunk GetChunk (int cx, int cz)
 		{
-			XZCoordinate coord = new XZCoordinate(cx, cz);
-			lock(activeChunks)
-				return chunkCache.GetItem(coord, getChunk);
+			var coord = new XZCoordinate(cx, cz);
+			lock(_activeChunks)
+				return _chunkCache.GetItem(coord, getChunk);
 		}
 
 		/// <summary>
@@ -221,25 +221,25 @@ namespace Lapis.Level
 		/// <remarks>This method should ONLY be called from within a Chunk's Dispose() method.</remarks>
 		internal void FreeChunk (int cx, int cz)
 		{
-			XZCoordinate coord = new XZCoordinate(cx, cz);
-			lock(activeChunks)
-				activeChunks.Remove(coord);
+			var coord = new XZCoordinate(cx, cz);
+			lock(_activeChunks)
+				_activeChunks.Remove(coord);
 		}
 
 		private Chunk getChunk (XZCoordinate coord)
 		{
-/*			ChunkData data;
-			if(afm.ChunkExists(coord.X, coord.Z))
+			ChunkData data;
+/*			if(afm.ChunkExists(coord.X, coord.Z))
 				data = afm.GetChunk(coord.X, coord.Z);
 			else
-			{
+			{*/
 				data = new ChunkData(coord.X, coord.Z);
 				// TODO: Generate the chunk
-			}
+//			}
 
 			if(!data.TerrainPopulated)
 				data.TerrainPopulated = true; // TODO: Populate the chunk
-			*/
+			
 			throw new NotImplementedException();
 			// TODO: Add chunk to activeChunks
 		}
@@ -281,38 +281,38 @@ namespace Lapis.Level
 		/// If it is not valid, no realms will be found.</remarks>
 		internal static IEnumerable<int> DiscoverRealms (string path)
 		{
-			HashSet<int> realmIDs = new HashSet<int>();
+			var realmIds = new HashSet<int>();
 
 			if(Directory.Exists(path))
 			{
-				string levelDataPath = string.Join(DirectorySeparator, path, LevelDataFilename);
+				var levelDataPath = string.Join(_directorySeparator, path, LevelDataFilename);
 				if(File.Exists(levelDataPath)) // Overworld found
-					realmIDs.Add((int)Dimension.Normal);
+					realmIds.Add((int)Dimension.Normal);
 
-				foreach(string directoryName in Directory.EnumerateDirectories(path))
+				foreach(var directoryName in Directory.EnumerateDirectories(path))
 				{// Iterate through each directory
-					levelDataPath = string.Join(DirectorySeparator, path, directoryName, LevelDataFilename);
+					levelDataPath = string.Join(_directorySeparator, path, directoryName, LevelDataFilename);
 					if(File.Exists(levelDataPath))
 					{// It contains a level.dat file
 						if(directoryName.Length > DimensionPrefix.Length && directoryName.Substring(0, DimensionPrefix.Length) == DimensionPrefix)
 						{// Vanilla Minecraft dimension directory
-							string numberPart = directoryName.Substring(DimensionPrefix.Length);
-							int realmID;
-							if(int.TryParse(numberPart, out realmID))
-								realmIDs.Add(realmID);
+							var numberPart = directoryName.Substring(DimensionPrefix.Length);
+							int realmId;
+							if(int.TryParse(numberPart, out realmId))
+								realmIds.Add(realmId);
 						}
 						else if(directoryName.Length > RealmPrefix.Length && directoryName.Substring(0, RealmPrefix.Length) == RealmPrefix)
 						{// Custom realm directory
-							string numberPart = directoryName.Substring(RealmPrefix.Length);
-							int realmID;
-							if(int.TryParse(numberPart, out realmID))
-								realmIDs.Add(realmID);
+							var numberPart = directoryName.Substring(RealmPrefix.Length);
+							int realmId;
+							if(int.TryParse(numberPart, out realmId))
+								realmIds.Add(realmId);
 						}
 					}
 				}
 			}
 
-			return realmIDs;
+			return realmIds;
 		}
 	}
 }
