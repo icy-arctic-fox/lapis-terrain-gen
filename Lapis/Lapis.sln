@@ -1,9 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generator\Generator.csproj", "{E4C6137F-E69C-437A-BCFA-04E407519F80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lapis", "Lapis\Lapis.csproj", "{155F4145-4018-441B-8F24-728BE1F99038}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", "{8DC801BE-53A6-473B-B87C-E917B17A8071}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleGenerator", "SampleGenerator\SampleGenerator.csproj", "{C66570CC-C89B-447A-B154-5B89B9D1A070}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +39,21 @@ Global
 		{155F4145-4018-441B-8F24-728BE1F99038}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{155F4145-4018-441B-8F24-728BE1F99038}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{155F4145-4018-441B-8F24-728BE1F99038}.Release|x86.ActiveCfg = Release|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C66570CC-C89B-447A-B154-5B89B9D1A070}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C66570CC-C89B-447A-B154-5B89B9D1A070} = {8DC801BE-53A6-473B-B87C-E917B17A8071}
 	EndGlobalSection
 EndGlobal
