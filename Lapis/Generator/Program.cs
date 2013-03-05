@@ -9,6 +9,8 @@ namespace Generator
 	{
 		static void Main (string[] args)
 		{
+			Lapis.Level.Generation.GenerationManager.foo();
+			Console.ReadKey();
 		}
 	}
 }
