@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Lapis.IO;
 using Lapis.Level.Data;
+using Lapis.Level.Generation;
 using Lapis.Spatial;
 using Lapis.Utility;
 using P = System.IO.Path;
@@ -29,7 +31,7 @@ namespace Lapis.Level
 		private readonly World _world;
 		private readonly Dimension _dimension;
 		private readonly int _id;
-		private readonly LevelData _level;
+		private readonly LevelData _levelData;
 		private readonly string _diskName, _path, _levelFilePath, _regionPath;
 
 		#region Properties
@@ -112,10 +114,14 @@ namespace Lapis.Level
 		}
 		#endregion
 
-		private Realm (World world, int realmId, Dimension dimension)
+		private Realm (World world, int realmId, Dimension dimension, LevelData level, ITerrainGenerator generator)
 		{
 			if(null == world)
 				throw new ArgumentNullException("world", "The world that the realm belongs to can't be null.");
+			if(null == level)
+				throw new ArgumentNullException("level", "The level data can't be null.");
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
 			_world     = world;
 			_id        = realmId;
@@ -133,33 +139,73 @@ namespace Lapis.Level
 			}
 			_levelFilePath = string.Join(_directorySeparator, _path, LevelDataFilename);
 			_regionPath    = string.Join(_directorySeparator, _path, RegionDirectory);
+
+			_levelData = level;
+			_afm = new AnvilFileManager(_regionPath);
 		}
 
 		#region Creation and loading
+		private static readonly Random _rng = new Random();
+
 		/// <summary>
 		/// Creates a new realm
 		/// </summary>
 		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
 		/// <param name="dimension">Dimension type for the realm</param>
 		/// <returns>A new realm</returns>
 		/// <remarks>This realm will be compatible with vanilla Minecraft.</remarks>
-		internal static Realm Create (World world, Dimension dimension)
+		internal static Realm Create (World world, ITerrainGenerator generator, Dimension dimension)
 		{
-			throw new NotImplementedException();
+			return Create(world, generator, (int)dimension, dimension);
 		}
 
 		/// <summary>
 		/// Creates a new custom realm
 		/// </summary>
 		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
 		/// <param name="realmId">ID number of the realm</param>
 		/// <param name="dimension">Dimension type for the realm</param>
 		/// <returns>A new realm</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
 		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
-		internal static Realm Create (World world, int realmId, Dimension dimension = Dimension.Normal)
+		internal static Realm Create (World world, ITerrainGenerator generator, int realmId, Dimension dimension = Dimension.Normal)
 		{
-			throw new NotImplementedException();
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
+
+			var temp = new byte[sizeof(long)];
+			_rng.NextBytes(temp);
+			var seed  = temp.ToLong();
+			var level = new LevelData(world.Name, seed, generator.GeneratorName, generator.GeneratorVersion, generator.GeneratorOptions);
+
+			var realm = new Realm(world, realmId, dimension, level, generator);
+			realm.Save();
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new custom realm
+		/// </summary>
+		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>A new realm</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
+		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
+		internal static Realm Create (World world, int realmId, long seed, ITerrainGenerator generator, Dimension dimension = Dimension.Normal)
+		{
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
+
+			var level = new LevelData(world.Name, seed, generator.GeneratorName, generator.GeneratorVersion, generator.GeneratorOptions);
+
+			var realm = new Realm(world, realmId, dimension, level, generator);
+			realm.Save();
+			return realm;
 		}
 
 		/// <summary>
@@ -167,7 +213,19 @@ namespace Lapis.Level
 		/// </summary>
 		public void Save ()
 		{
-			throw new NotImplementedException();
+			if(!Directory.Exists(_regionPath))
+				Directory.CreateDirectory(_regionPath);
+
+			// TODO: Save all chunks
+
+			saveLevelData();
+		}
+
+		private void saveLevelData ()
+		{
+			using(var fs = new FileStream(_levelFilePath, FileMode.Create))
+			using(var bw = new BinaryWriter(fs))
+				_levelData.WriteToStream(bw);
 		}
 
 		/// <summary>
@@ -184,7 +242,8 @@ namespace Lapis.Level
 		#endregion
 
 		#region Chunk management
-//		private readonly AnvilFileManager afm;
+		private readonly AnvilFileManager _afm;
+		private readonly ITerrainGenerator _generator;
 
 		/// <summary>
 		/// Contains all active chunks
@@ -220,7 +279,7 @@ namespace Lapis.Level
 		{
 			var coord = new XZCoordinate(cx, cz);
 			lock(_activeChunks)
-				return _chunkCache.GetItem(coord, getChunk);
+				return _chunkCache.GetItem(coord, constructChunk);
 		}
 
 		/// <summary>
@@ -236,20 +295,21 @@ namespace Lapis.Level
 				_activeChunks.Remove(coord);
 		}
 
-		private Chunk getChunk (XZCoordinate coord)
+		private Chunk constructChunk (XZCoordinate coord)
 		{
-			ChunkData data;
-/*			if(afm.ChunkExists(coord.X, coord.Z))
-				data = afm.GetChunk(coord.X, coord.Z);
-			else
-			{*/
-				data = new ChunkData(coord.X, coord.Z);
-				// TODO: Generate the chunk
-//			}
+			ChunkData data = null;
+			if(_afm.ChunkExists(coord.X, coord.Z))
+				data = _afm.GetChunk(coord.X, coord.Z);
+			if(null == data)
+			{// The chunk provider might return null for a chunk
+				data = _generator.GenerateChunk(coord.X, coord.Z);
+				if(null == data)
+					throw new ApplicationException("The chunk data can't be null.");
+			}
 
 			if(!data.TerrainPopulated)
 				data.TerrainPopulated = true; // TODO: Populate the chunk
-			
+
 			throw new NotImplementedException();
 			// TODO: Add chunk to activeChunks
 		}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Lapis.Level.Generation;
 using Lapis.Utility;
 using P = System.IO.Path;
 
@@ -83,12 +84,13 @@ namespace Lapis.Level
 		/// <summary>
 		/// Creates a new realm in the world and adds it to the world
 		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
 		/// <param name="dimension">Dimension type for the realm</param>
 		/// <returns>Newly created realm</returns>
 		/// <remarks>Warning: Creating a realm for a dimension that already exists will overwrite the existing realm.</remarks>
-		public Realm CreateRealm (Dimension dimension = Dimension.Normal)
+		public Realm CreateRealm (ITerrainGenerator generator, Dimension dimension = Dimension.Normal)
 		{
-			var realm = Realm.Create(this, dimension);
+			var realm = Realm.Create(this, generator, dimension);
 			lock(_realms)
 				_realms[realm.Id] = realm;
 			return realm;
@@ -97,13 +99,14 @@ namespace Lapis.Level
 		/// <summary>
 		/// Creates a new realm in the world and adds it to the world
 		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
 		/// <param name="realmId">ID number of the realm</param>
 		/// <param name="dimension">Dimension type for the realm</param>
 		/// <returns>Newly created realm</returns>
 		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
-		public Realm CreateRealm (int realmId, Dimension dimension = Dimension.Normal)
+		public Realm CreateRealm (ITerrainGenerator generator, int realmId, Dimension dimension = Dimension.Normal)
 		{
-			var realm = Realm.Create(this, realmId, dimension);
+			var realm = Realm.Create(this, generator, realmId, dimension);
 			lock(_realms)
 				_realms[realm.Id] = realm;
 			return realm;
@@ -200,6 +203,9 @@ namespace Lapis.Level
 		#region World creation and loading
 		private World (string name)
 		{
+			if(null == name)
+				throw new ArgumentNullException("name", "The name of the world can't be null.");
+
 			_name     = name;
 			_diskName = generateDiskName(name, true);
 			_path     = P.GetFullPath(_diskName);
