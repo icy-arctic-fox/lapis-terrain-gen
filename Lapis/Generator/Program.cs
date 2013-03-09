@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Lapis.Level.Generation;
 
 namespace Generator
 {
@@ -9,7 +10,7 @@ namespace Generator
 	{
 		static void Main (string[] args)
 		{
-			Lapis.Level.Generation.GenerationManager.foo();
+			Console.WriteLine(String.Join<string>("\n", GenerationManager.GeneratorNames));
 			Console.ReadKey();
 		}
 	}

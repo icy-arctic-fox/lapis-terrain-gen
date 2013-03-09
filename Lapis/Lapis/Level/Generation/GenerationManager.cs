@@ -14,6 +14,22 @@ namespace Lapis.Level.Generation
 	/// <remarks>Use this class to get available generators.</remarks>
 	public static class GenerationManager
 	{
+		private static readonly List<Type> _terrainGeneratorTypes = new List<Type>();
+		private static readonly List<string> _terrainGeneratorNames = new List<string>();
+		private static readonly Type _terrainGeneratorType = typeof(ITerrainGenerator);
+
+		/// <summary>
+		/// Names of the terrain generators available
+		/// </summary>
+		public static string[] GeneratorNames
+		{
+			get
+			{
+				lock(_terrainGeneratorTypes)
+					return _terrainGeneratorNames.ToArray<string>();
+			}
+		}
+
 		#region Discovery
 		private const string GeneratorDir = "generators";
 
@@ -22,20 +38,31 @@ namespace Lapis.Level.Generation
 		/// </summary>
 		static GenerationManager ()
 		{
-			var types = new List<Type>();
-			loadGenerators(GeneratorDir, types);
-			foreach(var type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(typeof(ITerrainGenerator).IsAssignableFrom)))
-				Console.WriteLine(type.FullName);
+			lock(_terrainGeneratorTypes)
+			{
+				discoverGenerators();
+				// TODO: Add terrain populator loading
+			}
 		}
 
-		public static void foo ()
+		private static void discoverGenerators ()
 		{
-			Console.WriteLine("Done");
+			loadGenerators(GeneratorDir);
+			var types = AppDomain.CurrentDomain.GetAssemblies()
+								.SelectMany(asm => asm.GetTypes()
+													.Where(t =>
+															_terrainGeneratorType.IsAssignableFrom(t) &&
+															!t.IsInterface &&
+															_terrainGeneratorType != t));
+
+			_terrainGeneratorTypes.Clear();
+			_terrainGeneratorTypes.AddRange(types);
+			_terrainGeneratorNames.AddRange(
+				types.Select(t => ((ITerrainGenerator)Activator.CreateInstance(t)).GeneratorName));
 		}
 
-		private static void loadGenerators (string path, List<Type> types)
+		private static void loadGenerators (string path)
 		{
-			var type = typeof(ITerrainGenerator);
 			var sep = Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
 
 			if(Directory.Exists(path))
@@ -45,7 +72,6 @@ namespace Lapis.Level.Generation
 					try
 					{
 						var asm = Assembly.LoadFrom(file);
-						types.AddRange(asm.GetTypes().Where(type.IsAssignableFrom));
 					}
 					catch(Exception e)
 					{
