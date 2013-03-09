@@ -141,6 +141,7 @@ namespace Lapis.Level
 			_regionPath    = string.Join(_directorySeparator, _path, RegionDirectory);
 
 			_levelData = level;
+			_generator = generator;
 			_afm = new AnvilFileManager(_regionPath);
 		}
 
@@ -280,6 +281,17 @@ namespace Lapis.Level
 			var coord = new XZCoordinate(cx, cz);
 			lock(_activeChunks)
 				return _chunkCache.GetItem(coord, constructChunk);
+		}
+
+		/// <summary>
+		/// Saves chunk data
+		/// </summary>
+		/// <param name="cx">X-position of the chunk within the realm</param>
+		/// <param name="cz">Z-position of the chunk within the realm</param>
+		/// <param name="data">Chunk data to save at the position</param>
+		internal void SaveChunk (int cx, int cz, ChunkData data)
+		{
+			_afm.PutChunk(cx, cz, data);
 		}
 
 		/// <summary>

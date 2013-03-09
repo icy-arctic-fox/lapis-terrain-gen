@@ -81,6 +81,14 @@ namespace Lapis.Level
 		}
 		#endregion
 
+		/// <summary>
+		/// Forces the chunk to save its contents to disk
+		/// </summary>
+		public void Save ()
+		{
+			realm.SaveChunk(ChunkX, ChunkZ, data);
+		}
+
 		#region Cleanup
 		/// <summary>
 		/// Disposes the chunk and removes its contents from memory
