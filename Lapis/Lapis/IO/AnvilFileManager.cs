@@ -62,9 +62,9 @@ namespace Lapis.IO
 		/// <returns>Chunk data or null if the chunk doesn't exist</returns>
 		public ChunkData GetChunk (int cx, int cz)
 		{
-			XZCoordinate coord = toRegionCoordinate(cx, cz);
-			var rc             = relativeCoordinate(cx, cz);
-			AnvilFile file     = _cache.GetItem(coord, getFile);
+			var coord = toRegionCoordinate(cx, cz);
+			var rc    = relativeCoordinate(cx, cz);
+			var file  = _cache.GetItem(coord, getFile);
 			return file.GetChunk(rc.Item1, rc.Item2);
 		}
 
@@ -79,9 +79,9 @@ namespace Lapis.IO
 			if(null == data)
 				throw new ArgumentNullException("data", "The chunk data can't be null.");
 
-			XZCoordinate coord = toRegionCoordinate(cx, cz);
-			var rc             = relativeCoordinate(cx, cz);
-			AnvilFile file     = _cache.GetItem(coord, getFile);
+			var coord = toRegionCoordinate(cx, cz);
+			var rc    = relativeCoordinate(cx, cz);
+			var file  = _cache.GetItem(coord, getFile);
 			file.PutChunk(rc.Item1, rc.Item2, data);
 		}
 
@@ -93,9 +93,9 @@ namespace Lapis.IO
 		/// <returns>True if the chunk exists or false if it doesn't</returns>
 		public bool ChunkExists (int cx, int cz)
 		{
-			XZCoordinate coord = toRegionCoordinate(cx, cz);
-			var rc             = relativeCoordinate(cx, cz);
-			AnvilFile file     = _cache.GetItem(coord, getFile);
+			var coord = toRegionCoordinate(cx, cz);
+			var rc    = relativeCoordinate(cx, cz);
+			var file  = _cache.GetItem(coord, getFile);
 			return file.ChunkExists(rc.Item1, rc.Item2);
 		}
 		#endregion
