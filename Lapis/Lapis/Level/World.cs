@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Lapis.Utility;
+using P = System.IO.Path;
 
 namespace Lapis.Level
 {
@@ -17,7 +19,7 @@ namespace Lapis.Level
 		/// All realms that the world contains (knows about)
 		/// </summary>
 		/// <remarks>The values in the dictionary will be null if the realm isn't loaded.</remarks>
-		private readonly Dictionary<int, Realm> _realms;
+		private readonly Dictionary<int, Realm> _realms = new Dictionary<int,Realm>();
 
 		#region Properties
 		/// <summary>
@@ -25,7 +27,7 @@ namespace Lapis.Level
 		/// </summary>
 		public string Name
 		{
-			get { throw new NotImplementedException(); }
+			get { return _name; }
 		}
 
 		/// <summary>
@@ -33,7 +35,7 @@ namespace Lapis.Level
 		/// </summary>
 		public string DiskName
 		{
-			get { throw new NotImplementedException(); }
+			get { return _diskName; }
 		}
 
 		/// <summary>
@@ -41,7 +43,7 @@ namespace Lapis.Level
 		/// </summary>
 		public string Path
 		{
-			get { throw new NotImplementedException(); }
+			get { return _path; }
 		}
 		#endregion
 
@@ -53,7 +55,19 @@ namespace Lapis.Level
 		/// <returns>True if the the realm is in the world or false if it isn't</returns>
 		public bool ContainsRealm (int realmId)
 		{
-			throw new NotImplementedException();
+			lock(_realms)
+				return _realms.ContainsKey(realmId);
+		}
+
+		/// <summary>
+		/// Checks if the world has a realm
+		/// </summary>
+		/// <param name="dimension">Dimension to look for</param>
+		/// <returns>True if the the realm is in the world or false if it isn't</returns>
+		public bool ContainsRealm (Dimension dimension)
+		{
+			lock(_realms)
+				return _realms.ContainsKey((int)dimension);
 		}
 
 		/// <summary>
@@ -67,11 +81,51 @@ namespace Lapis.Level
 		}
 
 		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm for a dimension that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (int realmId, Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, realmId, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
 		/// ID numbers of realms present in the world
 		/// </summary>
 		public IEnumerable<int> RealmIds
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				int[] ids;
+				lock(_realms)
+				{
+					ids   = new int[_realms.Count];
+					var i = 0;
+					foreach(var id in _realms.Keys)
+						ids[i++] = id;
+				}
+				return ids;
+			}
 		}
 
 		/// <summary>
@@ -79,7 +133,11 @@ namespace Lapis.Level
 		/// </summary>
 		public IEnumerable<Realm> Realms
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				lock(_realms)
+					return _realms.Values;
+			}
 		}
 
 		/// <summary>
@@ -87,9 +145,14 @@ namespace Lapis.Level
 		/// </summary>
 		/// <param name="realmId">ID number of the realm</param>
 		/// <returns>A realm</returns>
+		/// <exception cref="KeyNotFoundException">Thrown if the realm specified by <paramref name="realmId"/> does not exist</exception>
 		public Realm this[int realmId]
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				lock(_realms)
+					return _realms[realmId];
+			}
 		}
 
 		/// <summary>
@@ -97,13 +160,21 @@ namespace Lapis.Level
 		/// </summary>
 		/// <param name="dimension">Dimension (realm) to access</param>
 		/// <returns>A realm</returns>
+		/// <exception cref="KeyNotFoundException">Thrown if the realm specified by <paramref name="dimension"/> does not exist</exception>
 		public Realm this[Dimension dimension]
 		{
-			get { return this[(int)dimension]; }
+			get
+			{
+				lock(_realms)
+					return _realms[(int)dimension];
+			}
 		}
 		#endregion
 
 		#region World management
+		private const string SafeReplacement = "_";
+		private static readonly Regex _diskNameRegex = new Regex(@"\W+");
+
 		private static readonly Dictionary<string, World> _loadedWorlds;
 
 		/// <summary>
@@ -114,16 +185,38 @@ namespace Lapis.Level
 			throw new NotImplementedException();
 		}
 
+		private static string generateDiskName (string name, bool newWorld)
+		{
+			var diskName = _diskNameRegex.Replace(name, SafeReplacement);
+			if(newWorld && Directory.Exists(diskName))
+			{
+				var i = 1;
+				for(; Directory.Exists(diskName + i); ++i) { }
+				diskName = diskName + i;
+			}
+			return diskName;
+		}
+
 		#region World creation and loading
+		private World (string name)
+		{
+			_name     = name;
+			_diskName = generateDiskName(name, true);
+			_path     = P.GetFullPath(_diskName);
+		}
+
 		/// <summary>
 		/// Creates a new world on disk
 		/// </summary>
 		/// <param name="name">Name of the world</param>
 		/// <returns>The created world</returns>
-		/// <remarks>The world name may be changed slightly so that it is safe to use in a file system.</remarks>
+		/// <remarks>The world name may be changed slightly so that it is safe to use in a file system.
+		/// This method will not generate any realms.</remarks>
 		public static World Create (string name)
 		{
-			throw new NotImplementedException();
+			var world = new World(name);
+			world.Save();
+			return world;
 		}
 
 		/// <summary>
@@ -142,7 +235,10 @@ namespace Lapis.Level
 		/// </summary>
 		public void Save ()
 		{
-			throw new NotImplementedException();
+			if(!Directory.Exists(_path))
+				Directory.CreateDirectory(_path);
+			foreach(var realm in _realms.Values)
+				realm.Save();
 		}
 		#endregion
 		#endregion

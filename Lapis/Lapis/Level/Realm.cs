@@ -163,6 +163,14 @@ namespace Lapis.Level
 		}
 
 		/// <summary>
+		/// Forces the realm and the chunks in it to save
+		/// </summary>
+		public void Save ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Loads a realm from disk
 		/// </summary>
 		/// <param name="world">World that the realm belongs to</param>
