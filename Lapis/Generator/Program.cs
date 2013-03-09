@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Lapis.Level;
 using Lapis.Level.Generation;
 
@@ -16,7 +13,10 @@ namespace Generator
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 			Console.ReadKey();
 
+			var generator = GenerationManager.GetGenerator(generatorNames[0]);
+
 			var world = World.Create("New World");
+			world.CreateRealm(generator);
 
 			world.Save();
 		}
