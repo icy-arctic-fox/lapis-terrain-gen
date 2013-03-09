@@ -222,6 +222,8 @@ namespace Lapis.Level
 		{
 			var world = new World(name);
 			world.Save();
+			lock(_loadedWorlds)
+				_loadedWorlds.Add(name, world); // TODO: Worlds with the same name will cause a problem
 			return world;
 		}
 
