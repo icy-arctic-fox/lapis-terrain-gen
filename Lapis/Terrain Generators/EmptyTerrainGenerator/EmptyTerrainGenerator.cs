@@ -1,4 +1,5 @@
 ﻿using System;
+using Lapis.Level;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
 
@@ -28,7 +29,11 @@ namespace EmptyTerrainGenerator
 
 		public ChunkData GenerateChunk (int cx, int cz)
 		{
-			return new ChunkData(cx, cz);
+			var data = new ChunkData(cx, cz);
+			for(var bx = (byte)0; bx < Chunk.Size; ++bx)
+				for(var bz = (byte)0; bz < Chunk.Size; ++bz)
+					data.SetBlockType(bx, 0, bz, Lapis.Blocks.BlockType.Bedrock);
+			return data;
 		}
 	}
 }

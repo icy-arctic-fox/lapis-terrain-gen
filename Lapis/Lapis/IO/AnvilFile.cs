@@ -194,8 +194,11 @@ namespace Lapis.IO
 
 					// Find where to put the chunk
 					var sector = findFreeSpace(sectorCount);
-					if(0 > sector) // Append to the end
+					if(0 > sector)
+					{// Append to the end
 						_writer.BaseStream.Seek(0, SeekOrigin.End);
+						sector = (int)_writer.BaseStream.Position / SectorSize;
+					}
 					else
 					{// Go to a free sector
 						gotoSector(_writer.BaseStream, sector);
@@ -526,7 +529,7 @@ namespace Lapis.IO
 		/// </summary>
 		/// <param name="s">Stream to seek with</param>
 		/// <param name="sector">Sector number</param>
-		private void gotoSector (Stream s, int sector)
+		private static void gotoSector (Stream s, int sector)
 		{
 			long position = sector * SectorSize;
 			s.Seek(position, SeekOrigin.Begin);
