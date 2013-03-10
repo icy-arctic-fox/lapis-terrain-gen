@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Lapis.Utility
@@ -8,271 +9,671 @@ namespace Lapis.Utility
 	/// </summary>
 	/// <typeparam name="TKey">Type used to reference cached objects</typeparam>
 	/// <typeparam name="TValue">Type of object to cache (must implement IDisposable)</typeparam>
-	/// <remarks>This class uses the adaptive replacement cache technique.
-	/// A description of this algorithm can be found here: http://en.wikipedia.org/wiki/Adaptive_replacement_cache
+	/// <remarks>This class uses the Low Inter-reference Recency Set cache technique.
+	/// A description of this algorithm can be found here: http://en.wikipedia.org/wiki/LIRS_caching_algorithm
 	/// Items that are no longer cached will be disposed (have Dispose() called on them) if the disposed flag is set.</remarks>
-	public class Cache<TKey, TValue> where TValue : IDisposable
+	public class Cache<TKey, TValue> : IDictionary<TKey, TValue> where TValue : IDisposable
 	{
+		#region Preset Constants
 		/// <summary>
 		/// Default number of items to contain in the entire cache
 		/// </summary>
 		private const int DefaultCacheSize = 64;
 
-		private readonly LinkedList<TKey> _t1, _b1, _t2, _b2; // These lists track meta-information about object usage
-		private readonly Dictionary<TKey, TValue> _cache;     // Fast lookup of cached objects
-		private int _capacity, _ghostSize;                    // Size of t1 + t2 and b1, b2 respectively
-		private readonly bool _dispose;                       // Dispose objects after removal from cache
+		/// <summary>
+		/// Percentage of the cache that is dedicated to hot entries
+		/// </summary>
+		private const float HotRate = 0.99f;
+		#endregion
 
 		/// <summary>
-		/// Creates a new cache with the default cache size
+		/// Describes a method that returns an item to insert into the cache given a key
 		/// </summary>
-		/// <param name="dispose">Whether or not the cached objects should be disposed (call Dispose() on them) when they're removed from the cache</param>
-		public Cache (bool dispose)
-		{
-			_dispose = dispose;
-
-			_t1 = new LinkedList<TKey>();
-			_t2 = new LinkedList<TKey>();
-			_b1 = new LinkedList<TKey>();
-			_b2 = new LinkedList<TKey>();
-
-			_cache = new Dictionary<TKey, TValue>(DefaultCacheSize);
-			setSizes(DefaultCacheSize);
-		}
-
-		/// <summary>
-		/// Creates a new cache with a specified cache size
-		/// </summary>
-		/// <param name="capacity">Maximum number of items to cache</param>
-		/// <param name="dispose">Whether or not the cached objects should be disposed (call Dispose() on them) when they're removed from the cache</param>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown when attempting to set the capacity to 0 or less</exception>
-		public Cache (int capacity, bool dispose)
-		{
-			if(1 > capacity)
-				throw new ArgumentOutOfRangeException("capacity", "The cache must have a capacity of at least 1 item.");
-
-			_dispose = dispose;
-
-			_t1 = new LinkedList<TKey>();
-			_t2 = new LinkedList<TKey>();
-			_b1 = new LinkedList<TKey>();
-			_b2 = new LinkedList<TKey>();
-
-			_cache = new Dictionary<TKey, TValue>(capacity);
-			setSizes(capacity);
-		}
-
-		/// <summary>
-		/// Describes a function that retrieves the object if a cache miss occurs
-		/// </summary>
-		/// <param name="key">Key that references the object</param>
-		/// <returns>An object that corresponds to the key</returns>
+		/// <param name="key">Key that represents the item to cache</param>
+		/// <returns>Value of the item to cache</returns>
 		public delegate TValue CacheMiss (TKey key);
 
+		private readonly Dictionary<TKey, CacheEntry> _cacheEntries;
+		private readonly CacheEntry _header;
+
+		private readonly int _maxHotSize, _maxSize;
+		private volatile int _hotSize, _size;
+		private readonly bool _disposeEntries;
+
 		/// <summary>
-		/// The maximum amount of objects to keep in the cache
+		/// Creates a new cache with the default maximum number of entries
 		/// </summary>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown when attempting to set the capacity to 0 or less</exception>
-		/// <remarks>Changing the capacity of the cache frequently will degrade performance.
-		/// If the cache size is decreased, items may be removed from the cache.</remarks>
+		/// <param name="dispose">Flag determining whether or not cached items are forcefully disposed when evicted from the cache</param>
+		public Cache (bool dispose = true)
+		{
+			_maxHotSize     = calculateMaxHotSize(_maxSize);
+			_maxSize        = DefaultCacheSize;
+			_cacheEntries   = new Dictionary<TKey, CacheEntry>(_maxSize);
+			_header         = new CacheEntry(this);
+			_disposeEntries = dispose;
+		}
+
+		/// <summary>
+		/// Creates a new cache
+		/// </summary>
+		/// <param name="maxSize">Maximum number of items to keep in the cache</param>
+		/// <param name="dispose">Flag determining whether or not cached items are forcefully disposed when evicted from the cache</param>
+		public Cache (int maxSize, bool dispose = true)
+		{
+			_maxHotSize     = calculateMaxHotSize(_maxSize);
+			_maxSize        = maxSize;
+			_cacheEntries   = new Dictionary<TKey, CacheEntry>(_maxSize);
+			_header         = new CacheEntry(this);
+			_disposeEntries = dispose;
+		}
+
+		/// <summary>
+		/// Maximum number of items to keep in the cache
+		/// </summary>
 		public int Capacity
+		{
+			get { return _maxSize; }
+		}
+
+		#region Dictionary access
+		/// <summary>
+		/// Checks if an item is in the cache
+		/// </summary>
+		/// <param name="key">Key that represents that item</param>
+		/// <returns>True if the cache contains the item or false if it doesn't</returns>
+		public bool ContainsKey (TKey key)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Forces an item to be added to the cache
+		/// </summary>
+		/// <param name="key">Key that represents the item</param>
+		/// <param name="value">Value of the item itself</param>
+		/// <exception cref="ArgumentException">Thrown if an item already exists in the cache with the same key as <paramref name="key"/></exception>
+		public void Add (TKey key, TValue value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Forces an item to be removed from the cache
+		/// </summary>
+		/// <param name="key">Key that represents the item</param>
+		/// <returns>True if the item existed and was removed or false if it didn't exist to start with</returns>
+		public bool Remove (TKey key)
+		{
+			CacheEntry entry;
+			lock(_cacheEntries)
+				if(_cacheEntries.TryGetValue(key, out entry))
+				{
+					entry.Remove();
+					return true;
+				}
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to get a value without raising an exception
+		/// </summary>
+		/// <param name="key">Key that represents the item</param>
+		/// <param name="value">Updated to contain the value of the cached item if it exists</param>
+		/// <returns>True if the item exists in the cache and <paramref name="value"/> was set or false if the item doesn't exist in the cache</returns>
+		public bool TryGetValue (TKey key, out TValue value)
+		{
+			lock(_cacheEntries)
+			{
+				CacheEntry entry;
+				if(_cacheEntries.TryGetValue(key, out entry))
+				{
+					value = entry.Value;
+					if(entry.IsResident)
+						entry.Hit();
+					else
+						entry.Miss();
+					return true;
+				}
+				value = default(TValue);
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Access to items in the cache
+		/// </summary>
+		/// <param name="key">Key that represents the cached item</param>
+		/// <returns>The item contained in the cache</returns>
+		/// <exception cref="KeyNotFoundException">Thrown if an item represented by <paramref name="key"/> does not exist in the cache</exception>
+		public TValue this [TKey key]
 		{
 			get
 			{
-				lock(_cache)
-					return _capacity;
+				lock(_cacheEntries)
+				{
+					// This could throw a KeyNotFoundException
+					var entry = _cacheEntries[key];
+
+					if(entry.IsResident)
+						entry.Hit();
+					else
+						entry.Miss();
+					return entry.Value;
+				}
 			}
 
 			set
 			{
-				if(1 > value)
-					throw new ArgumentOutOfRangeException("value", "The cache must have a capacity of at least 1 item.");
-
-				lock(_cache)
+				lock(_cacheEntries)
 				{
-					_capacity = value;
-					_ghostSize = _capacity / 2;
-
-					while(Count > _capacity)
-					{// Cache decreased, remove items
-						if(0 < _t1.Count)
-							evictT1(); // Push one item from t1 to b1
-						if(Count <= _capacity)
-							break; // Done removing items
-						if(0 < _t2.Count)
-							evictT2(); // Push one item from t2 to b2
-					}
+					var entry = new CacheEntry(this, key, value);
+					CacheEntry prev;
+					if(_cacheEntries.TryGetValue(key, out prev))
+						prev.Remove();
+					_cacheEntries[key] = entry;
 				}
 			}
 		}
 
 		/// <summary>
-		/// Number of items in the cache
+		/// Gets an item from the cache.
+		/// If the item doesn't exist, a cache miss function will be called to get the item.
+		/// The item will then be stored in the cache and returned.
 		/// </summary>
-		public int Count
+		/// <param name="key">Key that represents the cached item</param>
+		/// <param name="missFunc">Function that will get the item if it isn't in the cache</param>
+		/// <returns>Value contained in the cache</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="missFunc"/> is null</exception>
+		public TValue GetItem (TKey key, CacheMiss missFunc)
 		{
-			get
-			{
-				lock(_cache)
-					return _t1.Count + _t2.Count;
-			}
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
-		/// Checks if an object is in the cache
+		/// Collection of keys for the items contained in the cache
 		/// </summary>
-		/// <param name="key">Key that references the object</param>
-		/// <returns>True if the object is cached in memory or false if it isn't</returns>
-		/// <remarks>This should not be used in conjunction with GetItem() unless you lock the cache.</remarks>
-		public bool Contains (TKey key)
+		public ICollection<TKey> Keys
 		{
-			lock(_cache)
-				return _cache.ContainsKey(key);
+			get { throw new NotImplementedException(); }
 		}
 
 		/// <summary>
-		/// Empties everything from the cache
+		/// Collection of values for the items contained in the cache
+		/// </summary>
+		public ICollection<TValue> Values
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		/// <summary>
+		/// Gets an enumerator to iterate over the items contained in the cache
+		/// </summary>
+		/// <returns>An enumerator</returns>
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Gets an enumerator to iterate over the items contained in the cache
+		/// </summary>
+		/// <returns>An enumerator</returns>
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator();
+		}
+
+		/// <summary>
+		/// Forces an item to be added to the cache
+		/// </summary>
+		/// <param name="item">Key and value for the item to add to the cache</param>
+		/// <exception cref="ArgumentException">Thrown if an item already exists in the cache with the same key provided by <paramref name="item"/></exception>
+		public void Add (KeyValuePair<TKey, TValue> item)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all items from the cache
 		/// </summary>
 		public void Clear ()
 		{
-			lock(_cache)
-			{
-				if(_dispose)
-				{
-					foreach(var value in _cache.Values)
-						value.Dispose();
-				}
-				_cache.Clear();
-				_t1.Clear();
-				_t2.Clear();
-				_b1.Clear();
-				_b2.Clear();
-			}
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
-		/// Retrieves an object from the cache
+		/// Checks if a item is contained in the cache
 		/// </summary>
-		/// <param name="key">Key that references the object</param>
-		/// <param name="missFunc">Function to call if the object doesn't exist in the cache</param>
-		/// <returns>The object that corresponds to the key</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="missFunc"/> is null</exception>
-		/// <remarks>If the object doesn't exist in the cache, <paramref name="missFunc"/> will be called.
-		/// Whatever is returned by that function will be saved in the cache and returned.</remarks>
-		public TValue GetItem (TKey key, CacheMiss missFunc)
+		/// <param name="item">Key and value of the item to look for in the cache</param>
+		/// <returns>True if the item is cached or false if it isn't</returns>
+		public bool Contains (KeyValuePair<TKey, TValue> item)
 		{
-			if(null == missFunc)
-				throw new ArgumentNullException("missFunc", "The cache miss function can't be null.");
+			throw new NotImplementedException();
+		}
 
-			TValue value;
+		/// <summary>
+		/// Copies the contents of the cache to an array
+		/// </summary>
+		/// <param name="array">Array to store the cached items in</param>
+		/// <param name="arrayIndex">Index to start storing items at in <paramref name="array"/></param>
+		public void CopyTo (KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+		{
+			throw new NotImplementedException();
+		}
 
-			lock(_cache)
+		/// <summary>
+		/// Removes an item from the cache
+		/// </summary>
+		/// <param name="item">Key and value of the item to remove</param>
+		/// <returns>True if the item was in the cache and was removed or false if it didn't exist</returns>
+		public bool Remove (KeyValuePair<TKey, TValue> item)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Current number of items contained in the cache
+		/// </summary>
+		public int Count
+		{
+			get { return _size; }
+		}
+
+		/// <summary>
+		/// Whether or not the cache is read-only
+		/// </summary>
+		/// <remarks>This value is always false</remarks>
+		public bool IsReadOnly
+		{
+			get { return false; }
+		}
+		#endregion
+
+		#region Stack and queue
+		private CacheEntry StackTop
+		{
+			get
 			{
-				if(_cache.ContainsKey(key))
-				{// Hooray! It's in the cache
-					value = _cache[key];
-					// Update T1 and T2
-					if(!processT2(key))
-						processT1(key);
+				var top = _header.NextInStack;
+				return (_header == top) ? null : top;
+			}
+		}
+
+		private CacheEntry StackBottom
+		{
+			get
+			{
+				var bottom = _header.PreviousInStack;
+				return (_header == bottom) ? null : bottom;
+			}
+		}
+
+		private CacheEntry QueueFront
+		{
+			get
+			{
+				var front = _header.NextInQueue;
+				return (_header == front) ? null : front;
+			}
+		}
+
+		private CacheEntry QueueEnd
+		{
+			get
+			{
+				var end = _header.PreviousInQueue;
+				return (_header == end) ? null : end;
+			}
+		}
+		#endregion
+
+		#region Utility methods
+		private static int calculateMaxHotSize (int maxSize)
+		{
+			var result = (int)(HotRate * maxSize);
+			return (maxSize == result) ? maxSize - 1 : result;
+		}
+
+		private void pruneStack ()
+		{
+			var bottom = StackBottom;
+			while(null != bottom && EntryStatus.Hot != bottom.Status)
+			{
+				if(EntryStatus.NonResident == bottom.Status)
+					_cacheEntries.Remove(bottom.Key);
+				bottom = StackBottom;
+			}
+		}
+		#endregion
+
+		/// <summary>
+		/// States that cache entries can be in
+		/// </summary>
+		private enum EntryStatus
+		{
+			/// <summary>
+			/// Resident LIRS, in stack, never in queue
+			/// </summary>
+			Hot,
+
+			/// <summary>
+			/// Resident HIRS, always in queue, sometimes in stack
+			/// </summary>
+			Cold,
+
+			/// <summary>
+			/// Non-resident HIRS, may be in stack, but never in queue
+			/// </summary>
+			NonResident
+		}
+
+		private class CacheEntry
+		{
+			private readonly Cache<TKey, TValue> _parent;
+			private readonly TKey _key;
+			private readonly TValue _value;
+
+			private EntryStatus _status = EntryStatus.NonResident;
+
+			/// <summary>
+			/// Default entry containing a key and value
+			/// </summary>
+			/// <param name="parent">Parent cache</param>
+			/// <param name="key">Cached item's key</param>
+			/// <param name="value">Cached item's value</param>
+			public CacheEntry (Cache<TKey, TValue> parent, TKey key, TValue value)
+			{
+				_parent = parent;
+				_key    = key;
+				_value  = value;
+				Miss();
+			}
+
+			/// <summary>
+			/// Creates the cache entry header
+			/// </summary>
+			/// <param name="parent">Parent cache</param>
+			public CacheEntry (Cache<TKey, TValue> parent)
+			{
+				_parent = parent;
+				_key    = default(TKey);
+				_value  = default(TValue);
+			}
+
+			/// <summary>
+			/// Key that represents the cached item
+			/// </summary>
+			public TKey Key
+			{
+				get { return _key; }
+			}
+
+			/// <summary>
+			/// Value of the item in the cache
+			/// </summary>
+			public TValue Value
+			{
+				get { return _value; }
+			}
+
+			/// <summary>
+			/// Current status of the entry
+			/// </summary>
+			public EntryStatus Status
+			{
+				get { return _status; }
+			}
+
+			/// <summary>
+			/// Whether or not the entry is resident in the cache
+			/// </summary>
+			public bool IsResident
+			{
+				get { return EntryStatus.NonResident != _status; }
+			}
+
+			/// <summary>
+			/// Whether or not this entry is in the stack
+			/// </summary>
+			public bool InStack
+			{
+				get { return null != NextInStack; }
+			}
+
+			/// <summary>
+			/// Whether or not this entry is in the queue
+			/// </summary>
+			public bool InQueue
+			{
+				get { return null != NextInQueue; }
+			}
+
+			public CacheEntry PreviousInStack, NextInStack;
+			public CacheEntry PreviousInQueue, NextInQueue;
+
+			#region Hit
+			/// <summary>
+			/// Records a cache hit
+			/// </summary>
+			public void Hit ()
+			{
+				switch(_status)
+				{
+				case EntryStatus.Hot:
+					hotHit();
+					break;
+				case EntryStatus.Cold:
+					coldHit();
+					break;
+				default:
+					throw new InvalidOperationException("Can't record a cache hit for a non-resident entry.");
+				}
+			}
+
+			private void hotHit ()
+			{
+				var onBottom = (_parent.StackBottom == this);
+				moveToStackTop();
+				if(onBottom)
+					_parent.pruneStack();
+			}
+
+			private void coldHit ()
+			{
+				var inStack = InStack;
+				moveToStackTop();
+
+				if(inStack)
+				{
+					markHot();
+					removeFromQueue();
+					_parent.StackBottom.migrateToQueue();
+					_parent.pruneStack();
 				}
 
 				else
-				{// Booo. Cache miss
-					value = missFunc(key);
-					// Update B1 and B2
-					if(!processB2(key))
-						processB1(key);
-					_cache.Add(key, value);
+					moveToQueueEnd();
+			}
+			#endregion
+
+			#region Miss
+			/// <summary>
+			/// Records a cache miss
+			/// </summary>
+			public void Miss ()
+			{
+				if(_parent._hotSize < _parent._maxHotSize)
+					warmupMiss();
+				else
+					fullMiss();
+				++_parent._size;
+			}
+
+			private void warmupMiss ()
+			{
+				hotHit();
+				moveToStackTop();
+			}
+
+			private void fullMiss ()
+			{
+				if(_parent._size >= _parent._maxSize)
+					_parent.QueueFront.evict();
+				var inStack = InStack;
+				moveToStackTop();
+
+				if(inStack)
+				{
+					hotHit();
+					_parent.StackBottom.migrateToQueue();
+					_parent.pruneStack();
+				}
+				else
+					markCold();
+			}
+			#endregion
+
+			#region Mark status
+			private void markHot ()
+			{
+				if(EntryStatus.Hot != _status)
+					++_parent._hotSize;
+				_status = EntryStatus.Hot;
+			}
+
+			private void markCold ()
+			{
+				if(EntryStatus.Hot == _status)
+					--_parent._hotSize;
+				_status = EntryStatus.Cold;
+				moveToQueueEnd();
+			}
+
+			private void markNonResident ()
+			{
+				if(EntryStatus.Hot == _status)
+				{
+					--_parent._hotSize;
+					--_parent._size;
+				}
+				else if(EntryStatus.Cold == _status)
+					--_parent._size;
+				_status = EntryStatus.NonResident;
+			}
+			#endregion
+
+			#region Stack and Queue
+			private void tempRemoveFromStack ()
+			{
+				if(InStack)
+				{
+					PreviousInStack.NextInStack = NextInStack;
+					NextInStack.PreviousInStack = PreviousInStack;
 				}
 			}
 
-			return value;
-		}
+			private void removeFromStack ()
+			{
+				tempRemoveFromStack();
+				PreviousInStack = null;
+				NextInStack     = null;
+			}
 
-		#region Cache logic
-		private void processT1 (TKey key)
-		{
-			var node = _t1.Find(key);
-			if(null != node)
-			{// Found in t1, move to t2
-				_t1.Remove(node);
-				_t2.AddFirst(key);
+			private void addToStackBefore (CacheEntry entry)
+			{
+				PreviousInStack = entry.PreviousInStack;
+				NextInStack     = entry;
+				PreviousInStack.NextInStack = this;
+				NextInStack.PreviousInStack = this;
+			}
+
+			private void moveToStackTop ()
+			{
+				tempRemoveFromStack();
+				addToStackBefore(_parent._header.NextInStack);
+			}
+
+			private void moveToStackBottom ()
+			{
+				tempRemoveFromStack();
+				addToStackBefore(_parent._header);
+			}
+
+			private void tempRemoveFromQueue ()
+			{
+				if(InQueue)
+				{
+					PreviousInQueue.NextInQueue = NextInQueue;
+					NextInQueue.PreviousInQueue = PreviousInQueue;
+				}
+			}
+
+			private void removeFromQueue ()
+			{
+				tempRemoveFromQueue();
+				PreviousInQueue = null;
+				NextInQueue     = null;
+			}
+
+			private void addToQueueBefore (CacheEntry entry)
+			{
+				PreviousInQueue = entry.PreviousInQueue;
+				NextInQueue     = entry;
+				PreviousInQueue.NextInQueue = this;
+				NextInQueue.PreviousInQueue = this;
+			}
+
+			private void moveToQueueEnd ()
+			{
+				tempRemoveFromQueue();
+				addToQueueBefore(_parent._header);
+			}
+
+			private void migrateToQueue ()
+			{
+				removeFromStack();
+				markCold();
+			}
+
+			private void migrateToStack ()
+			{
+				removeFromQueue();
+				if(!InStack)
+					moveToStackBottom();
+				markHot();
+			}
+			#endregion
+
+			private void evict ()
+			{
+				removeFromQueue();
+				removeFromStack();
+				_parent._cacheEntries.Remove(_key);
+				markNonResident();
+				if(_parent._disposeEntries)
+					_value.Dispose();
+			}
+
+			/// <summary>
+			/// Removes the entry from the cache
+			/// </summary>
+			public void Remove ()
+			{
+				var wasHot = (EntryStatus.Hot == _status);
+				evict();
+
+				if(wasHot)
+				{
+					var end = _parent.QueueEnd;
+					if(null != end)
+						end.migrateToStack();
+				}
+			}
+
+			public override string  ToString()
+			{
+ 				return _key + " = " + Value + " [" + _status + "]";
 			}
 		}
-
-		private bool processT2 (TKey key)
-		{
-			var node = _t2.Find(key);
-			if(null != node)
-			{// Found in t2, shift to front
-				_t2.Remove(node);
-				_t2.AddFirst(key);
-				return true;
-			}
-			return false;
-		}
-
-		private void processB1 (TKey key)
-		{
-			var node = _b1.Find(key);
-			if(null != node)
-			{// Found in b1, move to t2
-				_b1.Remove(node);
-				_t2.AddFirst(key);
-			}
-			else
-			{// First time seeing, add to t1
-				_t1.AddFirst(key);
-				if(Count > _capacity)
-					evictT2(); // Cache is full, push one item from t2 to b2
-			}
-		}
-
-		private bool processB2 (TKey key)
-		{
-			var node = _b2.Find(key);
-			if(null != node)
-			{// Found in b2, move to t2
-				_b2.Remove(node);
-				_t2.AddFirst(key);
-				if(Count > _capacity)
-					evictT1(); // Cache is full, push one item from t1 to b1
-				return true;
-			}
-			return false;
-		}
-
-		private void evictT1 ()
-		{
-			var node = _t1.Last;
-			var item = _cache[node.Value];
-			_cache.Remove(node.Value);
-			_b1.AddFirst(node.Value);
-			if(_b1.Count > _ghostSize)
-				_b1.RemoveLast(); // b1 is full, evict the last item
-			if(_dispose)
-				item.Dispose();
-		}
-
-		private void evictT2 ()
-		{
-			var node = _t2.Last;
-			var item = _cache[node.Value];
-			_cache.Remove(node.Value);
-			_b2.AddFirst(node.Value);
-			if(_b2.Count > _ghostSize)
-				_b2.RemoveLast(); // b2 is full, evict the last item
-			if(_dispose)
-				item.Dispose();
-		}
-
-		private void setSizes (int capacity)
-		{
-			_capacity  = capacity;
-			_ghostSize = capacity / 2;
-			if(1 == capacity % 2 || 1 > _ghostSize)
-				++_ghostSize;
-		}
-		#endregion
 	}
 }
