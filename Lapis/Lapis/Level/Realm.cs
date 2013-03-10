@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Ionic.Zlib;
 using Lapis.IO;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
@@ -114,6 +115,24 @@ namespace Lapis.Level
 		}
 		#endregion
 
+		private static bool isOverworld (int realmId)
+		{
+			return (int)Dimension.Normal == realmId;
+		}
+
+		private static string generatePath (string worldPath, int realmId)
+		{
+			string path;
+			if(isOverworld(realmId))
+				path = worldPath; // No special directory for the overworld
+			else
+			{// Sub-directory for the realm
+				var diskName = DimensionPrefix + realmId;
+				path = String.Join(_directorySeparator, worldPath, diskName);
+			}
+			return path;
+		}
+
 		private Realm (World world, int realmId, Dimension dimension, LevelData level, ITerrainGenerator generator)
 		{
 			if(null == world)
@@ -127,21 +146,24 @@ namespace Lapis.Level
 			_id        = realmId;
 			_dimension = dimension;
 
-			if(IsOverworld)
+			if(isOverworld(realmId))
 			{// No special directory for the overworld
-				_diskName = string.Empty;
+				_diskName = String.Empty;
 				_path     = world.Path;
 			}
 			else
 			{// Sub-directory for the realm
 				_diskName = DimensionPrefix + realmId;
-				_path     = string.Join(_directorySeparator, world.Path, _diskName);
+				_path     = String.Join(_directorySeparator, world.Path, _diskName);
 			}
-			_levelFilePath = string.Join(_directorySeparator, _path, LevelDataFilename);
-			_regionPath    = string.Join(_directorySeparator, _path, RegionDirectory);
+			_levelFilePath = String.Join(_directorySeparator, _path, LevelDataFilename);
+			_regionPath    = String.Join(_directorySeparator, _path, RegionDirectory);
 
 			_levelData = level;
 			_generator = generator;
+
+			if(!Directory.Exists(_regionPath)) // TODO: Move directory creation to Create()
+				Directory.CreateDirectory(_regionPath);
 			_afm = new AnvilFileManager(_regionPath);
 		}
 
@@ -219,14 +241,7 @@ namespace Lapis.Level
 
 			// TODO: Save all chunks
 
-			saveLevelData();
-		}
-
-		private void saveLevelData ()
-		{
-			using(var fs = new FileStream(_levelFilePath, FileMode.Create))
-			using(var bw = new BinaryWriter(fs))
-				_levelData.WriteToStream(bw);
+			saveLevelData(_levelFilePath, _levelData);
 		}
 
 		/// <summary>
@@ -238,7 +253,27 @@ namespace Lapis.Level
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
 		internal static Realm Load (World world, int realmId)
 		{
-			throw new NotImplementedException();
+			var path          = generatePath(world.Path, realmId);
+			var levelFilePath = String.Join(_directorySeparator, path, LevelDataFilename);
+			var level = loadLevelData(levelFilePath);
+//			return new Realm(world, realmId, dimension, level, generator);
+			return null; // TODO: Implement
+		}
+
+		private static void saveLevelData (string path, LevelData data)
+		{
+			using(var fs = new FileStream(path, FileMode.Create))
+			using(var compressor = new GZipStream(fs, CompressionMode.Compress))
+			using(var bw = new EndianBinaryWriter(compressor, Endian.Big))
+				data.WriteToStream(bw);
+		}
+
+		private static LevelData loadLevelData (string path)
+		{
+			using(var fs = new FileStream(path, FileMode.Open))
+			using(var decompressor = new GZipStream(fs, CompressionMode.Decompress))
+			using(var br = new EndianBinaryReader(decompressor, Endian.Big))
+				return LevelData.ReadFromStream(br);
 		}
 		#endregion
 
@@ -280,7 +315,7 @@ namespace Lapis.Level
 		{
 			var coord = new XZCoordinate(cx, cz);
 			lock(_activeChunks)
-				return _chunkCache.GetItem(coord, constructChunk);
+				return _chunkCache.GetItem(coord, getOrCreateChunk);
 		}
 
 		/// <summary>
@@ -307,23 +342,27 @@ namespace Lapis.Level
 				_activeChunks.Remove(coord);
 		}
 
-		private Chunk constructChunk (XZCoordinate coord)
+		private Chunk getOrCreateChunk (XZCoordinate coord)
 		{
 			ChunkData data = null;
 			if(_afm.ChunkExists(coord.X, coord.Z))
 				data = _afm.GetChunk(coord.X, coord.Z);
-			if(null == data)
-			{// The chunk provider might return null for a chunk
-				data = _generator.GenerateChunk(coord.X, coord.Z);
-				if(null == data)
-					throw new ApplicationException("The chunk data can't be null.");
-			}
+			if(null == data) // The chunk provider might return null for a chunk
+				data = generate(coord.X, coord.Z);
 
 			if(!data.TerrainPopulated)
 				data.TerrainPopulated = true; // TODO: Populate the chunk
 
-			throw new NotImplementedException();
-			// TODO: Add chunk to activeChunks
+			return new Chunk(this, data);
+		}
+
+		private ChunkData generate (int cx, int cz)
+		{
+			var data = _generator.GenerateChunk(cx, cz);
+			if(null == data)
+				throw new ApplicationException("The chunk data can't be null.");
+			_afm.PutChunk(cx, cz, data);
+			return data;
 		}
 
 		/// <summary>
@@ -337,7 +376,18 @@ namespace Lapis.Level
 		/// <remarks>This method won't populate the chunk after it has been generated.</remarks>
 		public void GenerateChunk (int cx, int cz, bool replace = false)
 		{
-			throw new NotImplementedException();
+			bool create;
+			lock(_activeChunks)
+				create = (!_afm.ChunkExists(cx, cz) || replace);
+
+			if(create)
+			{
+				var data = generate(cx, cz);
+				lock(_activeChunks)
+				{
+					// TODO: Add chunk to activeChunks
+				}
+			}
 		}
 
 		/// <summary>

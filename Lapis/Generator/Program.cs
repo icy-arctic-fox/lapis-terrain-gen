@@ -16,9 +16,14 @@ namespace Generator
 			var generator = GenerationManager.GetGenerator(generatorNames[0]);
 
 			var world = World.Create("New World");
-			world.CreateRealm(generator);
+			var realm = world.CreateRealm(generator);
+
+			for(var cx = -10; cx <= 10; ++cx)
+				for(var cz = -10; cz <= 10; ++cz)
+					realm.GenerateChunk(cx, cz);
 
 			world.Save();
+//			World.Load("New World").LoadRealm((int)Dimension.Normal);
 		}
 	}
 }

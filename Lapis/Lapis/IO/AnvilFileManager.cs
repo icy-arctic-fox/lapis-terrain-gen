@@ -29,9 +29,9 @@ namespace Lapis.IO
 		public AnvilFileManager (string path)
 		{
 			if(null == path)
-				throw new ArgumentNullException("path", "The file path to the files can't be null.");
+				throw new ArgumentNullException("path", "The file path to the chunk files can't be null.");
 			if(!Directory.Exists(path))
-				throw new FileNotFoundException("The path to the files does not exist or is not a directory.", path);
+				throw new FileNotFoundException("The path to the chunk files does not exist or is not a directory.", path);
 
 			_basePath = path;
 
