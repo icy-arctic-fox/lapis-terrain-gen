@@ -265,7 +265,8 @@ namespace Lapis.Level.Data
 			if(null == generatorName)
 				throw new ArgumentNullException("generatorName", "The name of the generator to use can't be null.");
 
-			_name             = name;
+			_name = name;
+			_seed = seed;
 			_generatorName    = generatorName;
 			_generatorVersion = generatorVersion;
 			_generatorOptions = generatorOptions ?? string.Empty;

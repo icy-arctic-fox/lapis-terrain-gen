@@ -31,8 +31,19 @@ namespace Lapis.Level
 		public const int Size = 16;
 		#endregion
 
-		private readonly Realm realm;
-		private readonly ChunkData data;
+		private readonly Realm _realm;
+		private readonly ChunkData _data;
+
+		/// <summary>
+		/// Creates a chunk from chunk data
+		/// </summary>
+		/// <param name="realm">Realm that the chunk belongs to</param>
+		/// <param name="data">Chunk data</param>
+		internal Chunk (Realm realm, ChunkData data)
+		{
+			_realm = realm;
+			_data  = data;
+		}
 
 		#region Properties
 		/// <summary>
@@ -40,7 +51,7 @@ namespace Lapis.Level
 		/// </summary>
 		public World World
 		{
-			get { return realm.World; }
+			get { return _realm.World; }
 		}
 
 		/// <summary>
@@ -48,7 +59,7 @@ namespace Lapis.Level
 		/// </summary>
 		public Realm Realm
 		{
-			get { return realm; }
+			get { return _realm; }
 		}
 
 		/// <summary>
@@ -69,7 +80,7 @@ namespace Lapis.Level
 		/// </summary>
 		public int ChunkX
 		{
-			get { return data.ChunkX; }
+			get { return _data.ChunkX; }
 		}
 
 		/// <summary>
@@ -77,7 +88,7 @@ namespace Lapis.Level
 		/// </summary>
 		public int ChunkZ
 		{
-			get { return data.ChunkZ; }
+			get { return _data.ChunkZ; }
 		}
 		#endregion
 
@@ -86,7 +97,7 @@ namespace Lapis.Level
 		/// </summary>
 		public void Save ()
 		{
-			realm.SaveChunk(ChunkX, ChunkZ, data);
+			_realm.SaveChunk(ChunkX, ChunkZ, _data);
 		}
 
 		#region Cleanup
@@ -113,7 +124,7 @@ namespace Lapis.Level
 		private void Dispose (bool disposing)
 		{
 			if(!disposing)
-				realm.FreeChunk(ChunkX, ChunkZ);
+				_realm.FreeChunk(ChunkX, ChunkZ);
 		}
 		#endregion
 	}

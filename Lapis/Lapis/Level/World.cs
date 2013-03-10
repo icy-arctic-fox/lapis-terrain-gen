@@ -78,7 +78,10 @@ namespace Lapis.Level
 		/// <returns>The loaded realm</returns>
 		public Realm LoadRealm (int realmId)
 		{
-			throw new NotImplementedException();
+			var realm = Realm.Load(this, realmId);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
 		}
 
 		/// <summary>
@@ -178,7 +181,7 @@ namespace Lapis.Level
 		private const string SafeReplacement = "_";
 		private static readonly Regex _diskNameRegex = new Regex(@"\W+");
 
-		private static readonly Dictionary<string, World> _loadedWorlds;
+		private static readonly Dictionary<string, World> _loadedWorlds = new Dictionary<string, World>();
 
 		/// <summary>
 		/// Unloads the current world from memory
@@ -193,7 +196,7 @@ namespace Lapis.Level
 			var diskName = _diskNameRegex.Replace(name, SafeReplacement);
 			if(newWorld && Directory.Exists(diskName))
 			{
-				var i = 1;
+				var i = 2;
 				for(; Directory.Exists(diskName + i); ++i) { }
 				diskName = diskName + i;
 			}
@@ -209,6 +212,16 @@ namespace Lapis.Level
 			_name     = name;
 			_diskName = generateDiskName(name, true);
 			_path     = P.GetFullPath(_diskName);
+		}
+
+		private World (string name, string diskName)
+		{
+			if(null == name)
+				throw new ArgumentNullException("name", "The name of the world can't be null.");
+
+			_name     = name;
+			_diskName = diskName;
+			_path     = P.GetFullPath(diskName);
 		}
 
 		/// <summary>
@@ -231,11 +244,26 @@ namespace Lapis.Level
 		/// Loads an existing world from disk
 		/// </summary>
 		/// <param name="name">Name of the world</param>
-		/// <returns>The loaded world</returns>
+		/// <returns>The loaded world or null if the world doesn't exist</returns>
 		/// <remarks>Use the original world name for <paramref name="name"/> that was used in Create(), not the disk name.</remarks>
 		public static World Load (string name)
 		{
-			throw new NotImplementedException();
+			World world = null;
+			lock(_loadedWorlds)
+			{
+				if(_loadedWorlds.ContainsKey(name)) // World already loaded
+					world = _loadedWorlds[name];
+				else
+				{// Not loaded
+					var diskName = generateDiskName(name, false);
+					if(Directory.Exists(diskName))
+					{
+						world = new World(name, diskName);
+						_loadedWorlds.Add(name, world); // TODO: Worlds with the same name will cause a problem
+					}
+				}
+			}
+			return world;
 		}
 
 		/// <summary>
