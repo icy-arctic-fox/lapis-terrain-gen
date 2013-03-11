@@ -22,6 +22,16 @@ namespace Lapis.Level.Generation
 		int GeneratorVersion { get; }
 
 		/// <summary>
+		/// Name of the person that wrote the terrain generator
+		/// </summary>
+		string GeneratorAuthor { get; }
+
+		/// <summary>
+		/// Brief description of what the generator does
+		/// </summary>
+		string GeneratorDescription { get; }
+
+		/// <summary>
 		/// Options string used to customize the generator
 		/// </summary>
 		/// <remarks>This property can be fed into Initialize() to get the same generation settings.</remarks>
