@@ -80,7 +80,7 @@ namespace Lapis.IO.NBT
 			var length = _data.Length;
 			bw.Write(length);
 			foreach(var i in _data)
-				bw.Write(i);
+				bw.Write(i); // TODO: This is a costly operation
 		}
 
 		/// <summary>
