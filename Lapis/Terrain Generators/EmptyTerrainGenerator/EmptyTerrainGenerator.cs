@@ -17,6 +17,16 @@ namespace EmptyTerrainGenerator
 			get { return 1; }
 		}
 
+		public string GeneratorDescription
+		{
+			get { return String.Empty; }
+		}
+
+		public string GeneratorAuthor
+		{
+			get { return String.Empty; }
+		}
+
 		public string GeneratorOptions
 		{
 			get { return String.Empty; }
