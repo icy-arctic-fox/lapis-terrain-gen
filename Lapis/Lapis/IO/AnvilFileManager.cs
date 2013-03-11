@@ -106,7 +106,7 @@ namespace Lapis.IO
 		/// <param name="cx">X-position of the chunk</param>
 		/// <param name="cz">Z-position of the chunk</param>
 		/// <returns>A region coordinate that contains the chunk</returns>
-		private XZCoordinate toRegionCoordinate (int cx, int cz)
+		private static XZCoordinate toRegionCoordinate (int cx, int cz)
 		{
 			var rx = cx / AnvilFile.ChunkCount;
 			var rz = cz / AnvilFile.ChunkCount;

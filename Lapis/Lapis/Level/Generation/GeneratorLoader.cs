@@ -12,7 +12,7 @@ namespace Lapis.Level.Generation
 	/// Manages terrain generators and chunk populators
 	/// </summary>
 	/// <remarks>Use this class to get available generators.</remarks>
-	public static class GenerationManager
+	public static class GeneratorLoader
 	{
 		private static readonly Dictionary<string, List<Tuple<int, Type>>> _terrainGeneratorTypes = new Dictionary<string, List<Tuple<int, Type>>>();
 		private static readonly Type _terrainGeneratorType = typeof(ITerrainGenerator);
@@ -36,7 +36,7 @@ namespace Lapis.Level.Generation
 		/// <summary>
 		/// Runs on first reference to load available generators
 		/// </summary>
-		static GenerationManager ()
+		static GeneratorLoader ()
 		{
 			lock(_terrainGeneratorTypes)
 			{
