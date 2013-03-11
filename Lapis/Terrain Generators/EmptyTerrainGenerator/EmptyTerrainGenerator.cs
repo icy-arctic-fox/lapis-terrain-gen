@@ -42,7 +42,7 @@ namespace EmptyTerrainGenerator
 			var data = new ChunkData(cx, cz);
 			for(var bx = (byte)0; bx < Chunk.Size; ++bx)
 				for(var bz = (byte)0; bz < Chunk.Size; ++bz)
-					data.SetBlockType(bx, 0, bz, Lapis.Blocks.BlockType.Bedrock);
+					data.SetBlockType(bx, (byte)30, bz, Lapis.Blocks.BlockType.Glass);
 			return data;
 		}
 	}

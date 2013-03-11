@@ -348,6 +348,7 @@ namespace Lapis.Utility
 			var bottom = StackBottom;
 			while(null != bottom && EntryStatus.Hot != bottom.Status)
 			{
+				bottom.RemoveFromStack();
 				if(EntryStatus.NonResident == bottom.Status)
 					_cacheEntries.Remove(bottom.Key);
 				bottom = StackBottom;
@@ -500,7 +501,7 @@ namespace Lapis.Utility
 				if(inStack)
 				{
 					markHot();
-					removeFromQueue();
+					RemoveFromQueue();
 					_parent.StackBottom.migrateToQueue();
 					_parent.pruneStack();
 				}
@@ -586,7 +587,7 @@ namespace Lapis.Utility
 				}
 			}
 
-			private void removeFromStack ()
+			public void RemoveFromStack ()
 			{
 				tempRemoveFromStack();
 				PreviousInStack = null;
@@ -622,7 +623,7 @@ namespace Lapis.Utility
 				}
 			}
 
-			private void removeFromQueue ()
+			public void RemoveFromQueue ()
 			{
 				tempRemoveFromQueue();
 				PreviousInQueue = null;
@@ -645,13 +646,13 @@ namespace Lapis.Utility
 
 			private void migrateToQueue ()
 			{
-				removeFromStack();
+				RemoveFromStack();
 				markCold();
 			}
 
 			private void migrateToStack ()
 			{
-				removeFromQueue();
+				RemoveFromQueue();
 				if(!InStack)
 					moveToStackBottom();
 				markHot();
@@ -660,8 +661,8 @@ namespace Lapis.Utility
 
 			private void evict ()
 			{
-				removeFromQueue();
-				removeFromStack();
+				RemoveFromQueue();
+				RemoveFromStack();
 				_parent._cacheEntries.Remove(_key);
 				markNonResident();
 				if(_parent._disposeEntries)
