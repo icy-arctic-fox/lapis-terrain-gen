@@ -18,9 +18,9 @@ namespace Generator
 			var world = World.Create("New World");
 			var realm = world.CreateRealm(generator);
 
-			for(var cx = -1000; cx <= 1000; ++cx)
+			for(var cx = -100; cx <= 100; ++cx)
 			{
-				for(var cz = -1000; cz <= 1000; ++cz)
+				for(var cz = -100; cz <= 100; ++cz)
 					realm.GenerateChunk(cx, cz);
 				Console.WriteLine(cx);
 			}

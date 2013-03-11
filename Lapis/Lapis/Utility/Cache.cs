@@ -186,7 +186,16 @@ namespace Lapis.Utility
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="missFunc"/> is null</exception>
 		public TValue GetItem (TKey key, CacheMiss missFunc)
 		{
-			throw new NotImplementedException();
+			if(null == missFunc)
+				throw new ArgumentNullException("missFunc", "The cache miss function can't be null.");
+
+			lock(_cacheEntries)
+			{
+				TValue value;
+				if(TryGetValue(key, out value))
+					return value; // Already exists in cache
+				return this[key] = missFunc(key); // Doesn't exist
+			}
 		}
 
 		/// <summary>
@@ -398,6 +407,11 @@ namespace Lapis.Utility
 				_parent = parent;
 				_key    = default(TKey);
 				_value  = default(TValue);
+
+				PreviousInStack = this;
+				NextInStack     = this;
+				PreviousInQueue = this;
+				NextInQueue     = this;
 			}
 
 			/// <summary>
