@@ -11,16 +11,16 @@ namespace Generator
 			var generatorNames = GenerationManager.GeneratorNames;
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
-			Console.ReadKey();
+//			Console.ReadKey();
 
 			var generator = GenerationManager.GetGenerator(generatorNames[0]);
 
 			var world = World.Create("New World");
 			var realm = world.CreateRealm(generator);
 
-			for(var cx = -100; cx <= 100; ++cx)
+			for(var cx = -10; cx <= 10; ++cx)
 			{
-				for(var cz = -100; cz <= 100; ++cz)
+				for(var cz = -10; cz <= 10; ++cz)
 					realm.GenerateChunk(cx, cz);
 				Console.WriteLine(cx);
 			}
