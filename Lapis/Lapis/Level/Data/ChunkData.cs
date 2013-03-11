@@ -82,7 +82,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public HeightData HeightMap
 		{
-			get { return _heightMap; }
+			get { return _heightMap; } // TODO: Where should the height-map be updated when block data is updated?
 		}
 		#endregion
 
