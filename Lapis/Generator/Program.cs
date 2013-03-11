@@ -13,12 +13,12 @@ namespace Generator
 
 		static void Main (string[] args)
 		{
-			var generatorNames = GenerationManager.GeneratorNames;
+			var generatorNames = GeneratorLoader.GeneratorNames;
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 //			Console.ReadKey();
 
-			var generator = GenerationManager.GetGenerator(generatorNames[0]);
+			var generator = GeneratorLoader.GetGenerator(generatorNames[0]);
 
 			var world = World.Create("New World");
 			var realm = world.CreateRealm(generator);

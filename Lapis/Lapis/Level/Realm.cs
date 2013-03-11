@@ -405,7 +405,7 @@ namespace Lapis.Level
 		#endregion
 
 		/// <summary>
-		/// Finds all directories that appear to contain realms
+		/// Finds all directories that appear to contain realms (dimensions)
 		/// </summary>
 		/// <param name="path">World path</param>
 		/// <returns>A collection of realm ID numbers</returns>
