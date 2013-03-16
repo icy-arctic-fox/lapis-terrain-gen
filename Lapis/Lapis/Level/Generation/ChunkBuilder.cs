@@ -85,78 +85,29 @@ namespace Lapis.Level.Generation
 		/// <param name="types">Array of types to fill the column with</param>
 		/// <param name="yOff">Y-offset to start at</param>
 		/// <param name="repeat">Whether or not to repeat the contents of <paramref name="types"/></param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="types"/> is null</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the length of <paramref name="types"/> is less than 1</exception>
 		public void FillColumn (byte bx, byte bz, BlockType[] types, byte yOff = 0, bool repeat = false)
 		{
 			checkBounds(bx, bz);
+			if(null == types)
+				throw new ArgumentNullException("types", "The array of block types can't be null.");
+			if(0 >= types.Length)
+				throw new ArgumentOutOfRangeException("types", "The array of block types must have at least 1 element.");
 
-			var yEnd = repeat ? Chunk.Height : yOff + types.Length;
-
-			var sectionStart = yOff / Chunk.SectionHeight;
-			var sectionEnd   = yEnd / Chunk.SectionHeight;
-
-			var subBy1 = (byte)(yOff % Chunk.Size);
-			var subBy2 = (byte)(yEnd % Chunk.Size);
-
-			var data = _data.BlockTypes;
-			var startIndex = ChunkData.CalculateIndex(bx, 0, bz);
-
-			if(sectionStart == sectionEnd)
-			{// Region is contained in a single section
-				var index    = startIndex + subBy1;
-				var endIndex = startIndex + subBy2;
-				for(var y = 0; index < endIndex; ++index, ++y)
-				{
-					if(types.Length <= y)
-					{// Hit the end
-						if(repeat)
-							y = 0;
-						else
-							break;
-					}
-					data[sectionStart][index] = types[y];
-				}
-			}
-
+			var column = new BlockType[Chunk.Height];
+			if(repeat)
+				for(var i = yOff; i < column.Length; ++i)
+					column[i] = types[i % types.Length];
 			else
-			{// Region spans multiple sections
-				var index = startIndex;
-				for(var y = subBy1; y < Chunk.SectionHeight; ++index, ++y)
-				{
-					if(types.Length <= y)
-					{// Hit the end
-						if(repeat)
-							y = 0;
-						else
-							break;
-					}
-					data[sectionStart][index] = types[y];
-				}
-				index = startIndex;
-				for(var section = sectionStart + 1; section < sectionEnd; ++section)
-					for(var y = 0; y < Chunk.SectionHeight; ++index, ++y)
-					{
-						if(types.Length <= y)
-						{// Hit the end
-							if(repeat)
-								y = 0;
-							else
-								break;
-						}
-						data[section][index] = types[y];
-					}
-				index = startIndex;
-				for(var y = 0; y < yEnd; ++index, ++y)
-				{
-					if(types.Length <= y)
-					{// Hit the end
-						if(repeat)
-							y = 0;
-						else
-							break;
-					}
-					data[sectionEnd][index] = types[y];
-				}
+			{
+				var y = 0;
+				for(var i = yOff; i < column.Length && y < types.Length; ++i, ++y)
+					column[i] = types[y]; // TODO: This could be optimized
 			}
+
+			setSectionSpan(bx, bz, _data.BlockTypes, yOff, column);
+			_data.HeightMap[bx, bz] = column.FindHighestBlock();
 		}
 		#endregion
 
@@ -170,14 +121,14 @@ namespace Lapis.Level.Generation
 			var zEnd = bz + zCount;
 
 			var sectionStart = by / Chunk.SectionHeight;
-			var sectionEnd   = yEnd / Chunk.SectionHeight;
+			var sectionEnd   = (yEnd - 1) / Chunk.SectionHeight;
 
 			var subBy1 = (byte)(by % Chunk.Size);
 			var subBy2 = (byte)(yEnd % Chunk.Size);
 
 			var index = ChunkData.CalculateIndex(bx, subBy1, bz);
 			// Blocks are organized as YZX
-			if(sectionStart == sectionEnd)
+			if(sectionStart <= sectionEnd)
 			{// Region is contained in a single section
 				for(var y = subBy1; y < subBy2; ++y)
 					for(var z = bz; z < zEnd; ++z)
@@ -214,6 +165,42 @@ namespace Lapis.Level.Generation
 			var index   = ChunkData.CalculateIndex(bx, secBy, bz);
 
 			blocks[section].SetNibble(index, value);
+		}
+
+		private static void setSectionSpan<T> (byte bx, byte bz, T[][] sections, byte yOff, T[] column)
+		{
+			var yEnd = yOff + column.Length;
+			const int step = Chunk.SectionHeight * Chunk.SectionHeight;
+
+			var sectionStart = yOff / Chunk.SectionHeight;
+			var sectionEnd   = (yEnd - 1) / Chunk.SectionHeight;
+
+			var subBy1 = yOff % Chunk.SectionHeight;
+			var subBy2 = yEnd % Chunk.SectionHeight;
+
+			var startIndex = ChunkData.CalculateIndex(bx, (byte)subBy1, bz);
+			var index = startIndex;
+
+			if(sectionStart >= sectionEnd)
+			{// Column is contained in a single section
+				for(var y = subBy1; y < subBy2; ++y, index += step)
+					sections[sectionStart][index] = column[y];
+			}
+
+			else
+			{// Column spans multiple sections
+				var y = subBy1;
+				for(; y < Chunk.SectionHeight; index += step)
+					sections[sectionStart][index] = column[y++];
+				for(var section = sectionStart + 1; section < sectionEnd; ++section)
+				{
+					index = startIndex;
+					for(var i = 0; i < Chunk.SectionHeight; ++i, index += step)
+						sections[section][index] = column[y++];
+				}
+				for(index = startIndex; y < yEnd; index += step)
+					sections[sectionEnd][index] = column[y++];
+			}
 		}
 
 		private static void updateHeightMap (HeightData heightMap, byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, bool reduce)
