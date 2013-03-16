@@ -46,10 +46,13 @@ namespace Lapis.Level.Generation
 		/// <param name="xCount">Number of blocks along the x-axis to fill</param>
 		/// <param name="yCount">Number of blocks along the y-axis to fill</param>
 		/// <param name="zCount">Number of blocks along the z-axis to fill</param>
-		/// <param name="type">Block type to fill the region with</param>
-		public void FillType (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, BlockType type)
+		/// <param name="value">Block type to fill the region with</param>
+		/// <remarks>The chunk height map will be updated after filling blocks.</remarks>
+		public void FillType (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, BlockType value)
 		{
-			throw new NotImplementedException();
+			fillBlock(bx, by, bz, xCount, yCount, zCount, _data.BlockTypes, value);
+			var reduce = BlockType.Air == value; // Move the height map down if we're filling with air
+			updateHeightMap(_data.HeightMap, bx, by, bz, xCount, yCount, zCount, reduce);
 		}
 		#endregion
 
@@ -107,7 +110,31 @@ namespace Lapis.Level.Generation
 			var index   = ChunkData.CalculateIndex(bx, secBy, bz);
 
 			blocks[section].SetNibble(index, value);
-			throw new NotImplementedException();
+		}
+
+		private static void updateHeightMap (HeightData heightMap, byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, bool reduce)
+		{
+			var xEnd = bx + xCount;
+			var zEnd = bz + zCount;
+
+			int height;
+			if(reduce)
+			{// Air blocks (lower height if needed)
+				height = (0 == yCount) ? by : by + yCount - 1;
+				for(var x = bx; x < xEnd; ++x)
+					for(var z = bz; z < zEnd; ++z)
+						if(height < heightMap[x, z])
+							heightMap[x, z] = height;
+			}
+
+			else
+			{// Solid blocks (raise height if needed)
+				height = (0 == by) ? 0 : by - 1;
+				for(var x = bx; x < xEnd; ++x)
+					for(var z = bz; z < zEnd; ++z)
+						if(height > heightMap[x, z])
+							heightMap[x, z] = height;
+			}
 		}
 
 		private static void checkBounds (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount)
