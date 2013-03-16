@@ -43,13 +43,120 @@ namespace Lapis.Level.Generation
 		/// <param name="xCount">Number of blocks along the x-axis to fill</param>
 		/// <param name="yCount">Number of blocks along the y-axis to fill</param>
 		/// <param name="zCount">Number of blocks along the z-axis to fill</param>
-		/// <param name="value">Block type to fill the region with</param>
+		/// <param name="type">Block type to fill the region with</param>
 		/// <remarks>The chunk height map will be updated after filling blocks.</remarks>
-		public void FillType (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, BlockType value)
+		public void FillType (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, BlockType type)
 		{
-			fillBlock(bx, by, bz, xCount, yCount, zCount, _data.BlockTypes, value);
-			var reduce = BlockType.Air == value; // Move the height map down if we're filling with air
+			fillBlock(bx, by, bz, xCount, yCount, zCount, _data.BlockTypes, type);
+			var reduce = BlockType.Air == type; // Move the height map down if we're filling with air
 			updateHeightMap(_data.HeightMap, bx, by, bz, xCount, yCount, zCount, reduce);
+		}
+
+		/// <summary>
+		/// Fills a single column within a chunk (1x1x256)
+		/// </summary>
+		/// <param name="bx">X-position of the column</param>
+		/// <param name="bz">Z-position of the column</param>
+		/// <param name="type">Block type to fill the region with</param>
+		/// <param name="yOff">Y-offset to start at</param>
+		public void FillColumn (byte bx, byte bz, BlockType type, byte yOff = 0)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Fills a single column within a chunk (1x1x256)
+		/// </summary>
+		/// <param name="bx">X-position of the column</param>
+		/// <param name="bz">Z-position of the column</param>
+		/// <param name="type">Block type to fill the region with</param>
+		/// <param name="yOff">Y-offset to start at</param>
+		/// <param name="yCount">Number of blocks to fill</param>
+		public void FillColumn (byte bx, byte bz, BlockType type, byte yOff, byte yCount)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Fills a single column within a chunk (1x1x256)
+		/// </summary>
+		/// <param name="bx">X-position of the column</param>
+		/// <param name="bz">Z-position of the column</param>
+		/// <param name="types">Array of types to fill the column with</param>
+		/// <param name="yOff">Y-offset to start at</param>
+		/// <param name="repeat">Whether or not to repeat the contents of <paramref name="types"/></param>
+		public void FillColumn (byte bx, byte bz, BlockType[] types, byte yOff = 0, bool repeat = false)
+		{
+			checkBounds(bx, bz);
+
+			var yEnd = repeat ? Chunk.Height : yOff + types.Length;
+
+			var sectionStart = yOff / Chunk.SectionHeight;
+			var sectionEnd   = yEnd / Chunk.SectionHeight;
+
+			var subBy1 = (byte)(yOff % Chunk.Size);
+			var subBy2 = (byte)(yEnd % Chunk.Size);
+
+			var data = _data.BlockTypes;
+			var startIndex = ChunkData.CalculateIndex(bx, 0, bz);
+
+			if(sectionStart == sectionEnd)
+			{// Region is contained in a single section
+				var index    = startIndex + subBy1;
+				var endIndex = startIndex + subBy2;
+				for(var y = 0; index < endIndex; ++index, ++y)
+				{
+					if(types.Length <= y)
+					{// Hit the end
+						if(repeat)
+							y = 0;
+						else
+							break;
+					}
+					data[sectionStart][index] = types[y];
+				}
+			}
+
+			else
+			{// Region spans multiple sections
+				var index = startIndex;
+				for(var y = subBy1; y < Chunk.SectionHeight; ++index, ++y)
+				{
+					if(types.Length <= y)
+					{// Hit the end
+						if(repeat)
+							y = 0;
+						else
+							break;
+					}
+					data[sectionStart][index] = types[y];
+				}
+				index = startIndex;
+				for(var section = sectionStart + 1; section < sectionEnd; ++section)
+					for(var y = 0; y < Chunk.SectionHeight; ++index, ++y)
+					{
+						if(types.Length <= y)
+						{// Hit the end
+							if(repeat)
+								y = 0;
+							else
+								break;
+						}
+						data[section][index] = types[y];
+					}
+				index = startIndex;
+				for(var y = 0; y < yEnd; ++index, ++y)
+				{
+					if(types.Length <= y)
+					{// Hit the end
+						if(repeat)
+							y = 0;
+						else
+							break;
+					}
+					data[sectionEnd][index] = types[y];
+				}
+			}
 		}
 		#endregion
 
@@ -134,12 +241,17 @@ namespace Lapis.Level.Generation
 			}
 		}
 
-		private static void checkBounds (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount)
+		private static void checkBounds (byte bx, byte bz)
 		{
 			if(Chunk.Size <= bx)
 				throw new ArgumentOutOfRangeException("bx", "The x-position of the block must be less than " + Chunk.Size);
 			if(Chunk.Size <= bz)
 				throw new ArgumentOutOfRangeException("bz", "The z-position of the block must be less than " + Chunk.Size);
+		}
+
+		private static void checkBounds (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount)
+		{
+			checkBounds(bx, bz);
 			if(Chunk.Size < bx + xCount)
 				throw new ArgumentOutOfRangeException("xCount", "The total block count can't extend outside the chunk.");
 			if(Chunk.Height < by + yCount)
