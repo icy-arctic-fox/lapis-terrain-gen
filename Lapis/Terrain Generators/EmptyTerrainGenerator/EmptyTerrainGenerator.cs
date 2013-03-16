@@ -1,5 +1,4 @@
 ﻿using System;
-using Lapis.Level;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
 
