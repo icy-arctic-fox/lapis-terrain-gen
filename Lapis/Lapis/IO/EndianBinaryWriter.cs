@@ -149,7 +149,7 @@ namespace Lapis.IO
 			lock(_buffer)
 			{
 				_buffer.Insert(value, 0, _endian);
-				int start = (Endian.Big == _endian) ? 1 : 0;
+				var start = (Endian.Big == _endian) ? 1 : 0;
 				base.Write(_buffer, start, 3);
 			}
 		}
@@ -162,7 +162,7 @@ namespace Lapis.IO
 			lock(_buffer)
 			{
 				_buffer.Insert(value, 0, _endian);
-				int start = (Endian.Big == _endian) ? 1 : 0;
+				var start = (Endian.Big == _endian) ? 1 : 0;
 				base.Write(_buffer, start, 3);
 			}
 		}
