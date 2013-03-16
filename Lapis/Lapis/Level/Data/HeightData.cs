@@ -35,21 +35,21 @@ namespace Lapis.Level.Data
 		/// <summary>
 		/// The height of the highest block at a cell coordinate (BlockX, BlockY)
 		/// </summary>
-		/// <param name="cx">X-value of the coordinate</param>
-		/// <param name="cz">Z-value of the coordinate</param>
+		/// <param name="bx">X-value of the coordinate</param>
+		/// <param name="bz">Z-value of the coordinate</param>
 		/// <returns>The height of the highest block at the given cell coordinate</returns>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="cx"/> or <paramref name="cz"/> are outside the bounds of the chunk</exception>
-		public int this[byte cx, byte cz]
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bx"/> or <paramref name="bz"/> are outside the bounds of the chunk</exception>
+		public int this[byte bx, byte bz]
 		{
 			get
 			{
-				var index = CalculateIndex(cx, cz);
+				var index = CalculateIndex(bx, bz);
 				return _data[index];
 			}
 
 			set
 			{
-				var index = CalculateIndex(cx, cz);
+				var index = CalculateIndex(bx, bz);
 				_data[index] = value;
 				if(value > Maximum)
 					Maximum = value;
@@ -86,18 +86,18 @@ namespace Lapis.Level.Data
 		/// <summary>
 		/// Calculates the cell index for a chunk from and x and z-value of a coordinate
 		/// </summary>
-		/// <param name="cx">X-value of the coordinate</param>
-		/// <param name="cz">Z-value of the coordinate</param>
+		/// <param name="bx">X-value of the coordinate</param>
+		/// <param name="bz">Z-value of the coordinate</param>
 		/// <returns>The index of the cell</returns>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="cx"/> or <paramref name="cz"/> are outside the bounds of the chunk</exception>
-		public static byte CalculateIndex (byte cx, byte cz)
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bx"/> or <paramref name="bz"/> are outside the bounds of the chunk</exception>
+		public static byte CalculateIndex (byte bx, byte bz)
 		{
 			if(Chunk.Size <= cx)
-				throw new ArgumentOutOfRangeException("cx", "The x-value of the block coordinate can't be at or above " + Chunk.Size);
+				throw new ArgumentOutOfRangeException("bx", "The x-value of the block coordinate can't be at or above " + Chunk.Size);
 			if(Chunk.Size <= cz)
-				throw new ArgumentOutOfRangeException("cz", "The z-value of the block coordinate can't be at or above " + Chunk.Size);
+				throw new ArgumentOutOfRangeException("bz", "The z-value of the block coordinate can't be at or above " + Chunk.Size);
 
-			var index = (byte)(cz * Chunk.Size + cx);
+			var index = (byte)(bz * Chunk.Size + bx);
 			return index;
 		}
 
