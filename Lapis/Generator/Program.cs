@@ -7,7 +7,7 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 50;
+		private const int Radius = 125;
 
 		private static Realm _realm;
 
@@ -42,10 +42,7 @@ namespace Generator
 		{
 			for(var cx = -Radius; cx < 0; ++cx)
 				for(var cz = -Radius; cz < 0; ++cz)
-				{
-					Console.WriteLine(Thread.CurrentThread.ToString() + " - (" + cx + ", " + cz + ")");
 					_realm.GenerateChunk(cx, cz);
-				}
 			Console.WriteLine("Top-left done");
 			((ManualResetEvent)state).Set();
 		}
@@ -54,10 +51,7 @@ namespace Generator
 		{
 			for(var cx = 0; cx < Radius; ++cx)
 				for(var cz = -Radius; cz < 0; ++cz)
-				{
-					Console.WriteLine(Thread.CurrentThread.ToString() + " - (" + cx + ", " + cz + ")");
 					_realm.GenerateChunk(cx, cz);
-				}
 			Console.WriteLine("Top-right done");
 			((ManualResetEvent)state).Set();
 		}
@@ -66,10 +60,7 @@ namespace Generator
 		{
 			for(var cx = -Radius; cx < 0; ++cx)
 				for(var cz = 0; cz < Radius; ++cz)
-				{
-					Console.WriteLine(Thread.CurrentThread.ToString() + " - (" + cx + ", " + cz + ")");
 					_realm.GenerateChunk(cx, cz);
-				}
 			Console.WriteLine("Bottom-left done");
 			((ManualResetEvent)state).Set();
 		}
@@ -78,10 +69,7 @@ namespace Generator
 		{
 			for(var cx = 0; cx < Radius; ++cx)
 				for(var cz = 0; cz < Radius; ++cz)
-				{
-					Console.WriteLine(Thread.CurrentThread.ToString() + " - (" + cx + ", " + cz + ")");
 					_realm.GenerateChunk(cx, cz);
-				}
 			Console.WriteLine("Bottom-right done");
 			((ManualResetEvent)state).Set();
 		}
