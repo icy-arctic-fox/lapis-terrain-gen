@@ -92,9 +92,9 @@ namespace Lapis.Level.Data
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bx"/> or <paramref name="bz"/> are outside the bounds of the chunk</exception>
 		public static byte CalculateIndex (byte bx, byte bz)
 		{
-			if(Chunk.Size <= cx)
+			if(Chunk.Size <= bx)
 				throw new ArgumentOutOfRangeException("bx", "The x-value of the block coordinate can't be at or above " + Chunk.Size);
-			if(Chunk.Size <= cz)
+			if(Chunk.Size <= bSz)
 				throw new ArgumentOutOfRangeException("bz", "The z-value of the block coordinate can't be at or above " + Chunk.Size);
 
 			var index = (byte)(bz * Chunk.Size + bx);
