@@ -51,12 +51,11 @@
       <Project>{155F4145-4018-441B-8F24-728BE1F99038}</Project>
       <Name>Lapis</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Terrain Generators\EmptyTerrainGenerator\EmptyTerrainGenerator.csproj">
-      <Project>{E3618707-DFCE-4B27-9055-AE6A1BBCFE99}</Project>
-      <Name>EmptyTerrainGenerator</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if not exist "$(TargetDir)generators" mkdir "$(TargetDir)generators"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
