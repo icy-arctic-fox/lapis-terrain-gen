@@ -153,7 +153,7 @@ namespace FlatlandTerrainGenerator
 								typeValue = temp;
 							}
 						var type = (BlockType)typeValue;
-						switch(count)
+						switch(set.Length)
 						{
 						case 1:
 							if(_column.Length > pos)

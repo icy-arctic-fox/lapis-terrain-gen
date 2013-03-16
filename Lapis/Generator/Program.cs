@@ -8,17 +8,23 @@ namespace Generator
 	class Program
 	{
 		private const int Radius = 50;
-		private const string DesiredGeneratorName = "Empty Terrain Generator";
+		private const string DesiredGeneratorName = "Flatland Terrain Generator";
 
 		private static Realm _realm;
 
 		static void Main (string[] args)
 		{
+#if DEBUG
+			ThreadPool.SetMinThreads(1, 1);
+			ThreadPool.SetMaxThreads(1, 1);
+#endif
+
 			var generatorNames = GeneratorLoader.GeneratorNames;
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
+			generator.Initialize("7,59x1,3x3,2,78");
 
 			var world = World.Create("New World");
 			var realm = world.CreateRealm(generator);
