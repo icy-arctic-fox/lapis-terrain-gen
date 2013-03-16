@@ -56,18 +56,29 @@ namespace Lapis.Level.Generation
 															_terrainGeneratorType != t));
 
 			_terrainGeneratorTypes.Clear();
-			foreach(var type in types)
+			try
 			{
-				var instance = (ITerrainGenerator)Activator.CreateInstance(type);
-				var name     = instance.GeneratorName;
-				var version  = instance.GeneratorVersion;
-				List<Tuple<int, Type>> list;
-				if(_terrainGeneratorTypes.ContainsKey(name)) // Multiple versions under the same name
-					list = _terrainGeneratorTypes[name];
-				else // First seen
-					_terrainGeneratorTypes[name] = list = new List<Tuple<int, Type>>();
-				var item = new Tuple<int, Type>(version, type);
-				list.Add(item);
+				foreach(var type in types)
+				{
+					var instance = (ITerrainGenerator)Activator.CreateInstance(type);
+					var name = instance.GeneratorName;
+					var version = instance.GeneratorVersion;
+					List<Tuple<int, Type>> list;
+					if(_terrainGeneratorTypes.ContainsKey(name)) // Multiple versions under the same name
+						list = _terrainGeneratorTypes[name];
+					else // First seen
+						_terrainGeneratorTypes[name] = list = new List<Tuple<int, Type>>();
+					var item = new Tuple<int, Type>(version, type);
+					list.Add(item);
+				}
+			}
+			catch(TypeLoadException)
+			{
+				// TODO: Do something...
+			}
+			catch(ReflectionTypeLoadException)
+			{
+				// TODO: Do something
 			}
 		}
 

@@ -16,8 +16,8 @@ namespace Lapis.Level.Data
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
 	public class ChunkData : ISerializable
 	{
-		private const int SectionLength     = Chunk.SectionHeight * Chunk.Size * Chunk.Size;
-		private const int HalfSectionLength = SectionLength / 2;
+		internal const int SectionLength     = Chunk.SectionHeight * Chunk.Size * Chunk.Size;
+		internal const int HalfSectionLength = SectionLength / 2;
 
 		private bool _terrainPopulated;
 		private readonly int _cx, _cz;
@@ -84,6 +84,14 @@ namespace Lapis.Level.Data
 		{
 			get { return _heightMap; } // TODO: Where should the height-map be updated when block data is updated?
 		}
+
+		/// <summary>
+		/// Values for block types
+		/// </summary>
+		internal BlockType[][] BlockTypes
+		{
+			get { return _blockTypes; }
+		}
 		#endregion
 
 		/// <summary>
@@ -123,7 +131,7 @@ namespace Lapis.Level.Data
 		/// <param name="by">Y-position of the block relative to the chunk section</param>
 		/// <param name="bz">Z-position of the block relative to the chunk</param>
 		/// <returns>Flattened index of the block</returns>
-		private static int calculateIndex (byte bx, byte by, byte bz)
+		internal static int CalculateIndex (byte bx, byte by, byte bz)
 		{
 			var index = (by * Chunk.Size * Chunk.Size) + (bz * Chunk.Size) + bx;
 			return index;
@@ -231,9 +239,9 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, bz);
 
-			var section = by / Chunk.Size;
-			var secBy   = (byte)(by % Chunk.Size);
-			var index   = calculateIndex(bx, secBy, bz);
+			var section = by / Chunk.SectionHeight;
+			var secBy   = (byte)(by % Chunk.SectionHeight);
+			var index   = CalculateIndex(bx, secBy, bz);
 
 			return blocks[section][index];
 		}
@@ -242,9 +250,9 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, bz);
 
-			var section = by / Chunk.Size;
-			var newBy   = (byte)(by % Chunk.Size);
-			var index   = calculateIndex(bx, newBy, bz);
+			var section = by / Chunk.SectionHeight;
+			var newBy   = (byte)(by % Chunk.SectionHeight);
+			var index   = CalculateIndex(bx, newBy, bz);
 
 			blocks[section][index] = value;
 		}
@@ -253,9 +261,9 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, bz);
 
-			var section = by / Chunk.Size;
-			var secBy   = (byte)(by % Chunk.Size);
-			var index   = calculateIndex(bx, secBy, bz);
+			var section = by / Chunk.SectionHeight;
+			var secBy   = (byte)(by % Chunk.SectionHeight);
+			var index   = CalculateIndex(bx, secBy, bz);
 
 			return blocks[section].GetNibble(index);
 		}
@@ -264,9 +272,9 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, bz);
 
-			var section = by / Chunk.Size;
-			var secBy   = (byte)(by % Chunk.Size);
-			var index   = calculateIndex(bx, secBy, bz);
+			var section = by / Chunk.SectionHeight;
+			var secBy   = (byte)(by % Chunk.SectionHeight);
+			var index   = CalculateIndex(bx, secBy, bz);
 
 			blocks[section].SetNibble(index, value);
 		}

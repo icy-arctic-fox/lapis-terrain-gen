@@ -76,7 +76,8 @@
     <Compile Include="Level\Data\LevelDataUtility.cs" />
     <Compile Include="Level\Dimension.cs" />
     <Compile Include="Level\GameMode.cs" />
-    <Compile Include="Level\Generation\GenerationManager.cs" />
+    <Compile Include="Level\Generation\ChunkBuilder.cs" />
+    <Compile Include="Threading\GenerationManager.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />
     <Compile Include="Level\Generation\ITerrainGenerator.cs" />
     <Compile Include="Level\Realm.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\StringManipulation.cs" />
     <Compile Include="Utility\Timestamp.cs" />
-    <Compile Include="Utility\WaitList.cs" />
+    <Compile Include="Threading\WaitList.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
