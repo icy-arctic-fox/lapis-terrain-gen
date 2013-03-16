@@ -61,7 +61,7 @@ namespace Lapis.Level.Generation
 		/// <param name="yOff">Y-offset to start at</param>
 		public void FillColumn (byte bx, byte bz, BlockType type, byte yOff = 0)
 		{
-			throw new NotImplementedException();
+			FillColumn(bx, bz, type, yOff, (byte)(Chunk.Height - yOff));
 		}
 
 		/// <summary>
@@ -74,7 +74,39 @@ namespace Lapis.Level.Generation
 		/// <param name="yCount">Number of blocks to fill</param>
 		public void FillColumn (byte bx, byte bz, BlockType type, byte yOff, byte yCount)
 		{
-			throw new NotImplementedException();
+			var yEnd = yOff + yCount;
+			const int step = Chunk.SectionHeight * Chunk.SectionHeight;
+
+			var sectionStart = yOff / Chunk.SectionHeight;
+			var sectionEnd   = (yEnd - 1) / Chunk.SectionHeight;
+
+			var subBy1 = yOff % Chunk.SectionHeight;
+			var subBy2 = yEnd % Chunk.SectionHeight;
+
+			var startIndex = ChunkData.CalculateIndex(bx, (byte)subBy1, bz);
+			var index = startIndex;
+			var data  = _data.BlockTypes;
+
+			if(sectionStart >= sectionEnd)
+			{// Column is contained in a single section
+				for(var y = subBy1; y < subBy2; ++y, index += step)
+					data[sectionStart][index] = type;
+			}
+
+			else
+			{// Column spans multiple sections
+				var y = subBy1;
+				for(; y < Chunk.SectionHeight; index += step)
+					data[sectionStart][index] = type;
+				for(var section = sectionStart + 1; section < sectionEnd; ++section)
+				{
+					index = startIndex;
+					for(var i = 0; i < Chunk.SectionHeight; ++i, index += step)
+						data[section][index] = type;
+				}
+				for(index = startIndex; y < yEnd; index += step)
+					data[sectionEnd][index] = type;
+			}
 		}
 
 		/// <summary>
