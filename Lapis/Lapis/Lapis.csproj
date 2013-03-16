@@ -86,6 +86,7 @@
     <Compile Include="Spatial\XZCoordinate.cs" />
     <Compile Include="Utility\ByteArrayUtility.cs" />
     <Compile Include="Utility\Cache.cs" />
+    <Compile Include="Utility\EndianUtility.cs" />
     <Compile Include="Utility\StringManipulation.cs" />
     <Compile Include="Utility\Timestamp.cs" />
     <Compile Include="Threading\WaitList.cs" />
