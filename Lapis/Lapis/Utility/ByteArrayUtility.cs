@@ -196,9 +196,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, short value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -211,9 +210,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, ushort value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -226,9 +224,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, int value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -241,9 +238,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, uint value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -256,9 +252,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, long value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -271,9 +266,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, ulong value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -286,9 +280,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, float value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 
@@ -301,9 +294,8 @@ namespace Lapis.Utility
 		/// <param name="e">Endianness (default is big-endian)</param>
 		public static void Insert (this byte[] bytes, double value, int offset = 0, Endian e = Endian.Big)
 		{
-			var temp = BitConverter.GetBytes(value);
-			if(needFlip(e))
-				Reverse(temp);
+			var newValue = needFlip(e) ? value.FlipEndian() : value;
+			var temp     = BitConverter.GetBytes(newValue);
 			Copy(temp, bytes, 0, offset);
 		}
 		#endregion
@@ -330,24 +322,24 @@ namespace Lapis.Utility
 					var ps = pSrc + srcStart;
 					var pd = pDest + destStart;
 #if X64
-					var stop = count / 8;
+					var stop = count / sizeof(long);
 #else
-					var stop = count / 4;
+					var stop = count / sizeof(int);
 #endif
 					for(var i = 0; i < stop; ++i)
 					{
 #if X64
 						*((long*)pd) = *((long*)ps);
-						pd += 8;
-						ps += 8;
+						pd += sizeof(long);
+						ps += sizeof(long);
 					}
-					stop = count % 8;
+					stop = count % sizeof(long);
 #else
 						*((int*)pd) = *((int*)ps);
-						pd += 4;
-						ps += 4;
+						pd += sizeof(int);
+						ps += sizeof(int);
 					}
-					stop = count % 4;
+					stop = count % sizeof(int);
 #endif
 					for(var i = 0; i < stop; ++i)
 					{
@@ -434,8 +426,7 @@ namespace Lapis.Utility
 		/// <returns>True if the bytes need to be flipped or false if they should be flipped</returns>
 		private static bool needFlip (Endian e)
 		{
-			return ((BitConverter.IsLittleEndian && Endian.Big == e) ||
-				(!BitConverter.IsLittleEndian && Endian.Little == e));
+			return BitConverter.IsLittleEndian ^ Endian.Little == e;
 		}
 	}
 }

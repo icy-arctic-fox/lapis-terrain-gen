@@ -1,4 +1,9 @@
 ﻿using System;
+using System.IO;
+
+#if !DEBUG
+using Lapis.Utility;
+#endif
 
 namespace Lapis.IO.NBT
 {
@@ -75,12 +80,18 @@ namespace Lapis.IO.NBT
 		/// Writes just the payload portion of the node to a stream
 		/// </summary>
 		/// <param name="bw">Stream writer</param>
-		protected internal override void WritePayload (System.IO.BinaryWriter bw)
+		protected internal override void WritePayload (BinaryWriter bw)
 		{
 			var length = _data.Length;
 			bw.Write(length);
+#if !DEBUG
+			var ebw = bw as EndianBinaryWriter;
+			if(null != ebw && needFlip(ebw.Endian))
+				bw.Write(endianSpeedTrick());
+			else
+#endif
 			foreach(var i in _data)
-				bw.Write(i); // TODO: This is a costly operation
+				bw.Write(i); // This is a costly operation when the endian is flipped
 		}
 
 		/// <summary>
@@ -91,14 +102,80 @@ namespace Lapis.IO.NBT
 		/// <returns>An integer array node read from a stream</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is longer than allowed</exception>
-		internal static IntArrayNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static IntArrayNode ReadPayload (BinaryReader br, string name)
 		{
 			var length = br.ReadInt32();
 			var data   = new int[length];
+#if !DEBUG
+			var ebr = br as EndianBinaryReader;
+			if(null != ebr && needFlip(ebr.Endian))
+				endianSpeedTrick(ebr, data);
+			else
+#endif
 			for(var i = 0; i < length; ++i)
 				data[i] = br.ReadInt32();
 			return new IntArrayNode(name, data);
 		}
+
+#if !DEBUG
+		private static bool needFlip (Endian e)
+		{
+			return BitConverter.IsLittleEndian ^ Endian.Little == e;
+		}
+
+		/// <summary>
+		/// Flips the endian in bulk for each integer quickly so that the binary writer doesn't have to do it individually
+		/// </summary>
+		/// <returns>An array of bytes containing the integers</returns>
+		private byte[] endianSpeedTrick ()
+		{
+			var bytes = new byte[_data.Length * sizeof(int)];
+			unsafe
+			{
+				fixed(int* pSrc = _data, pDest = bytes)
+				{
+					var ps = pSrc;
+					var pd = pDest;
+
+					for(var i = 0; i < _data.Length; ++i)
+					{
+						var value = *ps;
+						*pd = value.FlipEndian();
+						++ps;
+						pd += sizeof(int);
+					}
+				}
+			}
+			return bytes;
+		}
+
+		/// <summary>
+		/// Reads the integers in bulk and then flips them so that the binary reader doesn't have to do it individually
+		/// </summary>
+		/// <param name="br">Stream reader</param>
+		/// <param name="data">Array to store the integers in</param>
+		private static void endianSpeedTrick (BinaryReader br, int[] data)
+		{
+			var count = data.Length * sizeof(int);
+			var bytes = br.ReadBytes(count);
+			unsafe
+			{
+				fixed(int* pSrc = bytes, pDest = data)
+				{
+					var ps = pSrc;
+					var pd = pDest;
+
+					for(var i = 0; i < data.Length; ++i)
+					{
+						var value = *ps;
+						*pd = value.FlipEndian();
+						ps += sizeof(int);
+						++pd;
+					}
+				}
+			}
+		}
+#endif
 		#endregion
 
 		/// <summary>

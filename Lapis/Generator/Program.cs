@@ -7,7 +7,7 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 125;
+		private const int Radius = 16;
 
 		private static Realm _realm;
 
