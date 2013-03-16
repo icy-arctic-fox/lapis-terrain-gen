@@ -39,11 +39,11 @@ namespace EmptyTerrainGenerator
 
 		public ChunkData GenerateChunk (int cx, int cz)
 		{
-			var data = new ChunkData(cx, cz);
-			for(var bx = (byte)0; bx < Chunk.Size; ++bx)
-				for(var bz = (byte)0; bz < Chunk.Size; ++bz)
-					data.SetBlockType(bx, (byte)30, bz, Lapis.Blocks.BlockType.Glass);
-			return data;
+			using(var builder = new ChunkBuilder(cx, cz))
+			{
+				builder.FillType(0, 30, 0, Chunk.Size, 1, Chunk.Size, Lapis.Blocks.BlockType.Sand);
+				return builder.GetChunkData();
+			}
 		}
 	}
 }
