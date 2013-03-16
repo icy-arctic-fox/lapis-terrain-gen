@@ -132,19 +132,20 @@ namespace Lapis.IO.NBT
 			var bytes = new byte[_data.Length * sizeof(int)];
 			unsafe
 			{
-				fixed(int* pSrc = _data, pDest = bytes)
-				{
-					var ps = pSrc;
-					var pd = pDest;
-
-					for(var i = 0; i < _data.Length; ++i)
+				fixed(int* pSrc = _data)
+					fixed(byte* pDest = bytes)
 					{
-						var value = *ps;
-						*pd = value.FlipEndian();
-						++ps;
-						pd += sizeof(int);
+						var ps = pSrc;
+						var pd = pDest;
+
+						for(var i = 0; i < _data.Length; ++i)
+						{
+							var value = *ps;
+							*(int*)pd = value.FlipEndian();
+							++ps;
+							pd += sizeof(int);
+						}
 					}
-				}
 			}
 			return bytes;
 		}
@@ -160,19 +161,20 @@ namespace Lapis.IO.NBT
 			var bytes = br.ReadBytes(count);
 			unsafe
 			{
-				fixed(int* pSrc = bytes, pDest = data)
-				{
-					var ps = pSrc;
-					var pd = pDest;
-
-					for(var i = 0; i < data.Length; ++i)
+				fixed(byte* pSrc = bytes)
+					fixed(int* pDest = data)
 					{
-						var value = *ps;
-						*pd = value.FlipEndian();
-						ps += sizeof(int);
-						++pd;
+						var ps = pSrc;
+						var pd = pDest;
+
+						for(var i = 0; i < data.Length; ++i)
+						{
+							var value = *(int*)ps;
+							*pd = value.FlipEndian();
+							ps += sizeof(int);
+							++pd;
+						}
 					}
-				}
 			}
 		}
 #endif
