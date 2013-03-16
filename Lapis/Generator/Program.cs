@@ -7,7 +7,8 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 16;
+		private const int Radius = 50;
+		private const string DesiredGeneratorName = "Empty Terrain Generator";
 
 		private static Realm _realm;
 
@@ -16,9 +17,8 @@ namespace Generator
 			var generatorNames = GeneratorLoader.GeneratorNames;
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
-//			Console.ReadKey();
 
-			var generator = GeneratorLoader.GetGenerator(generatorNames[0]);
+			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 
 			var world = World.Create("New World");
 			var realm = world.CreateRealm(generator);
