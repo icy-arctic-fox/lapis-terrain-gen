@@ -51,12 +51,50 @@ namespace FlatlandTerrainGenerator
 		}
 		#endregion
 
+		#region Presets
+		/// <summary>
+		/// Classic flatlands with grass on top of a couple layers of dirt
+		/// </summary>
+		public const string ClassicFlat = "7,2x3,2;1";
+
+		/// <summary>
+		/// Mostly stone world with a bit of dirt and grass on top
+		/// </summary>
+		public const string TunnelersDream = "7,230x1,5x3,2";
+
+		/// <summary>
+		/// Ocean with a sandy floor
+		/// </summary>
+		public const string WaterWorld = "7,5x1,5x3,5x12,90x9";
+
+		/// <summary>
+		/// Typical vanilla Minecraft overworld, but completely flat
+		/// </summary>
+		public const string StandardOverworld = "7,59x1,3x3,2";
+
+		/// <summary>
+		/// Typical vanilla Minecraft overworld, but completely flat and covered in snow
+		/// </summary>
+		public const string SnowOverworld = "7,59x1,3x3,2,78";
+
+		/// <summary>
+		/// Flat sandy desert
+		/// </summary>
+		public const string Desert = "7,3x1,52x24,8x12";
+
+		/// <summary>
+		/// Flatland area that is ideal for redstone contraptions
+		/// </summary>
+		public const string RedstoneCanvas = "7,3x1,52x24";
+		#endregion
+
 		private readonly BlockType[] _column = new BlockType[Chunk.Height];
 
 		/// <summary>
 		/// Options string used to customize the generator
 		/// </summary>
-		/// <remarks>This string has the format: BlockID[xCount][,BlockID[xCount]]...</remarks>
+		/// <remarks>This string has the format: [Countx]BlockID[,[Countx]BlockID]...
+		/// The order is arranged from bottom (0) to top (256).</remarks>
 		public string GeneratorOptions
 		{
 			get
@@ -78,9 +116,9 @@ namespace FlatlandTerrainGenerator
 				var sb = new StringBuilder();
 				foreach(var part in parts)
 				{
-					sb.Append(part.Item1);
-					sb.Append('x');
 					sb.Append(part.Item2);
+					sb.Append('x');
+					sb.Append(part.Item1);
 					sb.Append(',');
 				}
 				if(parts.Count > 0) // Remove trailing comma
@@ -106,10 +144,15 @@ namespace FlatlandTerrainGenerator
 					byte typeValue;
 					if(byte.TryParse(set[0], out typeValue))
 					{
-						var type = (BlockType)typeValue;
-						uint count = 1;
+						byte count = 1;
 						if(set.Length > 1)
-							uint.TryParse(set[1], out count);
+							if(byte.TryParse(set[1], out count))
+							{// Annoyingly, the vanilla Minecraft flatlands generator does things more difficult than the need to be
+								var temp  = count;
+								count     = typeValue;
+								typeValue = temp;
+							}
+						var type = (BlockType)typeValue;
 						switch(count)
 						{
 						case 1:
@@ -141,6 +184,21 @@ namespace FlatlandTerrainGenerator
 						builder.FillColumn(bx, bz, _column);
 				return builder.GetChunkData();
 			}
+		}
+
+		/// <summary>
+		/// Sets the blocks used at a specific level
+		/// </summary>
+		/// <param name="by">Y-offset of the level/block to set</param>
+		/// <param name="count">Number of levels/blocks to set (should be at least 1)</param>
+		/// <param name="type">Type to set to the blocks to</param>
+		public void SetLevel (byte by, byte count, BlockType type)
+		{
+			var yEnd = by + count;
+			if(_column.Length <= yEnd)
+				yEnd = _column.Length - 1;
+			for(var y = by; y < yEnd; ++y)
+				_column[y] = type;
 		}
 	}
 }
