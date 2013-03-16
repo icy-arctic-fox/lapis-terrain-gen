@@ -94,7 +94,7 @@ namespace Lapis.Level.Data
 		{
 			if(Chunk.Size <= bx)
 				throw new ArgumentOutOfRangeException("bx", "The x-value of the block coordinate can't be at or above " + Chunk.Size);
-			if(Chunk.Size <= bSz)
+			if(Chunk.Size <= bz)
 				throw new ArgumentOutOfRangeException("bz", "The z-value of the block coordinate can't be at or above " + Chunk.Size);
 
 			var index = (byte)(bz * Chunk.Size + bx);
