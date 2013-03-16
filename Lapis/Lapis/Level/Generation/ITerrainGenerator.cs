@@ -9,6 +9,7 @@ namespace Lapis.Level.Generation
 	/// After a generator is set up, a combination of the version and options string can produce the same generator later.</remarks>
 	public interface ITerrainGenerator
 	{
+		#region Meta data
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
@@ -30,6 +31,7 @@ namespace Lapis.Level.Generation
 		/// Brief description of what the generator does
 		/// </summary>
 		string GeneratorDescription { get; }
+		#endregion
 
 		/// <summary>
 		/// Options string used to customize the generator
