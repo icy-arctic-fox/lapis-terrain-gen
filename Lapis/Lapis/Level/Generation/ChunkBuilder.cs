@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Lapis.Blocks;
 using Lapis.Level.Data;
 using Lapis.Utility;
@@ -71,7 +68,7 @@ namespace Lapis.Level.Generation
 			var subBy1 = (byte)(by % Chunk.Size);
 			var subBy2 = (byte)(yEnd % Chunk.Size);
 
-			var index = ChunkData.CalculateIndex(bx, by, bz);
+			var index = ChunkData.CalculateIndex(bx, subBy1, bz);
 			// Blocks are organized as YZX
 			if(sectionStart == sectionEnd)
 			{// Region is contained in a single section
@@ -143,11 +140,11 @@ namespace Lapis.Level.Generation
 				throw new ArgumentOutOfRangeException("bx", "The x-position of the block must be less than " + Chunk.Size);
 			if(Chunk.Size <= bz)
 				throw new ArgumentOutOfRangeException("bz", "The z-position of the block must be less than " + Chunk.Size);
-			if(Chunk.Size <= bx + xCount)
+			if(Chunk.Size < bx + xCount)
 				throw new ArgumentOutOfRangeException("xCount", "The total block count can't extend outside the chunk.");
-			if(Chunk.Height <= by + yCount)
+			if(Chunk.Height < by + yCount)
 				throw new ArgumentOutOfRangeException("yCount", "The total block count can't extend outside the chunk.");
-			if(Chunk.Size <= bz + zCount)
+			if(Chunk.Size < bz + zCount)
 				throw new ArgumentOutOfRangeException("zCount", "The total block count can't extend outside the chunk.");
 		}
 		#endregion

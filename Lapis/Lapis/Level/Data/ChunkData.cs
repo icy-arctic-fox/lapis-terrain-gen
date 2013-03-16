@@ -133,7 +133,7 @@ namespace Lapis.Level.Data
 		/// <returns>Flattened index of the block</returns>
 		internal static int CalculateIndex (byte bx, byte by, byte bz)
 		{
-			var index = (by * Chunk.Size * Chunk.Size) + (bz * Chunk.Size) + bx;
+			var index = (by * Chunk.SectionHeight * Chunk.SectionHeight) + (bz * Chunk.Size) + bx;
 			return index;
 		}
 
