@@ -49,10 +49,7 @@ namespace Lapis.Level.Generation
 			loadGenerators(GeneratorDir);
 			var types = AppDomain.CurrentDomain.GetAssemblies()
 								.SelectMany(asm => asm.GetTypes()
-													.Where(t =>
-															_terrainGeneratorType.IsAssignableFrom(t) &&
-															!t.IsInterface &&
-															_terrainGeneratorType != t));
+									.Where(isSuitableTerrainGenerator));
 
 			_terrainGeneratorTypes.Clear();
 			try
@@ -99,6 +96,14 @@ namespace Lapis.Level.Generation
 					}
 				}
 			}
+		}
+
+		private static bool isSuitableTerrainGenerator (Type t)
+		{
+			return _terrainGeneratorType.IsAssignableFrom(t) &&
+					null != t.GetConstructor(Type.EmptyTypes) &&
+					!t.IsInterface &&
+					_terrainGeneratorType != t;
 		}
 		#endregion
 
