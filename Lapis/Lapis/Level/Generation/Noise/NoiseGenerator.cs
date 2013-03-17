@@ -7,8 +7,27 @@ namespace Lapis.Level.Generation.Noise
 	/// <summary>
 	/// Generates noise values used for terrain generation
 	/// </summary>
+	/// <remarks>Noise generators always produce a value from -1 to 1.
+	/// However, a post-processor (like RangePostProcessor or ClampPostProcessor) may change that.</remarks>
 	public abstract class NoiseGenerator
 	{
+		/// <summary>
+		/// Describes a method that generates noise given a 2D coordinate
+		/// </summary>
+		/// <param name="x">X-position</param>
+		/// <param name="y">Y-position</param>
+		/// <returns>A noise value</returns>
+		public delegate double NoiseGenerator2D (double x, double y);
+
+		/// <summary>
+		/// Describes a method that generates noise given a 3D coordinate
+		/// </summary>
+		/// <param name="x">X-position</param>
+		/// <param name="y">Y-position</param>
+		/// <param name="z">Z-position</param>
+		/// <returns>A noise value</returns>
+		public delegate double NoiseGenerator3D (double x, double y, double z);
+
 		#region Pre-process
 		private readonly List<INoisePreProcessor> _preProcessors = new List<INoisePreProcessor>();
 
@@ -82,7 +101,7 @@ namespace Lapis.Level.Generation.Noise
 		/// </summary>
 		/// <param name="x">X-position</param>
 		/// <param name="y">Y-position</param>
-		/// <returns>A noise value</returns>
+		/// <returns>A noise value from -1 to 1</returns>
 		public double GenerateNoise (double x, double y)
 		{
 			preProcess(x, y, out x, out y);
@@ -97,7 +116,7 @@ namespace Lapis.Level.Generation.Noise
 		/// <param name="x">X-position</param>
 		/// <param name="y">Y-position</param>
 		/// <param name="z">Z-position</param>
-		/// <returns>A noise value</returns>
+		/// <returns>A noise value from -1 to 1</returns>
 		public double GenerateNoise (double x, double y, double z)
 		{
 			preProcess(x, y, z, out x, out y, out z);
