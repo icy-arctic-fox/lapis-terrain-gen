@@ -78,6 +78,9 @@
     <Compile Include="Level\GameMode.cs" />
     <Compile Include="Level\Generation\ChunkBuilder.cs" />
     <Compile Include="Level\Generation\Noise\ConstantValueNoiseGenerator.cs" />
+    <Compile Include="Level\Generation\Noise\ClampPostProcessor.cs" />
+    <Compile Include="Level\Generation\Noise\RangePostProcessor.cs" />
+    <Compile Include="Level\Generation\Noise\InvertPostProcessor.cs" />
     <Compile Include="Level\Generation\Noise\SineWaveNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\MathConstants.cs" />
     <Compile Include="Level\Generation\Noise\RotatePreProcessor.cs" />
