@@ -72,7 +72,9 @@ namespace EmptyTerrainGenerator
 		/// <returns>The generated chunk data</returns>
 		public ChunkData GenerateChunk (int cx, int cz)
 		{
-			return new ChunkData(cx, cz);
+			return new ChunkData(cx, cz) {
+				TerrainPopulated = true
+			};
 		}
 	}
 }

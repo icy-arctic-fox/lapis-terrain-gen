@@ -182,6 +182,7 @@ namespace FlatlandTerrainGenerator
 				for(var bx = (byte)0; bx < Chunk.Size; ++bx)
 					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 						builder.FillColumn(bx, bz, _column);
+				// TODO: Light chunk
 				return builder.GetChunkData();
 			}
 		}

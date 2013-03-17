@@ -18,7 +18,7 @@ namespace Lapis.Level.Generation.Noise
 		{
 			switch(method)
 			{
-			case SineWaveMethod.Ribbon:
+			case SineWaveMethod.Wavy:
 				_2DMethod = generateRibbon;
 				_3DMethod = generateRibbon;
 				break;
@@ -105,11 +105,11 @@ namespace Lapis.Level.Generation.Noise
 			Normal,
 
 			/// <summary>
-			/// Ribbon appearance with sharp diagonals and smooth inner-regions
+			/// Wavy appearance with sharp diagonals and smooth inner-regions
 			/// </summary>
 			/// <remarks>Uses the equation: n = sin(x * y)
 			/// A preview of this type can be found here: http://www.wolframalpha.com/input/?i=sin%28x*y%29 </remarks>
-			Ribbon,
+			Wavy,
 
 			/// <summary>
 			/// Water ripple appearance

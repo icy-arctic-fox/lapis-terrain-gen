@@ -20,8 +20,8 @@ namespace Generator
 			var watch = new Stopwatch();
 			watch.Start();
 #if DEBUG
-			ThreadPool.SetMinThreads(1, 1);
-			ThreadPool.SetMaxThreads(1, 1);
+			System.Threading.ThreadPool.SetMinThreads(1, 1);
+			System.Threading.ThreadPool.SetMaxThreads(1, 1);
 #endif
 
 			var generatorNames = GeneratorLoader.GeneratorNames;
