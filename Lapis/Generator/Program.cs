@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
-using Lapis.Level;
 using Lapis.Level.Generation;
 using Lapis.Threading;
 
