@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Lapis.Utility
 {
@@ -37,9 +34,60 @@ namespace Lapis.Utility
 			get { return _count; }
 		}
 
+		/// <summary>
+		/// Number of bytes that the array uses
+		/// </summary>
 		public int ByteCount
 		{
 			get { return _data.Length; }
+		}
+
+		/// <summary>
+		/// Nibble values contained in the array
+		/// </summary>
+		/// <param name="index">Index of the nibble</param>
+		/// <returns>A nibble value</returns>
+		public byte this[int index]
+		{
+			get
+			{
+				if(0 > index || index >= _data.Length * 2)
+					throw new IndexOutOfRangeException("The index of the nibble is out of range.");
+
+				var pos = index / 2;
+				var val = _data[pos];
+				if(0 == (index % 2)) // First half of the byte
+					val &= 0x0f;
+				else // Second half of the byte
+					val >>= 4;
+				return val;
+			}
+
+			set
+			{
+				if(0 > index || index >= _data.Length * 2)
+					throw new IndexOutOfRangeException("The index of the nibble is out of range.");
+
+				value &= 0x0f;
+				var pos = index / 2;
+				var val = _data[pos];
+				if(0 == (index % 2)) // First half of the byte
+					val = (byte)((val & 0xf0) | value);
+				else // Second half of the byte
+					val = (byte)((value << 4) | val & 0x0f);
+				_data[pos] = val;
+			}
+		}
+
+		/// <summary>
+		/// Gets the contents of the array as an array of bytes
+		/// </summary>
+		/// <returns>A byte array</returns>
+		public byte[] ToByteArray ()
+		{
+			var bytes = new byte[_data.Length];
+			_data.Copy(bytes);
+			return bytes;
 		}
 	}
 }

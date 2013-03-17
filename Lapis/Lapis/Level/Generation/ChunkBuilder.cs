@@ -75,7 +75,7 @@ namespace Lapis.Level.Generation
 		public void FillColumn (byte bx, byte bz, BlockType type, byte yOff, byte yCount)
 		{
 			var yEnd = yOff + yCount;
-			const int step = Chunk.SectionHeight * Chunk.SectionHeight;
+			const int step = Chunk.Size * Chunk.Size;
 
 			var sectionStart = yOff / Chunk.SectionHeight;
 			var sectionEnd   = (yEnd - 1) / Chunk.SectionHeight;
@@ -202,7 +202,7 @@ namespace Lapis.Level.Generation
 		private static void setSectionSpan<T> (byte bx, byte bz, T[][] sections, byte yOff, T[] column)
 		{
 			var yEnd = yOff + column.Length;
-			const int step = Chunk.SectionHeight * Chunk.SectionHeight;
+			const int step = Chunk.Size * Chunk.Size;
 
 			var sectionStart = yOff / Chunk.SectionHeight;
 			var sectionEnd   = (yEnd - 1) / Chunk.SectionHeight;
