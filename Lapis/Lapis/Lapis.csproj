@@ -77,6 +77,9 @@
     <Compile Include="Level\Dimension.cs" />
     <Compile Include="Level\GameMode.cs" />
     <Compile Include="Level\Generation\ChunkBuilder.cs" />
+    <Compile Include="Level\Generation\Noise\INoisePostProcessor.cs" />
+    <Compile Include="Level\Generation\Noise\INoisePreProcessor.cs" />
+    <Compile Include="Level\Generation\Noise\NoiseGenerator.cs" />
     <Compile Include="Threading\GenerationManager.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />
     <Compile Include="Level\Generation\ITerrainGenerator.cs" />
@@ -87,6 +90,7 @@
     <Compile Include="Utility\ByteArrayUtility.cs" />
     <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\EndianUtility.cs" />
+    <Compile Include="Utility\NibbleArray.cs" />
     <Compile Include="Utility\StringManipulation.cs" />
     <Compile Include="Utility\Timestamp.cs" />
     <Compile Include="Threading\WaitList.cs" />
