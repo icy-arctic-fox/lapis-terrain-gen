@@ -366,5 +366,20 @@ namespace Lapis.Level.Data
 					return i; // TODO: This could be optimized
 			return 0;
 		}
+
+		/// <summary>
+		/// Converts a local block coordinate to a global coordinate
+		/// </summary>
+		/// <param name="cx">X-position of the containing chunk</param>
+		/// <param name="cz">Z-position of the containing chunk</param>
+		/// <param name="bx">X-position inside the chunk</param>
+		/// <param name="bz">Z-position inside the chunk</param>
+		/// <param name="gx">X-position of the global block coordinate</param>
+		/// <param name="gz">Z-position of the global block coordinate</param>
+		public static void LocalToGlobalXZ (int cx, int cz, int bx, int bz, out int gx, out int gz)
+		{
+			gx = cx * Chunk.Size + bx;
+			gz = cz * Chunk.Size + bz;
+		}
 	}
 }
