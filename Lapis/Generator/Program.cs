@@ -9,11 +9,16 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 128;
+		private const int Radius = 64;
 		private const string DesiredGeneratorName = "Flatland Terrain Generator";
 
 		static void Main (string[] args)
 		{
+			Console.Write("World Name: ");
+			var name = Console.ReadLine();
+			Console.Write("Generator Options: ");
+			var opts = Console.ReadLine();
+
 			var watch = new Stopwatch();
 			watch.Start();
 #if DEBUG
@@ -25,14 +30,16 @@ namespace Generator
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 
-			var manager   = new GenerationManager("New World");
+			var manager   = new GenerationManager(name);
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
-			generator.Initialize("7,5x1,5x3,5x12,90x9");
+			generator.Initialize(opts);
 			var realmId = manager.AddRealm(generator);
 			manager.GenerateRectange(realmId, -Radius, -Radius, Radius * 2, Radius * 2);
 
 			watch.Stop();
 			Console.WriteLine(watch.Elapsed);
+			Console.Write("Generation completed, press any key to exit");
+			Console.ReadKey();
 		}
 	}
 }
