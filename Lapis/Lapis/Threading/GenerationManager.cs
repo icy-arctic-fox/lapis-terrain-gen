@@ -13,31 +13,97 @@ namespace Lapis.Threading
 	/// </summary>
 	public class GenerationManager
 	{
+		#region Generation Speed Values
+		/// <summary>
+		/// Delay (in milliseconds) between each piece of work
+		/// </summary>
+		private static readonly int[] _generationDelay = new[] {
+																	0,    // Full
+																	2000, // Fast
+																	5000, // Medium
+																	7000, // Slow
+																	10000 // Very slow
+																};
+
+		/// <summary>
+		/// Diameter of the area of chunks to generate per unit of work
+		/// </summary>
+		private static readonly int[] _generationCount = new[] {
+																	32, // Full
+																	16, // Fast
+																	8,  // Medium
+																	4,  // Slow
+																	1   // Very slow
+																};
+		#endregion
+
 		private readonly World _world;
+		private volatile GenerationSpeed _speed;
+
+		/// <summary>
+		/// Creates a new manager that handles generating chunks in bulk
+		/// </summary>
+		/// <param name="name">Name of the new world</param>
+		/// <param name="speed">Speed to generate chunks at</param>
+		public GenerationManager (string name, GenerationSpeed speed = GenerationSpeed.Full)
+		{
+			_world = World.Create(name);
+			_speed = speed;
+		}
 
 		/// <summary>
 		/// Speed at which to generate chunks
 		/// </summary>
 		public GenerationSpeed Speed
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return _speed; }
+			set { _speed = value; }
 		}
 
-		public void AddRealm (ITerrainGenerator generator, Dimension dimmension = Dimension.Normal)
+		public int AddRealm (ITerrainGenerator generator, Dimension dimmension = Dimension.Normal)
 		{
-			throw new NotImplementedException();
+			return AddRealm(generator, (int)dimmension, dimmension);
 		}
 
-		public void AddRealm (ITerrainGenerator generator, int realmId, Dimension dimension = Dimension.Normal)
+		public int AddRealm (ITerrainGenerator generator, int realmId, Dimension dimension = Dimension.Normal)
 		{
-			World.Create("foo").CreateRealm(generator, realmId, dimension);
-			throw new NotImplementedException();
+			_world.CreateRealm(generator, realmId, dimension);
+			return realmId;
 		}
 
-		public void GenerateRectange (int realmId, int startX, int startZ, int countX, int countZ)
+		/// <summary>
+		/// Generates a rectangular region of chunks
+		/// </summary>
+		/// <param name="realmId">ID of the realm to generate chunks for</param>
+		/// <param name="startX">X-position of the chunk to start generating at</param>
+		/// <param name="startZ">Z-position of the chunk to start generating at</param>
+		/// <param name="countX">Number of chunks to generate along the x-axis</param>
+		/// <param name="countZ">Number of chunks to generate along the z-axis</param>
+		/// <param name="overwrite">Whether or not to overwrite existing chunks</param>
+		/// <remarks>This method will block until all of the chunks have been generated.</remarks>
+		public void GenerateRectange (int realmId, int startX, int startZ, int countX, int countZ, bool overwrite = false)
 		{
-			throw new NotImplementedException();
+			var realm    = _world[realmId];
+			var list     = new WaitList();
+			var unitSize = _generationCount[(int)_speed];
+
+			var lastX = startX + countX;
+			var lastZ = startZ + countZ;
+
+			for(var cx = startX; cx < lastX; cx += unitSize)
+				for(var cz = startZ; cz < lastZ; cz += unitSize)
+				{
+					var xSize  = Math.Min(unitSize, lastX - cx);
+					var zSize  = Math.Min(unitSize, lastZ - cz);
+					var handle = list.NextHandle();
+					var work   = new GenerationUnit(realm, cx, cz, xSize, zSize, handle);
+					ThreadPool.QueueUserWorkItem(doWork, work);
+				}
+
+			// TODO: Implement overwrite functionality
+
+			list.WaitAll();
+			_world.Save();
 		}
 
 		private void doWork (object state)
@@ -51,6 +117,7 @@ namespace Lapis.Threading
 				for(var x = work.StartX; x <= lastX; ++x)
 					for(var z = work.StartZ; z <= lastZ; ++z)
 						realm.GenerateChunk(x, z);
+				Thread.Sleep(_generationDelay[(int)_speed]);
 				work.Done();
 			}
 		}
@@ -60,45 +127,23 @@ namespace Lapis.Threading
 		/// </summary>
 		private class GenerationUnit
 		{
-			private readonly Realm _realm;
-			private readonly int _startX, _startZ, _countX, _countZ;
+			public readonly Realm Realm;
+			public readonly int StartX, StartZ, CountX, CountZ;
 			private readonly ManualResetEvent _handle;
-
-			public Realm Realm
-			{
-				get { return _realm; }
-			}
-
-			public int StartX
-			{
-				get { return _startX; }
-			}
-
-			public int StartZ
-			{
-				get { return _startZ; }
-			}
-
-			public int CountX
-			{
-				get { return _countX; }
-			}
-
-			public int CountZ
-			{
-				get { return _countZ; }
-			}
 
 			public GenerationUnit (Realm realm, int startX, int startZ, int countX, int countZ, ManualResetEvent handle)
 			{
-				_realm  = realm;
-				_startX = startX;
-				_startZ = startZ;
-				_countX = countX;
-				_countZ = countZ;
+				Realm   = realm;
+				StartX  = startX;
+				StartZ  = startZ;
+				CountX  = countX;
+				CountZ  = countZ;
 				_handle = handle;
 			}
 
+			/// <summary>
+			/// Marks the work as completed
+			/// </summary>
 			public void Done ()
 			{
 				_handle.Set();
@@ -111,14 +156,14 @@ namespace Lapis.Threading
 	/// </summary>
 	public enum GenerationSpeed
 	{
-		VerySlow = 10,
+		Full,
 
-		Slow = 5,
+		Fast,
 
-		Medium = 3,
+		Medium,
 
-		High = 1,
+		Slow,
 
-		Full = 0
+		VerySlow
 	}
 }

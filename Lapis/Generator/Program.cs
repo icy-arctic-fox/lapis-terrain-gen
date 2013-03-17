@@ -1,19 +1,21 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Lapis.Level;
 using Lapis.Level.Generation;
+using Lapis.Threading;
 
 namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 50;
+		private const int Radius = 128;
 		private const string DesiredGeneratorName = "Flatland Terrain Generator";
-
-		private static Realm _realm;
 
 		static void Main (string[] args)
 		{
+			var watch = new Stopwatch();
+			watch.Start();
 #if DEBUG
 			ThreadPool.SetMinThreads(1, 1);
 			ThreadPool.SetMaxThreads(1, 1);
@@ -23,61 +25,14 @@ namespace Generator
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 
+			var manager   = new GenerationManager("New World");
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
-			generator.Initialize("7,59x1,3x3,2,78");
+			generator.Initialize("7,5x1,5x3,5x12,90x9");
+			var realmId = manager.AddRealm(generator);
+			manager.GenerateRectange(realmId, -Radius, -Radius, Radius * 2, Radius * 2);
 
-			var world = World.Create("New World");
-			var realm = world.CreateRealm(generator);
-			_realm    = realm;
-
-			var events = new ManualResetEvent[4];
-			for(var i = 0; i < events.Length; ++i)
-				events[i] = new ManualResetEvent(false);
-
-			ThreadPool.QueueUserWorkItem(topLeft, events[0]);
-			ThreadPool.QueueUserWorkItem(topRight, events[1]);
-			ThreadPool.QueueUserWorkItem(bottomLeft, events[2]);
-			ThreadPool.QueueUserWorkItem(bottomRight, events[3]);
-			WaitHandle.WaitAll(events);
-
-			world.Save();
-//			World.Load("New World").LoadRealm((int)Dimension.Normal);
-		}
-
-		private static void topLeft (object state)
-		{
-			for(var cx = -Radius; cx < 0; ++cx)
-				for(var cz = -Radius; cz < 0; ++cz)
-					_realm.GenerateChunk(cx, cz);
-			Console.WriteLine("Top-left done");
-			((ManualResetEvent)state).Set();
-		}
-
-		private static void topRight (object state)
-		{
-			for(var cx = 0; cx < Radius; ++cx)
-				for(var cz = -Radius; cz < 0; ++cz)
-					_realm.GenerateChunk(cx, cz);
-			Console.WriteLine("Top-right done");
-			((ManualResetEvent)state).Set();
-		}
-
-		private static void bottomLeft (object state)
-		{
-			for(var cx = -Radius; cx < 0; ++cx)
-				for(var cz = 0; cz < Radius; ++cz)
-					_realm.GenerateChunk(cx, cz);
-			Console.WriteLine("Bottom-left done");
-			((ManualResetEvent)state).Set();
-		}
-
-		private static void bottomRight (object state)
-		{
-			for(var cx = 0; cx < Radius; ++cx)
-				for(var cz = 0; cz < Radius; ++cz)
-					_realm.GenerateChunk(cx, cz);
-			Console.WriteLine("Bottom-right done");
-			((ManualResetEvent)state).Set();
+			watch.Stop();
+			Console.WriteLine(watch.Elapsed);
 		}
 	}
 }
