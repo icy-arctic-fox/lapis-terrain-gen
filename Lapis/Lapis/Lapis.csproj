@@ -77,9 +77,13 @@
     <Compile Include="Level\Dimension.cs" />
     <Compile Include="Level\GameMode.cs" />
     <Compile Include="Level\Generation\ChunkBuilder.cs" />
+    <Compile Include="Level\Generation\Noise\MathConstants.cs" />
+    <Compile Include="Level\Generation\Noise\RotatePreProcessor.cs" />
+    <Compile Include="Level\Generation\Noise\ScalePreProcessor.cs" />
     <Compile Include="Level\Generation\Noise\INoisePostProcessor.cs" />
     <Compile Include="Level\Generation\Noise\INoisePreProcessor.cs" />
     <Compile Include="Level\Generation\Noise\NoiseGenerator.cs" />
+    <Compile Include="Level\Generation\Noise\TranslatePreProcessor.cs" />
     <Compile Include="Threading\GenerationManager.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />
     <Compile Include="Level\Generation\ITerrainGenerator.cs" />
