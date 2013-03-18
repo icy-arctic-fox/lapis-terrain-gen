@@ -36,7 +36,7 @@ namespace Lapis.Level.Generation.Noise
 		/// <returns>A scaled noise value</returns>
 		public double ProcessNoise (double noise)
 		{
-			var value = noise * _range;
+			var value = (noise + 1d) * _range + _lower;
 			if(_lower > value)
 				return _lower;
 			if(_upper < value)
