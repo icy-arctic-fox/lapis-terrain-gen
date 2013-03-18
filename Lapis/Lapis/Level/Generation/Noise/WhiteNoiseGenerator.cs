@@ -11,7 +11,7 @@ namespace Lapis.Level.Generation.Noise
 		private readonly long _seed;
 
 		/// <summary>
-		/// Creates a new constant value noise generator
+		/// Creates a new white noise generator
 		/// </summary>
 		/// <param name="seed">Random seed</param>
 		public WhiteNoiseGenerator (long seed)

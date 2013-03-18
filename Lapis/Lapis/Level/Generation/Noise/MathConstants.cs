@@ -16,5 +16,15 @@ namespace Lapis.Level.Generation.Noise
 		/// Radians to degrees ratio
 		/// </summary>
 		public const double RadiansToDegrees = 180d / Math.PI;
+
+		/// <summary>
+		/// 2 Pi
+		/// </summary>
+		public const double Pi2 = Math.PI * 2d;
+
+		/// <summary>
+		/// Half Pi
+		/// </summary>
+		public const double HalfPi = Math.PI / 2d;
 	}
 }
