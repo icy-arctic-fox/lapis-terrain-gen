@@ -26,7 +26,7 @@ namespace Lapis.Level.Generation.Noise
 
 			_lower = lower;
 			_upper = upper;
-			_range = (_upper - _lower + 1d) / 2d; // +1 to make bounds inclusive and /2 assuming original -1 to 1 range
+			_range = (_upper - _lower) / 2d;
 		}
 
 		/// <summary>
