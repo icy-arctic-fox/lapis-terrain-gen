@@ -82,6 +82,15 @@ namespace Lapis.Level.Generation.Noise
 			return t * t * t * (t * (t * 6 - 15) + 10);
 		}
 
+		protected static double Grad (int hash, double x)
+		{
+			var h = hash & 15;
+			var grad = 1.0 + (h & 7);
+			if(0 != (h & 8))
+				grad = -grad;
+			return grad * x;
+		}
+
 		protected static double Grad (int hash, double x, double y)
 		{
 			var h = hash & 7;
@@ -96,6 +105,15 @@ namespace Lapis.Level.Generation.Noise
 			var u = (h < 8) ? x : y;
 			var v = (h < 4) ? y : (12 == h || 14 == h) ? x : z;
 			return ((h & 1) != 0 ? -u : u) + ((h & 2) != 0 ? -v : v);
+		}
+
+		protected static double Grad (int hash, double x, double y, double z, double t)
+		{
+			var h = hash & 31;
+			var u = (h < 24) ? x : y;
+			var v = (h < 16) ? y : z;
+			var w = (h < 8)  ? z : t;
+			return ((h & 1) != 0 ? -u : u) + ((h & 2) != 0 ? -v : v) + ((h & 4) != 0 ? -w : w);
 		}
 
 		/// <summary>

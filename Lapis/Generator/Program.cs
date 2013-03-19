@@ -7,8 +7,8 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 64;
-		private const string DesiredGeneratorName = "Flatland Terrain Generator";
+		private const int Radius = 32;
+		private const string DesiredGeneratorName = "Test Terrain Generator";
 
 		static void Main (string[] args)
 		{
@@ -32,7 +32,7 @@ namespace Generator
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 			generator.Initialize(opts);
 			var realmId = manager.AddRealm(generator);
-			manager.GenerateRectange(realmId, -Radius, -Radius, Radius * 2, Radius * 2);
+			manager.GenerateRectange(realmId, 0, 0, Radius, Radius);
 
 			watch.Stop();
 			Console.WriteLine(watch.Elapsed);

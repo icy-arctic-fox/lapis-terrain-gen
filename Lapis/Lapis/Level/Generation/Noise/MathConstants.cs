@@ -26,5 +26,30 @@ namespace Lapis.Level.Generation.Noise
 		/// Half Pi
 		/// </summary>
 		public const double HalfPi = Math.PI / 2d;
+
+		/// <summary>
+		/// Square root of 3
+		/// </summary>
+		public const double Sqrt3 = 1.7320508075688772935274463415059;
+
+		/// <summary>
+		/// F skewing factor for 2D
+		/// </summary>
+		public const double F2 = 0.5 * (Sqrt3 - 1.0);
+
+		/// <summary>
+		/// G skewing factor for 2D
+		/// </summary>
+		public const double G2 = (3.0 - Sqrt3) / 6.0;
+
+		/// <summary>
+		/// F skewing factor for 3D
+		/// </summary>
+		public const double F3 = 1 / 3;
+
+		/// <summary>
+		/// G skewing factor for 3D
+		/// </summary>
+		public const double G3 = 1 / 6;
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using Lapis.Level;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
+using Lapis.Level.Generation.Noise;
 
 namespace TestTerrainGenerator
 {
@@ -62,7 +64,12 @@ namespace TestTerrainGenerator
 		public void Initialize (string options)
 		{
 			// ...
+			_noise.AddPostProcess(new RangePostProcessor(0, Chunk.Height));
 		}
+
+		private readonly NoiseGenerator _noise = new SimplexNoiseGenerator(0);
+		private const double Scale = 1 / 256d;
+
 
 		/// <summary>
 		/// Generates a chunk at the given coordinate
@@ -72,10 +79,33 @@ namespace TestTerrainGenerator
 		/// <returns>The generated chunk data</returns>
 		public ChunkData GenerateChunk (int cx, int cz)
 		{
-			return new ChunkData(cx, cz)
-			{
-				TerrainPopulated = true
-			};
+			var data = new ChunkData(cx, cz);
+			for(var bx = (byte)0; bx < Chunk.Size; ++bx)
+				for(var bz = (byte)0; bz < Chunk.Size; ++bz)
+				{
+					int gx, gz;
+					LevelDataUtility.LocalToGlobalXZ(cx, cz, bx, bz, out gx, out gz);
+					var x = gx * Scale;
+					var z = gz * Scale;
+					var height = _noise.GenerateNoise(x, z, 0);
+					for(var by = (byte)(height - 1); by > 0; --by)
+						data.SetBlockType(bx, by, bz, Lapis.Blocks.BlockType.Dirt);
+					if(height < 64)
+					{
+						for(var by = (byte)height; by < height + 3; ++by)
+							data.SetBlockType(bx, by, bz, Lapis.Blocks.BlockType.Sand);
+						for(var by = (byte)(height + 3); by < 65; ++by)
+							data.SetBlockType(bx, by, bz, Lapis.Blocks.BlockType.Water);
+						height = 64;
+					}
+					else
+					{
+						data.SetBlockType(bx, (byte)height, bz, height > 220 ? Lapis.Blocks.BlockType.Snow : Lapis.Blocks.BlockType.Grass);
+					}
+					data.SetBlockType(bx, 0, bz, Lapis.Blocks.BlockType.Bedrock);
+					data.HeightMap[bx, bz] = (byte)height;
+				}
+			return data;
 		}
 	}
 }
