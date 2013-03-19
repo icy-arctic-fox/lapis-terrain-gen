@@ -12,11 +12,6 @@ namespace Lapis.Level.Generation.Noise
 	{
 		private const int MaxOffset = 256;
 
-		private const int XNoisePrime    = 1619;
-		private const int YNoisePrime    = 31337;
-		private const int ZNoisePrime    = 263;
-		private const int SeedNoisePrime = 1013;
-
 		public const int DefaultOctaves        = 8;
 		public const double DefaultPersistence = 0.35;
 		public const double DefaultFrequency   = 2.0;
@@ -163,36 +158,21 @@ namespace Lapis.Level.Generation.Noise
 			}
 
 			double n0, n1, ix0, ix1, iy0, iy1;
-			n0  = noise(seed, x0, y0, z0);
-			n1  = noise(seed, x1, y0, z0);
+			n0  = Noise(seed, x0, y0, z0);
+			n1  = Noise(seed, x1, y0, z0);
 			ix0 = Interpolate(n0, n1, xs);
-			n0  = noise(seed, x0, y1, z0);
-			n1  = noise(seed, x1, y1, z0);
+			n0  = Noise(seed, x0, y1, z0);
+			n1  = Noise(seed, x1, y1, z0);
 			ix1 = Interpolate(n0, n1, xs);
 			iy0 = Interpolate(ix0, ix1, ys);
-			n0  = noise(seed, x0, y0, z1);
-			n1  = noise(seed, x1, y0, z1);
+			n0  = Noise(seed, x0, y0, z1);
+			n1  = Noise(seed, x1, y0, z1);
 			ix0 = Interpolate(n0, n1, xs);
-			n0  = noise(seed, x0, y1, z1);
-			n1  = noise(seed, x1, y1, z1);
+			n0  = Noise(seed, x0, y1, z1);
+			n1  = Noise(seed, x1, y1, z1);
 			ix1 = Interpolate(n0, n1, xs);
 			iy1 = Interpolate(ix0, ix1, ys);
 			return Interpolate(iy0, iy1, zs);
-		}
-
-		private static double noise (int seed, int x, int y, int z)
-		{
-			unchecked
-			{
-				var n = (XNoisePrime * x) +
-						(YNoisePrime * y) +
-						(ZNoisePrime * z) +
-						(SeedNoisePrime * seed) &
-						0x7fffffff;
-				n = (n >> 13) ^ n;
-				var noise = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
-				return 1 - (noise / 1073741824.0);
-			}
 		}
 
 		#region Noise quality
