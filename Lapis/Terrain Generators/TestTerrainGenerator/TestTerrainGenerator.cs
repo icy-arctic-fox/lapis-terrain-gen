@@ -67,7 +67,7 @@ namespace TestTerrainGenerator
 			_noise.AddPostProcess(new RangePostProcessor(0, Chunk.Height));
 		}
 
-		private readonly NoiseGenerator _noise = new SimplexNoiseGenerator(0);
+		private readonly NoiseGenerator _noise = new CellNoiseGenerator(0);
 		private const double Scale = 1 / 256d;
 
 

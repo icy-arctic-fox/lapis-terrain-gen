@@ -128,5 +128,33 @@ namespace Lapis.Level.Generation.Noise
 			return _interpolator(a, b, x);
 		}
 		#endregion
+
+		private const int XNoisePrime    = 1619;
+		private const int YNoisePrime    = 31337;
+		private const int ZNoisePrime    = 263;
+		private const int SeedNoisePrime = 1013;
+
+		/// <summary>
+		/// Generates a reproducable noise value from -1 to 1
+		/// </summary>
+		/// <param name="seed">Seed</param>
+		/// <param name="x">X value</param>
+		/// <param name="y">Y value</param>
+		/// <param name="z">Z value</param>
+		/// <returns>A noise value from -1 to 1</returns>
+		protected static double Noise (int seed, int x, int y, int z)
+		{
+			unchecked
+			{
+				var n = (XNoisePrime * x) +
+						(YNoisePrime * y) +
+						(ZNoisePrime * z) +
+						(SeedNoisePrime * seed) &
+						0x7fffffff;
+				n = (n >> 13) ^ n;
+				var noise = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+				return 1 - (noise / 1073741824.0);
+			}
+		}
 	}
 }
