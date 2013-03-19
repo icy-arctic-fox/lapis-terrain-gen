@@ -27,14 +27,15 @@ namespace Lapis.Level.Generation.Noise
 		private readonly int _xOff, _yOff, _zOff;
 		private readonly CurveMethod _curve;
 
+		// TODO: Add more constructors
+
 		/// <summary>
 		/// Creates a new constant value noise generator
 		/// </summary>
 		/// <param name="seed">Random seed</param>
 		/// <param name="octaves">Number of times to stack noise</param>
 		/// <param name="persistence">How much each octave should affect the final result</param>
-		public PerlinNoiseGenerator (long seed, int octaves = DefaultOctaves, double persistence = DefaultPersistence, double frequency = DefaultFrequency, double lacunarity = DefaultLacunarity, NoiseQuality quality = NoiseQuality.Best)
-			: base(SineInterpolator)
+		public PerlinNoiseGenerator (long seed, int octaves = DefaultOctaves, double persistence = DefaultPersistence, double frequency = DefaultFrequency, double lacunarity = DefaultLacunarity, NoiseQuality quality = NoiseQuality.Standard)
 		{
 			// Unlike Java, .NET C# only supports 32-bit seeds
 			// Split it up to achieve a similar random range
@@ -100,8 +101,7 @@ namespace Lapis.Level.Generation.Noise
 
 		private double calculate (int seed, double x, double y)
 		{
-			return calculate(seed, x, y, 0);
-			throw new NotImplementedException();
+			return calculate(seed, x, y, 0); // TODO: Possibly optimize 2D generation
 		}
 
 		/// <summary>

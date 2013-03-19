@@ -6,10 +6,21 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Terrain Generators", "Terrain Generators", "{16E287ED-57E1-4B7F-A471-AE695E23AF00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyTerrainGenerator", "Terrain Generators\EmptyTerrainGenerator\EmptyTerrainGenerator.csproj", "{E3618707-DFCE-4B27-9055-AE6A1BBCFE99}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4C6137F-E69C-437A-BCFA-04E407519F80} = {E4C6137F-E69C-437A-BCFA-04E407519F80}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lapis", "Lapis\Lapis.csproj", "{155F4145-4018-441B-8F24-728BE1F99038}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatlandTerrainGenerator", "Terrain Generators\FlatlandTerrainGenerator\FlatlandTerrainGenerator.csproj", "{FB3E8C48-9146-4AE7-834E-3E95196C3CF5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4C6137F-E69C-437A-BCFA-04E407519F80} = {E4C6137F-E69C-437A-BCFA-04E407519F80}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTerrainGenerator", "Terrain Generators\TestTerrainGenerator\TestTerrainGenerator.csproj", "{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4C6137F-E69C-437A-BCFA-04E407519F80} = {E4C6137F-E69C-437A-BCFA-04E407519F80}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +72,16 @@ Global
 		{FB3E8C48-9146-4AE7-834E-3E95196C3CF5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FB3E8C48-9146-4AE7-834E-3E95196C3CF5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FB3E8C48-9146-4AE7-834E-3E95196C3CF5}.Release|x86.ActiveCfg = Release|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,5 +89,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E3618707-DFCE-4B27-9055-AE6A1BBCFE99} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
 		{FB3E8C48-9146-4AE7-834E-3E95196C3CF5} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
+		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
 	EndGlobalSection
 EndGlobal
