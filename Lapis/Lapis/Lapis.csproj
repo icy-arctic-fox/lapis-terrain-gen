@@ -80,6 +80,7 @@
     <Compile Include="Level\Generation\Noise\ConstantValueNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\ClampPostProcessor.cs" />
     <Compile Include="Level\Generation\Noise\PerlinNoiseGenerator.cs" />
+    <Compile Include="Level\Generation\Noise\SimplexNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\SmoothNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\WhiteNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\RangePostProcessor.cs" />

@@ -30,7 +30,7 @@ namespace Lapis.Level.Generation.Noise
 		// TODO: Add more constructors
 
 		/// <summary>
-		/// Creates a new constant value noise generator
+		/// Creates a new Perlin value noise generator
 		/// </summary>
 		/// <param name="seed">Random seed</param>
 		/// <param name="octaves">Number of times to stack noise</param>
