@@ -105,6 +105,10 @@ namespace Lapis.Level.Generation.Noise
 			var halfLength = _perm.Length / 2;
 			var ii = i % halfLength;
 			var jj = j % halfLength;
+			if(0 > ii)
+				ii += halfLength;
+			if(0 > jj)
+				jj += halfLength;
 
 			// Calculate the contribution from the three corners
 			var t0 = 0.5 - x0 * x0 - y0 * y0;
@@ -234,6 +238,12 @@ namespace Lapis.Level.Generation.Noise
 			var ii = i % halfLength;
 			var jj = j % halfLength;
 			var kk = k % halfLength;
+			if(0 > ii)
+				ii += halfLength;
+			if(0 > jj)
+				jj += halfLength;
+			if(0 > kk)
+				kk += halfLength;
 
 			// Calculate the contribution from the four corners
 			var t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;

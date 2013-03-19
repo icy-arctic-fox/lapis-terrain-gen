@@ -32,7 +32,7 @@ namespace Generator
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 			generator.Initialize(opts);
 			var realmId = manager.AddRealm(generator);
-			manager.GenerateRectange(realmId, 0, 0, Radius, Radius);
+			manager.GenerateRectange(realmId, -Radius, -Radius, Radius * 2, Radius * 2);
 
 			watch.Stop();
 			Console.WriteLine(watch.Elapsed);
