@@ -58,6 +58,7 @@ namespace Lapis.Level.Generation.Noise
 		/// <param name="b">Second point</param>
 		/// <param name="x">Distance from point <paramref name="a"/> to point <paramref name="b"/> to interpolate the value for (0 to 1)</param>
 		/// <returns>An interpolated value between point <paramref name="a"/> and point <paramref name="b"/></returns>
+		/// <remarks>This is slower than linear interpolation, but gives a nice round and smooth appearance between points.</remarks>
 		public static double SineInterpolator (double a, double b, double x)
 		{
 			var y = Math.Sin(x * MathConstants.HalfPi);
@@ -76,9 +77,9 @@ namespace Lapis.Level.Generation.Noise
 			return (value >= 0) ? (int)value : (int)value - 1;
 		}
 
-		protected static double Fade (double value)
+		protected static double Fade (double t)
 		{
-			return value * value * value * (value * (value * 6 - 15) + 10);
+			return t * t * t * (t * (t * 6 - 15) + 10);
 		}
 
 		protected static double Grad (int hash, double x, double y)

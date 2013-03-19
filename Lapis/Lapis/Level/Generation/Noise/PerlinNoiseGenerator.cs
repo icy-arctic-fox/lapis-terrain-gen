@@ -33,12 +33,12 @@ namespace Lapis.Level.Generation.Noise
 
 			_octaves   = octaves;
 			var length = (int)Math.Pow(2, _octaves);
-			_p = new int[length * 2];
-			seedPermutation(seed2, length);
+			seedPermutation(seed2, length, out _p);
 		}
 
-		private void seedPermutation (int seed, int length)
+		private static void seedPermutation (int seed, int length, out int[] p)
 		{
+			p = new int[length * 2];
 			var perm = Enumerable.Range(0, length).ToArray();
 			var rng  = new Random(seed);
 			for(var i = 0; i < perm.Length; ++i)
@@ -49,8 +49,8 @@ namespace Lapis.Level.Generation.Noise
 				perm[swap] = temp;
 			}
 
-			for(var i =0; i < perm.Length; ++i)
-				_p[perm.Length + i] = _p[i] = perm[i];
+			for(var i = 0; i < perm.Length; ++i)
+				p[perm.Length + i] = p[i] = perm[i];
 		}
 
 		/// <summary>
@@ -61,12 +61,49 @@ namespace Lapis.Level.Generation.Noise
 		/// <returns>A noise value</returns>
 		protected override double Generate (double x, double y)
 		{
-			throw new NotImplementedException();
+			var result = 0d;
+			var octave = 1;
+
+			var newX = x + _xOff;
+			var newY = y + _yOff;
+
+			for(var i = 0; i < _octaves; ++i)
+			{
+				var finalX = newX * octave;
+				var finalY = newY * octave;
+
+				var value = noise(finalX, finalY);
+				result += value / octave;
+				octave *= 2;
+			}
+
+			result = 1d - 2 * result;
+			return result;
 		}
 
-		private double noise (double xIn, double yIn)
+		private double noise (double x, double y)
 		{
-			throw new NotImplementedException();
+			var length = _p.Length;
+			var cx = Floor(x) % length;
+			var cy = Floor(y) % length;
+
+			if(cx < 0)
+				cx += length;
+			if(cy < 0)
+				cy += length;
+
+			var u = Fade(x);
+			var v = Fade(y);
+
+			// Hash coordinates of the corners
+			int aa = _p[cx] + cy,
+				 ab = _p[aa] + cy,
+				 ba = _p[cx + 1] + cy,
+				 bb = _p[ba] + cy;
+
+			var p1 = Interpolate(aa, ab, u);
+			var p2 = Interpolate(ba, bb, u);
+			return Interpolate(p1, p2, v);
 		}
 
 		/// <summary>
@@ -102,17 +139,17 @@ namespace Lapis.Level.Generation.Noise
 
 		private double noise (double x, double y, double z)
 		{
-			var halfLength = _p.Length;
-			var cx = Floor(x) % halfLength;
-			var cy = Floor(y) % halfLength;
-			var cz = Floor(z) % halfLength;
+			var length = _p.Length;
+			var cx = Floor(x) % length;
+			var cy = Floor(y) % length;
+			var cz = Floor(z) % length;
 
 			if(cx < 0)
-				cx += halfLength;
+				cx += length;
 			if(cy < 0)
-				cy += halfLength;
+				cy += length;
 			if(cz < 0)
-				cz += halfLength;
+				cz += length;
 
 			var u = Fade(x);
 			var v = Fade(y);
