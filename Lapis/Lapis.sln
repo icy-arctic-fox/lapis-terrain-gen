@@ -22,6 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTerrainGenerator", "Ter
 		{E4C6137F-E69C-437A-BCFA-04E407519F80} = {E4C6137F-E69C-437A-BCFA-04E407519F80}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IslandsTerrainGenerator", "Terrain Generators\IslandsTerrainGenerator\IslandsTerrainGenerator.csproj", "{804147A7-294A-4E43-8A0E-5781B59A1DDB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4C6137F-E69C-437A-BCFA-04E407519F80} = {E4C6137F-E69C-437A-BCFA-04E407519F80}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +87,16 @@ Global
 		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,5 +105,6 @@ Global
 		{E3618707-DFCE-4B27-9055-AE6A1BBCFE99} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
 		{FB3E8C48-9146-4AE7-834E-3E95196C3CF5} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
 		{5E24A0E4-9254-483A-AE3F-73180AF1F6FF} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
+		{804147A7-294A-4E43-8A0E-5781B59A1DDB} = {16E287ED-57E1-4B7F-A471-AE695E23AF00}
 	EndGlobalSection
 EndGlobal
