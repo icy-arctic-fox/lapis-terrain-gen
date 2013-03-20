@@ -341,8 +341,8 @@ namespace Lapis.Level
 		/// <summary>
 		/// Removes a chunk from being considered active
 		/// </summary>
-		/// <param name="cx"></param>
-		/// <param name="cz"></param>
+		/// <param name="cx">X-position of the chunk to release</param>
+		/// <param name="cz">Z-position of the chunk to release</param>
 		/// <remarks>This method should ONLY be called from within a Chunk's Dispose() method.</remarks>
 		internal void FreeChunk (int cx, int cz)
 		{
@@ -359,8 +359,7 @@ namespace Lapis.Level
 			if(null == data) // The chunk provider might return null for a chunk
 				data = generate(coord.X, coord.Z);
 
-			if(!data.TerrainPopulated)
-				data.TerrainPopulated = true; // TODO: Populate the chunk
+			// NOTE: We do *NOT* populate the chunk here - that would cause a cycle between generation and population
 
 			return new Chunk(this, data);
 		}
