@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using Lapis.Level;
 using Lapis.Level.Generation;
@@ -103,6 +100,7 @@ namespace Lapis.Threading
 			// TODO: Implement overwrite functionality
 
 			list.WaitAll();
+			realm.Initialized = true; // TODO: Is this the best place to put this?
 			_world.Save();
 		}
 

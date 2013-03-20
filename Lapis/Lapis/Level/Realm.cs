@@ -113,6 +113,15 @@ namespace Lapis.Level
 		{
 			get { return GetChunk(cx, cz); }
 		}
+
+		/// <summary>
+		/// Whether or not the realm is initialized (ready to be played on)
+		/// </summary>
+		public bool Initialized
+		{
+			get { return _levelData.Initialized; }
+			set { _levelData.Initialized = value; }
+		}
 		#endregion
 
 		private static bool isOverworld (int realmId)
