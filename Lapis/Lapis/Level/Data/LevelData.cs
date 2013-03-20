@@ -16,7 +16,7 @@ namespace Lapis.Level.Data
 		private bool _initialized, _hardcore, _cheats, _mapFeatures, _raining, _storm;
 		private int _spawnX, _spawnY = 65, _spawnZ;
 		private int _rainTime, _stormTime;
-		private long _lastPlayed = Timestamp.Now, _size;
+		private long _lastPlayed = Timestamp.Now * 1000,  _size;
 		private long _gameTicks, _time;
 		private GameMode _mode = GameMode.Survival;
 		private Dimension? _dimension;
@@ -115,7 +115,7 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Unix timestamp of the last played time
+		/// Unix timestamp (in milliseconds) of the last played time
 		/// </summary>
 		/// <remarks>Technically, this is the last time the level was saved.
 		/// This value is automatically updated when an NBT structure is generated (about to save).</remarks>
