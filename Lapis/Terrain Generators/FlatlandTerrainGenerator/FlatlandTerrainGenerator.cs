@@ -14,7 +14,7 @@ namespace FlatlandTerrainGenerator
 	/// </summary>
 	public class FlatlandTerrainGenerator : ITerrainGenerator
 	{
-		#region Meta data
+		#region Meta-data
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
