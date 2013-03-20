@@ -93,11 +93,9 @@ namespace Lapis.Threading
 					var xSize  = Math.Min(unitSize, lastX - cx);
 					var zSize  = Math.Min(unitSize, lastZ - cz);
 					var handle = list.NextHandle();
-					var work   = new GenerationUnit(realm, cx, cz, xSize, zSize, handle);
+					var work   = new GenerationUnit(realm, cx, cz, xSize, zSize, overwrite, handle);
 					ThreadPool.QueueUserWorkItem(doWork, work);
 				}
-
-			// TODO: Implement overwrite functionality
 
 			list.WaitAll();
 			realm.Initialized = true; // TODO: Is this the best place to put this?
@@ -114,7 +112,7 @@ namespace Lapis.Threading
 				var lastZ = work.StartZ + work.CountZ;
 				for(var x = work.StartX; x <= lastX; ++x)
 					for(var z = work.StartZ; z <= lastZ; ++z)
-						realm.GenerateChunk(x, z);
+						realm.GenerateChunk(x, z, work.Overwrite);
 				Thread.Sleep(_generationDelay[(int)_speed]);
 				work.Done();
 			}
@@ -127,16 +125,18 @@ namespace Lapis.Threading
 		{
 			public readonly Realm Realm;
 			public readonly int StartX, StartZ, CountX, CountZ;
+			public readonly bool Overwrite;
 			private readonly ManualResetEvent _handle;
 
-			public GenerationUnit (Realm realm, int startX, int startZ, int countX, int countZ, ManualResetEvent handle)
+			public GenerationUnit (Realm realm, int startX, int startZ, int countX, int countZ, bool overwrite, ManualResetEvent handle)
 			{
-				Realm   = realm;
-				StartX  = startX;
-				StartZ  = startZ;
-				CountX  = countX;
-				CountZ  = countZ;
-				_handle = handle;
+				Realm     = realm;
+				StartX    = startX;
+				StartZ    = startZ;
+				CountX    = countX;
+				CountZ    = countZ;
+				Overwrite = overwrite;
+				_handle   = handle;
 			}
 
 			/// <summary>

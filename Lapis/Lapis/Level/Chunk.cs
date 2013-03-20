@@ -92,6 +92,80 @@ namespace Lapis.Level
 		}
 		#endregion
 
+		#region Neighbors
+		/// <summary>
+		/// Gets the chunk neighboring to the north
+		/// </summary>
+		/// <remarks>Relative coordinates: (x + 0, z - 1)</remarks>
+		public Chunk North
+		{
+			get { return _realm.GetChunk(ChunkX, ChunkZ - 1); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the south
+		/// </summary>
+		/// <remarks>Relative coordinates: (x + 0, z + 1)</remarks>
+		public Chunk South
+		{
+			get { return _realm.GetChunk(ChunkX, ChunkZ + 1); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the east
+		/// </summary>
+		/// <remarks>Relative coordinates: (x + 1, z + 0)</remarks>
+		public Chunk East
+		{
+			get { return _realm.GetChunk(ChunkX + 1, ChunkZ); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the west
+		/// </summary>
+		/// <remarks>Relative coordinates: (x - 1, z + 0)</remarks>
+		public Chunk West
+		{
+			get { return _realm.GetChunk(ChunkX - 1, ChunkZ); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the north-east
+		/// </summary>
+		/// <remarks>Relative coordinates: (x + 1, z - 1)</remarks>
+		public Chunk NorthEast
+		{
+			get { return _realm.GetChunk(ChunkX + 1, ChunkZ - 1); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the north-west
+		/// </summary>
+		/// <remarks>Relative coordinates: (x - 1, z - 1)</remarks>
+		public Chunk NorthWest
+		{
+			get { return _realm.GetChunk(ChunkX - 1, ChunkZ - 1); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the south-east
+		/// </summary>
+		/// <remarks>Relative coordinates: (x + 1, z + 1)</remarks>
+		public Chunk SouthEast
+		{
+			get { return _realm.GetChunk(ChunkX + 1, ChunkZ + 1); }
+		}
+
+		/// <summary>
+		/// Gets the chunk neighboring to the south-west
+		/// </summary>
+		/// <remarks>Relative coordinates: (x - 1, z + 1)</remarks>
+		public Chunk SouthWest
+		{
+			get { return _realm.GetChunk(ChunkX - 1, ChunkZ + 1); }
+		}
+		#endregion
+
 		/// <summary>
 		/// Forces the chunk to save its contents to disk
 		/// </summary>
