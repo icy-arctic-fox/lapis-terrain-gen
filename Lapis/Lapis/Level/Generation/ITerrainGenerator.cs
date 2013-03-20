@@ -7,32 +7,8 @@ namespace Lapis.Level.Generation
 	/// </summary>
 	/// <remarks>Terrain generators may require additional configuration and parameters when they're created.
 	/// After a generator is set up, a combination of the version and options string can produce the same generator later.</remarks>
-	public interface ITerrainGenerator
+	public interface ITerrainGenerator : IPlugin
 	{
-		#region Meta data
-		/// <summary>
-		/// Name of the terrain generator
-		/// </summary>
-		string GeneratorName { get; }
-
-		/// <summary>
-		/// Version of the generator
-		/// </summary>
-		/// <remarks>This property is used for consistency (backwards compatibility) when a generator's version changes.
-		/// It helps to use the same generator version so that there aren't chunk alignment issues (sheer cliffs).</remarks>
-		int GeneratorVersion { get; }
-
-		/// <summary>
-		/// Name of the person that wrote the terrain generator
-		/// </summary>
-		string GeneratorAuthor { get; }
-
-		/// <summary>
-		/// Brief description of what the generator does
-		/// </summary>
-		string GeneratorDescription { get; }
-		#endregion
-
 		/// <summary>
 		/// Options string used to customize the generator
 		/// </summary>
