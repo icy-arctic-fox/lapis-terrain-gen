@@ -16,7 +16,7 @@ namespace TestTerrainGenerator
 		/// Name of the terrain generator
 		/// </summary>
 		/// <remarks>The name of this generator is "Test Terrain Generator".</remarks>
-		public string GeneratorName
+		public string Name
 		{
 			get { return "Test Terrain Generator"; }
 		}
@@ -25,7 +25,7 @@ namespace TestTerrainGenerator
 		/// Version of the generator
 		/// </summary>
 		/// <remarks>The version of this generator is 1.</remarks>
-		public int GeneratorVersion
+		public int Version
 		{
 			get { return 1; }
 		}
@@ -34,7 +34,7 @@ namespace TestTerrainGenerator
 		/// Name of the person that wrote the terrain generator
 		/// </summary>
 		/// <remarks>The creator of this generator is Mike Miller &lt;dotMaiku@gmail.com&gt;</remarks>
-		public string GeneratorAuthor
+		public string Author
 		{
 			get { return "Mike Miller <dotMaikU@gmail.com>"; }
 		}
@@ -42,7 +42,7 @@ namespace TestTerrainGenerator
 		/// <summary>
 		/// Brief description of what the generator does
 		/// </summary>
-		public string GeneratorDescription
+		public string Description
 		{
 			get { return "Generator used for testing functionality"; }
 		}

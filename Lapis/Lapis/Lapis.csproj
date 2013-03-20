@@ -67,6 +67,7 @@
     <Compile Include="IO\NBT\ShortNode.cs" />
     <Compile Include="IO\NBT\StringNode.cs" />
     <Compile Include="IO\NBT\Tree.cs" />
+    <Compile Include="IPlugin.cs" />
     <Compile Include="Level\BiomeType.cs" />
     <Compile Include="Level\Chunk.cs" />
     <Compile Include="Level\Data\BiomeData.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Level\Generation\Noise\INoisePreProcessor.cs" />
     <Compile Include="Level\Generation\Noise\NoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\TranslatePreProcessor.cs" />
+    <Compile Include="Level\Generation\Population\IChunkPopulator.cs" />
     <Compile Include="Threading\GenerationManager.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />
     <Compile Include="Level\Generation\ITerrainGenerator.cs" />

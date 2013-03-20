@@ -210,7 +210,7 @@ namespace Lapis.Level
 			var temp = new byte[sizeof(long)];
 			_rng.NextBytes(temp);
 			var seed  = temp.ToLong();
-			var level = new LevelData(world.Name, seed, generator.GeneratorName, generator.GeneratorVersion, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
 			realm.Save();
@@ -233,7 +233,7 @@ namespace Lapis.Level
 			if(null == generator)
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
-			var level = new LevelData(world.Name, seed, generator.GeneratorName, generator.GeneratorVersion, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
 			realm.Save();
