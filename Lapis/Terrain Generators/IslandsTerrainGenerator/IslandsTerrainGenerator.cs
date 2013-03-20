@@ -12,7 +12,7 @@ namespace IslandsTerrainGenerator
 	/// </summary>
 	public class IslandsTerrainGenerator : ITerrainGenerator
 	{
-		#region Meta data
+		#region Meta-data
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>

@@ -11,7 +11,7 @@ namespace TestTerrainGenerator
 	/// </summary>
 	public class TestTerrainGenerator : ITerrainGenerator
 	{
-		#region Meta data
+		#region Meta-data
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
