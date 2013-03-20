@@ -8,7 +8,7 @@ namespace Generator
 	class Program
 	{
 		private const int Radius = 64;
-		private const string DesiredGeneratorName = "Test Terrain Generator";
+		private const string DesiredGeneratorName = "Islands Terrain Generator";
 
 		static void Main (string[] args)
 		{
