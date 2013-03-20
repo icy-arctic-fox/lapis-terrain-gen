@@ -67,7 +67,7 @@ namespace TestTerrainGenerator
 			_noise.AddPostProcess(new RangePostProcessor(0, Chunk.Height));
 		}
 
-		private readonly NoiseGenerator _noise = new NoiseCombiner(new PerlinNoiseGenerator(0), new SimplexNoiseGenerator(0), NoiseCombiner.CombinationMethod.Average);
+		private readonly NoiseGenerator _noise = new NoiseSelector(new PerlinNoiseGenerator(0), new SimplexNoiseGenerator(1), new CellNoiseGenerator(0));
 		private const double Scale = 1 / 256d;
 
 
