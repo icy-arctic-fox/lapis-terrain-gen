@@ -10,7 +10,7 @@
 	/// This class should be used to retrieve block information from a chunk and construct block information before storing it in a chunk.</remarks>
 	public abstract class Block
 	{
-		private byte _data;
+		private readonly byte _data;
 
 		#region Properties
 		/// <summary>
@@ -45,10 +45,6 @@
 		public byte Data
 		{
 			get { return _data; }
-			private set
-			{
-				_data = (byte)(value & 0x0f);
-			}
 		}
 		#endregion
 
@@ -58,7 +54,7 @@
 		/// <param name="data">Additional meta-data for the block</param>
 		protected Block (byte data)
 		{
-			Data = data;
+			_data = data;
 		}
 
 		/// <summary>
