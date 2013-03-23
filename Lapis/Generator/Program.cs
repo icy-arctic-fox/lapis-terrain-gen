@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Lapis.Level;
 using Lapis.Level.Generation;
 using Lapis.Threading;
 
@@ -7,7 +8,7 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 64;
+		private const int Radius = 16;
 		private const string DesiredGeneratorName = "Islands Terrain Generator";
 
 		static void Main (string[] args)
@@ -28,11 +29,13 @@ namespace Generator
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 
-			var manager   = new BulkGenerator(name);
+			var world = World.Create(name);
+
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 			generator.Initialize(opts);
-			var realmId = manager.AddRealm(generator);
-			manager.GenerateRectange(realmId, -Radius, -Radius, Radius * 2, Radius * 2);
+			var manager   = new BulkGenerator(world, generator);
+			manager.GenerateRectange(-Radius, -Radius, Radius * 2, Radius * 2);
+			world.Save();
 
 			watch.Stop();
 			Console.WriteLine(watch.Elapsed);

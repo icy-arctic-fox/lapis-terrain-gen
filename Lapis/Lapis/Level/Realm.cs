@@ -221,14 +221,14 @@ namespace Lapis.Level
 		/// Creates a new custom realm
 		/// </summary>
 		/// <param name="world">World that the realm belongs to</param>
-		/// <param name="seed">Generator seed</param>
 		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="seed">Generator seed</param>
 		/// <param name="realmId">ID number of the realm</param>
 		/// <param name="dimension">Dimension type for the realm</param>
 		/// <returns>A new realm</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
 		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
-		internal static Realm Create (World world, int realmId, long seed, ITerrainGenerator generator, Dimension dimension = Dimension.Normal)
+		internal static Realm Create (World world, ITerrainGenerator generator, long seed, int realmId, Dimension dimension = Dimension.Normal)
 		{
 			if(null == generator)
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
