@@ -6,6 +6,7 @@ using Lapis.Blocks;
 using Lapis.Level;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
+using Lapis.Level.Generation.Population;
 
 namespace FlatlandTerrainGenerator
 {
@@ -125,6 +126,14 @@ namespace FlatlandTerrainGenerator
 					sb.Remove(sb.Length - 1, 1);
 				return sb.ToString();
 			}
+		}
+
+		/// <summary>
+		/// List of chunk populators used to fill chunks after generation
+		/// </summary>
+		public IEnumerable<IChunkPopulator> Populators
+		{
+			get { return null; }
 		}
 
 		/// <summary>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
+using Lapis.Level.Generation.Population;
 
 namespace EmptyTerrainGenerator
 {
@@ -53,6 +55,14 @@ namespace EmptyTerrainGenerator
 		public string GeneratorOptions
 		{
 			get { return String.Empty; }
+		}
+
+		/// <summary>
+		/// List of chunk populators used to fill chunks after generation
+		/// </summary>
+		public IEnumerable<IChunkPopulator> Populators
+		{
+			get { return null; }
 		}
 
 		/// <summary>

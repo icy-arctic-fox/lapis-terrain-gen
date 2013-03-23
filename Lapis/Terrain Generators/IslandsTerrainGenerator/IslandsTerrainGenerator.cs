@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Lapis.Blocks;
 using Lapis.Level;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
 using Lapis.Level.Generation.Noise;
+using Lapis.Level.Generation.Population;
 
 namespace IslandsTerrainGenerator
 {
@@ -56,6 +58,14 @@ namespace IslandsTerrainGenerator
 		public string GeneratorOptions
 		{
 			get { return String.Empty; }
+		}
+
+		/// <summary>
+		/// List of chunk populators used to fill chunks after generation
+		/// </summary>
+		public IEnumerable<IChunkPopulator> Populators
+		{
+			get { return null; }
 		}
 
 		/// <summary>

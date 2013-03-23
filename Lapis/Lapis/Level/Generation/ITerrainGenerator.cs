@@ -1,4 +1,6 @@
-﻿using Lapis.Level.Data;
+﻿using System.Collections.Generic;
+using Lapis.Level.Data;
+using Lapis.Level.Generation.Population;
 
 namespace Lapis.Level.Generation
 {
@@ -28,5 +30,11 @@ namespace Lapis.Level.Generation
 		/// <param name="cz">Z-position of the chunk</param>
 		/// <returns>The generated chunk data</returns>
 		ChunkData GenerateChunk (int cx, int cz);
+
+		/// <summary>
+		/// List of chunk populators used to fill chunks after generation
+		/// </summary>
+		/// <remarks>This property can return null if there aren't any populators.</remarks>
+		IEnumerable<IChunkPopulator> Populators { get; }
 	}
 }
