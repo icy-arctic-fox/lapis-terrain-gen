@@ -99,7 +99,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x + 0, z - 1)</remarks>
 		public Chunk North
 		{
-			get { return _realm.GetChunk(ChunkX, ChunkZ - 1); }
+			get { return GetRelativeChunk(0, -1); }
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x + 0, z + 1)</remarks>
 		public Chunk South
 		{
-			get { return _realm.GetChunk(ChunkX, ChunkZ + 1); }
+			get { return GetRelativeChunk(0, +1); }
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x + 1, z + 0)</remarks>
 		public Chunk East
 		{
-			get { return _realm.GetChunk(ChunkX + 1, ChunkZ); }
+			get { return GetRelativeChunk(+1, 0); }
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x - 1, z + 0)</remarks>
 		public Chunk West
 		{
-			get { return _realm.GetChunk(ChunkX - 1, ChunkZ); }
+			get { return GetRelativeChunk(-1, 0); }
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x + 1, z - 1)</remarks>
 		public Chunk NorthEast
 		{
-			get { return _realm.GetChunk(ChunkX + 1, ChunkZ - 1); }
+			get { return GetRelativeChunk(+1, -1); }
 		}
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x - 1, z - 1)</remarks>
 		public Chunk NorthWest
 		{
-			get { return _realm.GetChunk(ChunkX - 1, ChunkZ - 1); }
+			get { return GetRelativeChunk(-1, -1); }
 		}
 
 		/// <summary>
@@ -153,7 +153,7 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x + 1, z + 1)</remarks>
 		public Chunk SouthEast
 		{
-			get { return _realm.GetChunk(ChunkX + 1, ChunkZ + 1); }
+			get { return GetRelativeChunk(+1, +1); }
 		}
 
 		/// <summary>
@@ -162,7 +162,19 @@ namespace Lapis.Level
 		/// <remarks>Relative coordinates: (x - 1, z + 1)</remarks>
 		public Chunk SouthWest
 		{
-			get { return _realm.GetChunk(ChunkX - 1, ChunkZ + 1); }
+			get { return GetRelativeChunk(-1, +1); }
+		}
+
+		/// <summary>
+		/// Gets a chunk relative to the current one
+		/// </summary>
+		/// <param name="cxOff">Chunk x-offset</param>
+		/// <param name="czOff">Chunk z-offset</param>
+		/// <returns>A chunk</returns>
+		/// <remarks>The chunk returned might not be populated.</remarks>
+		public Chunk GetRelativeChunk (int cxOff, int czOff)
+		{
+			return _realm.GetChunk(ChunkX + cxOff, ChunkZ + czOff);
 		}
 		#endregion
 
