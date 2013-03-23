@@ -73,6 +73,7 @@ namespace Lapis.Level
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
+			// TODO: When implementing block tiles (blocks that require additional NBT data), use an interface/abstract class and expose a method to retrieve that data
 		}
 
 		/// <summary>
