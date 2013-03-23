@@ -64,10 +64,19 @@ namespace Lapis.Threading
 			_speed = speed;
 		}
 
+		/// <summary>
+		/// Creates a new bulk generator for a realm
+		/// </summary>
+		/// <param name="world">World to add the realm to</param>
+		/// <param name="generator">Terrain generator for the realm</param>
+		/// <param name="seed">Seed for the realm</param>
+		/// <param name="realmId">Realm ID</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <param name="speed">Speed to generate chunks at</param>
 		public BulkGenerator (World world, ITerrainGenerator generator, long seed, int realmId, Dimension dimension = Dimension.Normal,
 		                      GenerationSpeed speed = GenerationSpeed.Full)
 		{
-			_realm = _realm = Realm.Create(world, generator, seed, realmId, dimension);
+			_realm = Realm.Create(world, generator, seed, realmId, dimension);
 			_speed = speed;
 		}
 
