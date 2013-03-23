@@ -33,8 +33,8 @@ namespace Generator
 
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 			generator.Initialize(opts);
-			var manager   = new BulkGenerator(world, generator);
-			manager.GenerateRectange(-Radius, -Radius, Radius * 2, Radius * 2);
+			var realm = world.CreateRealm(generator);
+			realm.GenerateRectange(-Radius, -Radius, Radius * 2, Radius * 2);
 			world.Save();
 
 			watch.Stop();
