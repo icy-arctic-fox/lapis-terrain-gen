@@ -28,7 +28,7 @@ namespace Generator
 			Console.WriteLine("Generators:");
 			Console.WriteLine(String.Join<string>("\n", generatorNames));
 
-			var manager   = new GenerationManager(name);
+			var manager   = new BulkGenerator(name);
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 			generator.Initialize(opts);
 			var realmId = manager.AddRealm(generator);

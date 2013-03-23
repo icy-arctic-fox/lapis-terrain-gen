@@ -8,30 +8,30 @@ namespace Lapis.Threading
 	/// <summary>
 	/// Manages generating chunks in bulk
 	/// </summary>
-	public class GenerationManager
+	public class BulkGenerator
 	{
 		#region Generation Speed Values
 		/// <summary>
 		/// Delay (in milliseconds) between each piece of work
 		/// </summary>
 		private static readonly int[] _generationDelay = new[] {
-																	0,    // Full
-																	2000, // Fast
-																	5000, // Medium
-																	7000, // Slow
-																	10000 // Very slow
-																};
+			0,    // Full
+			2000, // Fast
+			5000, // Medium
+			7000, // Slow
+			10000 // Very slow
+		};
 
 		/// <summary>
 		/// Diameter of the area of chunks to generate per unit of work
 		/// </summary>
 		private static readonly int[] _generationCount = new[] {
-																	32, // Full
-																	16, // Fast
-																	8,  // Medium
-																	4,  // Slow
-																	1   // Very slow
-																};
+			32, // Full
+			16, // Fast
+			8,  // Medium
+			4,  // Slow
+			1   // Very slow
+		};
 		#endregion
 
 		private readonly World _world;
@@ -42,7 +42,7 @@ namespace Lapis.Threading
 		/// </summary>
 		/// <param name="name">Name of the new world</param>
 		/// <param name="speed">Speed to generate chunks at</param>
-		public GenerationManager (string name, GenerationSpeed speed = GenerationSpeed.Full)
+		public BulkGenerator (string name, GenerationSpeed speed = GenerationSpeed.Full)
 		{
 			_world = World.Create(name);
 			_speed = speed;
@@ -78,14 +78,18 @@ namespace Lapis.Threading
 		/// <param name="countZ">Number of chunks to generate along the z-axis</param>
 		/// <param name="overwrite">Whether or not to overwrite existing chunks</param>
 		/// <remarks>This method will block until all of the chunks have been generated.</remarks>
-		public void GenerateRectange (int realmId, int startX, int startZ, int countX, int countZ, bool overwrite = false)
+		public ulong GenerateRectange (int realmId, int startX, int startZ, int countX, int countZ, bool overwrite = false)
 		{
+			if(countX <= 0 || countZ <= 0)
+				return 0;
+
 			var realm    = _world[realmId];
 			var list     = new WaitList();
 			var unitSize = _generationCount[(int)_speed];
 
 			var lastX = startX + countX;
 			var lastZ = startZ + countZ;
+			var totalChunks = (ulong)countX * (ulong)countZ;
 
 			for(var cx = startX; cx < lastX; cx += unitSize)
 				for(var cz = startZ; cz < lastZ; cz += unitSize)
@@ -100,6 +104,7 @@ namespace Lapis.Threading
 			list.WaitAll();
 			realm.Initialized = true; // TODO: Is this the best place to put this?
 			_world.Save();
+			return totalChunks;
 		}
 
 		private void doWork (object state)
@@ -147,21 +152,5 @@ namespace Lapis.Threading
 				_handle.Set();
 			}
 		}
-	}
-
-	/// <summary>
-	/// Speed at which to generate chunks
-	/// </summary>
-	public enum GenerationSpeed
-	{
-		Full,
-
-		Fast,
-
-		Medium,
-
-		Slow,
-
-		VerySlow
 	}
 }
