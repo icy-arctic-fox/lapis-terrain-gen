@@ -139,7 +139,7 @@ namespace Lapis.Level.Generation.Noise
 			var value = _combinationMethod(distanceArray);
 			value = value * 4.0 - 1.0;
 			if(-1.0 > value)
-				value = 0.0;
+				value = -1.0;
 			else if(1.0 < value)
 				value = 1.0;
 			return value;
