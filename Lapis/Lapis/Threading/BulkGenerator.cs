@@ -9,8 +9,6 @@ namespace Lapis.Threading
 	/// </summary>
 	public static class BulkGenerator
 	{
-		// TODO: Change this to a static class?
-
 		#region Generation Speed Values
 		/// <summary>
 		/// Delay (in milliseconds) between each piece of work
