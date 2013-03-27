@@ -25,7 +25,7 @@ namespace Lapis.Blocks
 		public abstract bool IsSolid { get; }
 
 		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent)
+		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
 		/// </summary>
 		public abstract int Opacity { get; }
 
