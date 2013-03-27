@@ -1,7 +1,7 @@
-﻿namespace Lapis.Blocks
-{
-	// TODO: Re-implement features in this class
+﻿using Lapis.Level;
 
+namespace Lapis.Blocks
+{
 	/// <summary>
 	/// Base block data
 	/// </summary>
@@ -68,17 +68,18 @@
 		{
 			if(null != obj)
 			{
-/*				if(obj is BlockRef)
+				var blockRef = obj as BlockRef;
+				if(blockRef != null)
 				{
-					Block block = (BlockRef)obj;
+					Block block = blockRef;
 					return Equals(block);
 				}
 				else
-				{*/
+				{
 					var block = obj as Block;
 					if(block != null)
 						return Equals(block);
-//				}
+				}
 			}
 			return false;
 		}
