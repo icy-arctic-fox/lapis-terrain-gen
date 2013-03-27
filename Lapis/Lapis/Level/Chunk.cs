@@ -134,9 +134,10 @@ namespace Lapis.Level
 		/// <remarks>Block references are useful for when you want to reference a location, but don't care about what's there.
 		/// A block reference doesn't contain any block information.
 		/// However, a block reference won't cause the chunk data to become loaded in memory.</remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bx"/> or <paramref name="bz"/> are outside the bounds of the chunk</exception>
 		public BlockRef GetBlockReference (byte bx, byte by, byte bz)
 		{
-			throw new NotImplementedException();
+			return new BlockRef(this, bx, by, bz);
 		}
 
 		#region Neighbors
