@@ -69,7 +69,9 @@
     <Compile Include="IO\NBT\Tree.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Level\BiomeType.cs" />
+    <Compile Include="Level\BlockRef.cs" />
     <Compile Include="Level\Chunk.cs" />
+    <Compile Include="Level\ChunkRef.cs" />
     <Compile Include="Level\Data\BiomeData.cs" />
     <Compile Include="Level\Data\ChunkData.cs" />
     <Compile Include="Level\Data\HeightData.cs" />
@@ -98,6 +100,8 @@
     <Compile Include="Level\Generation\Noise\NoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\TranslatePreProcessor.cs" />
     <Compile Include="Level\Generation\Population\IChunkPopulator.cs" />
+    <Compile Include="Level\RealmRef.cs" />
+    <Compile Include="Level\WorldRef.cs" />
     <Compile Include="Threading\BulkGenerator.cs" />
     <Compile Include="Threading\GenerationSpeed.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />

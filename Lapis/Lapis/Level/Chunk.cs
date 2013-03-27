@@ -71,9 +71,8 @@ namespace Lapis.Level
 		/// <returns>Block information</returns>
 		public Block this[byte bx, byte by, byte bz]
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-			// TODO: When implementing block tiles (blocks that require additional NBT data), use an interface/abstract class and expose a method to retrieve that data
+			get { return GetBlock(bx, by, bz); }
+			set { SetBlock(bx, by, bz, value); }
 		}
 
 		/// <summary>
@@ -92,6 +91,53 @@ namespace Lapis.Level
 			get { return _data.ChunkZ; }
 		}
 		#endregion
+
+		// TODO: When implementing block tiles (blocks that require additional NBT data), use an interface/abstract class and expose a method to retrieve that data
+
+		/// <summary>
+		/// Gets the values of a block at the given coordinates in the chunk
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <returns>Block information</returns>
+		/// <remarks>The block information is cloned from the position within the chunk.
+		/// This means that editing the block information (it should be read-only anyways) will have no effect on the chunk.
+		/// To update the chunk, use SetBlock().</remarks>
+		public Block GetBlock (byte bx, byte by, byte bz)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Sets the values of a block at the given coordinates in the chunk
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <param name="block">Block information to store</param>
+		/// <remarks>If you need to get and set multiple blocks and there concurrent threads, lock the chunk object.
+		/// This class guarantees that blocks will not get corrupt when multiple threads call SetBlock simultaneously,
+		/// but it cannot guarantee that nothing will happen to the state between a GetBlock() and SetBlock() call.</remarks>
+		public void SetBlock (byte bx, byte by, byte bz, Block block)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Gets a reference to a block within the chunk
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <returns>A block reference</returns>
+		/// <remarks>Block references are useful for when you want to reference a location, but don't care about what's there.
+		/// A block reference doesn't contain any block information.
+		/// However, a block reference won't cause the chunk data to become loaded in memory.</remarks>
+		public BlockRef GetBlockReference (byte bx, byte by, byte bz)
+		{
+			throw new NotImplementedException();
+		}
 
 		#region Neighbors
 		/// <summary>
