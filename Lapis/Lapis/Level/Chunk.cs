@@ -29,6 +29,16 @@ namespace Lapis.Level
 		/// Length and width of a chunk (in blocks)
 		/// </summary>
 		public const int Size = 16;
+
+		/// <summary>
+		/// Value for a fully lit block
+		/// </summary>
+		public const byte FullBrightness = 15;
+
+		/// <summary>
+		/// Value for a completely dark block
+		/// </summary>
+		public const byte NoBrightness = 0;
 		#endregion
 
 		private readonly Realm _realm;
@@ -92,6 +102,24 @@ namespace Lapis.Level
 		}
 		#endregion
 
+		/// <summary>
+		/// Gets a reference to a block within the chunk
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <returns>A block reference</returns>
+		/// <remarks>Block references are useful for when you want to reference a location, but don't care about what's there.
+		/// A block reference doesn't contain any block information.
+		/// However, a block reference won't cause the chunk data to become loaded in memory.</remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bx"/> or <paramref name="bz"/> are outside the bounds of the chunk</exception>
+		public BlockRef GetBlockReference (byte bx, byte by, byte bz)
+		{
+			return new BlockRef(this, bx, by, bz);
+		}
+
+		#region Chunk data
+		#region Blocks
 		// TODO: When implementing block tiles (blocks that require additional NBT data), use an interface/abstract class and expose a method to retrieve that data
 
 		/// <summary>
@@ -122,23 +150,119 @@ namespace Lapis.Level
 		public void SetBlock (byte bx, byte by, byte bz, Block block)
 		{
 			throw new NotImplementedException();
+			// TODO: Update height map
+		}
+		#endregion
+
+		#region Sky light
+		/// <summary>
+		/// Gets the amount of sky light at a given coordinate
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Amount of sky light from 0 to 15</returns>
+		public byte GetSkyLight (byte bx, byte by, byte bz)
+		{
+			lock(this)
+				return _data.GetSkyLight(bx, by, bz);
 		}
 
 		/// <summary>
-		/// Gets a reference to a block within the chunk
+		/// Sets the amount of sky light at a given coordinate
 		/// </summary>
-		/// <param name="bx">X-position of the block within the chunk</param>
-		/// <param name="by">Y-position of the block within the chunk</param>
-		/// <param name="bz">Z-position of the block within the chunk</param>
-		/// <returns>A block reference</returns>
-		/// <remarks>Block references are useful for when you want to reference a location, but don't care about what's there.
-		/// A block reference doesn't contain any block information.
-		/// However, a block reference won't cause the chunk data to become loaded in memory.</remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bx"/> or <paramref name="bz"/> are outside the bounds of the chunk</exception>
-		public BlockRef GetBlockReference (byte bx, byte by, byte bz)
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="amount">Amount of sky light from 0 to 15</param>
+		public void SetSkyLight (byte bx, byte by, byte bz, byte amount)
 		{
-			return new BlockRef(this, bx, by, bz);
+			lock(this)
+				_data.SetSkyLight(bx, by, bz, amount);
 		}
+
+		/// <summary>
+		/// Adds some sky light to a block
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="amount">Amount of sky light to add</param>
+		/// <remarks>This method reduces the number of calls for updating lighting - it is ideal for fading light values.
+		/// The sky light value will be capped at maximum brightness so it won't overflow (wrap around).</remarks>
+		public void AddSkyLight (byte bx, byte by, byte bz, byte amount)
+		{
+			lock(this)
+			{
+				var light = _data.GetSkyLight(bx, by, bz);
+				light = (byte)Math.Min(light + amount, FullBrightness);
+				_data.SetSkyLight(bx, by, bz, light);
+			}
+		}
+		#endregion
+
+		#region Block light
+		/// <summary>
+		/// Gets the amount of block light at a given coordinate
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Amount of block light from 0 to 15</returns>
+		public byte GetBlockLight (byte bx, byte by, byte bz)
+		{
+			lock(this)
+				return _data.GetBlockLight(bx, by, bz);
+		}
+
+		/// <summary>
+		/// Sets the amount of block light at a given coordinate
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="amount">Amount of block light from 0 to 15</param>
+		public void SetBlockLight (byte bx, byte by, byte bz, byte amount)
+		{
+			lock(this)
+				_data.SetBlockLight(bx, by, bz, amount);
+		}
+
+		/// <summary>
+		/// Adds some block light to a block
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="amount">Amount of block light to add</param>
+		/// <remarks>This method reduces the number of calls for updating lighting - it is ideal for fading light values.
+		/// The block light value will be capped at maximum brightness so it won't overflow (wrap around).</remarks>
+		public void AddBlockLight (byte bx, byte by, byte bz, byte amount)
+		{
+			lock(this)
+			{
+				var light = _data.GetBlockLight(bx, by, bz);
+				light = (byte)Math.Min(light + amount, FullBrightness);
+				_data.SetBlockLight(bx, by, bz, light);
+			}
+		}
+		#endregion
+
+		/// <summary>
+		/// Gets the highest block at a position within the chunk
+		/// </summary>
+		/// <param name="bx">X-position</param>
+		/// <param name="bz">Z-position</param>
+		/// <returns>The y-position of the highest block</returns>
+		/// <remarks>The lowest value returned by this method is 0.
+		/// This method gets the highest non-air block in a column.
+		/// If a grass block is the highest at y=64, then the value returned will be 64.</remarks>
+		public int GetHighestBlockAt (byte bx, byte bz)
+		{
+			lock(this)
+				return _data.HeightMap[bx, bz];
+		}
+		#endregion
 
 		#region Neighbors
 		/// <summary>
