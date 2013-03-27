@@ -100,6 +100,7 @@
     <Compile Include="Level\Generation\Noise\NoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\TranslatePreProcessor.cs" />
     <Compile Include="Level\Generation\Population\IChunkPopulator.cs" />
+    <Compile Include="Level\Generation\Population\SkyLightPopulator.cs" />
     <Compile Include="Level\RealmRef.cs" />
     <Compile Include="Level\WorldRef.cs" />
     <Compile Include="Threading\BulkGenerator.cs" />
