@@ -79,6 +79,7 @@
     <Compile Include="Level\Data\LevelDataUtility.cs" />
     <Compile Include="Level\Dimension.cs" />
     <Compile Include="Level\GameMode.cs" />
+    <Compile Include="Level\Generation\BlockCanvas.cs" />
     <Compile Include="Level\Generation\ChunkBuilder.cs" />
     <Compile Include="Level\Generation\Noise\CellNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\ConstantValueNoiseGenerator.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Level\Generation\Population\SkyLightPopulator.cs" />
     <Compile Include="Level\RealmRef.cs" />
     <Compile Include="Level\WorldRef.cs" />
+    <Compile Include="Spatial\XZYSection.cs" />
     <Compile Include="Threading\BulkGenerator.cs" />
     <Compile Include="Threading\GenerationSpeed.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />
