@@ -27,6 +27,21 @@ namespace Lapis.Utility
 		}
 
 		/// <summary>
+		/// Creates a new nibble array from an array of bytes
+		/// </summary>
+		/// <param name="data">Array of bytes to get nibbles from</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is null</exception>
+		public NibbleArray (byte[] data)
+		{
+			if(null == data)
+				throw new ArgumentNullException("data", "The byte array can't be null.");
+
+			_count = data.Length * 2;
+			_data  = new byte[data.Length];
+			data.Copy(_data);
+		}
+
+		/// <summary>
 		/// Number of nibbles in the array
 		/// </summary>
 		public int Length
