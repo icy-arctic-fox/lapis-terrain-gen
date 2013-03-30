@@ -70,123 +70,310 @@ namespace Lapis.Level.Data
 
 		#region Block Information
 		#region Block types
+		/// <summary>
+		/// Get and set block type
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <returns>Type of block at the index</returns>
 		public BlockType this [int index]
 		{
 			get { return GetBlockType(index); }
 			set { SetBlockType(index, value); }
 		}
 
+		/// <summary>
+		/// Get and set block type
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Type of block at the coordinate</returns>
 		public BlockType this [byte bx, byte by, byte bz]
 		{
 			get { return GetBlockType(bx, by, bz); }
 			set { SetBlockType(bx, by, bz, value); }
 		}
 
+		/// <summary>
+		/// Collection of block types within the section
+		/// </summary>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public BlockType[] BlockTypes
 		{
 			get { return _blockTypes; }
 		}
 
+		/// <summary>
+		/// Gets a block type
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <returns>Type of block at the index</returns>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other GetBlockType() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public BlockType GetBlockType (int index)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			return _blockTypes[index];
 		}
 
+		/// <summary>
+		/// Sets a block type
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <param name="type">Type to set the block to</param>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other SetBlockType() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public void SetBlockType (int index, BlockType type)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			_blockTypes[index] = type;
 		}
 
+		/// <summary>
+		/// Gets a block type
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Type of block at the coordinate</returns>
 		public BlockType GetBlockType (byte bx, byte by, byte bz)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			return _blockTypes[index];
 		}
 
+		/// <summary>
+		/// Sets a block type
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="type">Type to set the block to</param>
 		public void SetBlockType (byte bx, byte by, byte bz, BlockType type)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_blockTypes[index] = type;
 		}
 		#endregion
 
 		#region Block data
+		/// <summary>
+		/// Collection of block data within the section
+		/// </summary>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public NibbleArray BlockData
 		{
 			get { return _blockData; }
 		}
 
+		/// <summary>
+		/// Gets block data
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <returns>Data for the block as the given index</returns>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other GetBlockData() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public byte GetBlockData (int index)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			return _blockData[index];
 		}
 
+		/// <summary>
+		/// Sets a block type
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <param name="data">Data to set for the block</param>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other SetBlockData() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public void SetBlockData (int index, byte data)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			_blockData[index] = data;
 		}
 
+		/// <summary>
+		/// Gets block data
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Data at the coordinate</returns>
 		public byte GetBlockData (byte bx, byte by, byte bz)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			return _blockData[index];
 		}
 
+		/// <summary>
+		/// Sets block data
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="data">Data to set for the block</param>
 		public void SetBlockData (byte bx, byte by, byte bz, byte data)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_blockData[index] = data;
 		}
 		#endregion
 
 		#region Sky light
+		/// <summary>
+		/// Collection of sky light within the section
+		/// </summary>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public NibbleArray SkyLight
 		{
 			get { return _skyLight; }
 		}
 
+		/// <summary>
+		/// Gets the amount of sky light for a block
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <returns>Amount of sky light</returns>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other GetSkyLight() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public byte GetSkyLight (int index)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			return _skyLight[index];
 		}
 
+		/// <summary>
+		/// Sets the amount of sky light for a block
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <param name="amount">Amount of sky light</param>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other SetSkyLight() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public void SetSkyLight (int index, byte amount)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			_skyLight[index] = amount;
 		}
 
+		/// <summary>
+		/// Gets the amount of sky light for a block
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Amount of sky light</returns>
 		public byte GetSkyLight (byte bx, byte by, byte bz)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			return _skyLight[index];
 		}
 
+		/// <summary>
+		/// Sets the amount of sky light for a block
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="amount">Amount of sky light</param>
 		public void SetSkyLight (byte bx, byte by, byte bz, byte amount)
 		{
-			// TODO: Check bounds here
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_skyLight[index] = amount;
 		}
 		#endregion
 
 		#region Block light
+		/// <summary>
+		/// Collection of block light within the section
+		/// </summary>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public NibbleArray BlockLight
 		{
 			get { return _blockLight; }
 		}
 
+		/// <summary>
+		/// Gets the amount of block light for a block
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <returns>Amount of block light</returns>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other GetBlockLight() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public byte GetBlockLight (int index)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			return _blockLight[index];
 		}
 
+		/// <summary>
+		/// Sets the amount of block light for a block
+		/// </summary>
+		/// <param name="index">Index of the block</param>
+		/// <param name="amount">Amount of block light</param>
+		/// <remarks>Block indexes must be used to access the array.
+		/// Use ChunkData.CalculateBlockIndex() to get an index.
+		/// Alternatively, use the other SetBlockLight() method.</remarks>
+		/// <seealso cref="ChunkData.CalculateBlockIndex"/>
 		public void SetBlockLight (int index, byte amount)
 		{
-			throw new NotImplementedException();
+			checkIndex(index);
+			_blockLight[index] = amount;
 		}
 
+		/// <summary>
+		/// Gets the amount of block light for a block
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>Amount of block light</returns>
 		public byte GetBlockLight (byte bx, byte by, byte bz)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			return _blockLight[index];
 		}
 
+		/// <summary>
+		/// Sets the amount of block light for a block
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <param name="amount">Amount of block light</param>
 		public void SetBlockLight (byte bx, byte by, byte bz, byte amount)
 		{
-			throw new NotImplementedException();
+			checkBounds(bx, by, bz);
+			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_blockLight[index] = amount;
 		}
 		#endregion
 		#endregion
@@ -384,6 +571,12 @@ namespace Lapis.Level.Data
 		#endregion
 
 		#region Utility methods
+		private static void checkIndex (int index)
+		{
+			if(0 > index || SectionLength <= index)
+				throw new ArgumentOutOfRangeException("index", "The index of the block must be at least 0 and less than " + SectionLength);
+		}
+
 		private static void checkBounds (byte bx, byte by, byte bz)
 		{
 			if(Chunk.Size <= bx)
