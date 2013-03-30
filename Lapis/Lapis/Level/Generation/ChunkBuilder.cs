@@ -13,6 +13,7 @@ namespace Lapis.Level.Generation
 	public class ChunkBuilder : IDisposable
 	{
 		private readonly ChunkData _data;
+		private readonly BlockType[][] _types;
 
 		/// <summary>
 		/// Creates a new chunk builder
@@ -21,7 +22,8 @@ namespace Lapis.Level.Generation
 		/// <param name="cz">Z-position of the chunk coordinate</param>
 		public ChunkBuilder (int cx, int cz)
 		{
-			_data = new ChunkData(cx, cz);
+			_data  = new ChunkData(cx, cz);
+			_types = _data.BlockTypes; // Cache the arrays so we don't have to generate them again (from ChunkData)
 		}
 
 		/// <summary>
@@ -47,7 +49,7 @@ namespace Lapis.Level.Generation
 		/// <remarks>The chunk height map will be updated after filling blocks.</remarks>
 		public void FillType (byte bx, byte by, byte bz, byte xCount, byte yCount, byte zCount, BlockType type)
 		{
-			fillBlock(bx, by, bz, xCount, yCount, zCount, _data.BlockTypes, type);
+			fillBlock(bx, by, bz, xCount, yCount, zCount, _types, type);
 			var reduce = BlockType.Air == type; // Move the height map down if we're filling with air
 			updateHeightMap(_data.HeightMap, bx, by, bz, xCount, yCount, zCount, reduce);
 		}
@@ -81,23 +83,22 @@ namespace Lapis.Level.Generation
 			var startIndex = ChunkData.CalculateSectionIndex(bx, yOff, bz, out sectionStart);
 			var endIndex   = ChunkData.CalculateSectionIndex(bx, yEnd, bz, out sectionEnd);
 
-			var data = _data.BlockTypes;
 			if(sectionEnd > sectionStart)
 			{// Mutliple sections
 				for(var index = startIndex; index < ChunkSectionData.SectionLength; index += step)
-					data[sectionStart][index] = type;
+					_types[sectionStart][index] = type;
 				var baseIndex = ChunkData.CalculateBlockIndex(bx, 0, bz);
 				for(var section = sectionStart + 1; section < sectionEnd; ++section)
 					for(var index = baseIndex; index < Chunk.SectionHeight; index += step)
-						data[section][index] = type;
+						_types[section][index] = type;
 				for(var index = baseIndex; index < endIndex; index += step)
-					data[sectionEnd][index] = type;
+					_types[sectionEnd][index] = type;
 			}
 
 			else
 			{// Single section
 				for(var index = startIndex; index < endIndex; index += step)
-					data[sectionStart][index] = type;
+					_types[sectionStart][index] = type;
 			}
 		}
 
@@ -130,7 +131,7 @@ namespace Lapis.Level.Generation
 					column[i] = types[y]; // TODO: This could be optimized
 			}
 
-			setSectionSpan(bx, bz, _data.BlockTypes, yOff, column);
+			setSectionSpan(bx, bz, _types, yOff, column);
 			_data.HeightMap[bx, bz] = column.FindHighestBlock();
 		}
 		#endregion
@@ -148,23 +149,21 @@ namespace Lapis.Level.Generation
 			var startIndex = ChunkData.CalculateSectionIndex(bx, by, bz, out sectionStart);
 			var endIndex   = ChunkData.CalculateSectionIndex(xEnd, yEnd, zEnd, out sectionEnd);
 
-			// TODO: This loop logic with index is wrong
-
 			if(sectionEnd > sectionStart)
 			{// Mutliple sections
-				for(int index = startIndex, y = by; y < Chunk.SectionHeight; ++y)
+				for(var y = by; y < Chunk.SectionHeight; ++y)
 					for(var z = bz; z < zEnd; ++z)
-						for(var x = bx; x < xEnd; ++x, ++index)
+						for(int x = bx, index = ChunkData.CalculateBlockIndex(bx, y, z); x < xEnd; ++x, ++index)
 							data[sectionStart][index] = value;
 				var baseIndex = ChunkData.CalculateBlockIndex(bx, 0, bz);
 				for(var section = sectionStart + 1; section < sectionEnd; ++section)
-					for(int index = baseIndex, y = 0; y < Chunk.SectionHeight; ++y)
+					for(var y = (byte)0; y < Chunk.SectionHeight; ++y)
 						for(var z = bz; z < zEnd; ++z)
-							for(var x = bx; x < xEnd; ++x, ++index)
+							for(int x = bx, index = ChunkData.CalculateBlockIndex(bx, y, z); x < xEnd; ++x, ++index)
 								data[section][index] = value;
-				for(int index = baseIndex, y = by; y < yEnd; ++y)
+				for(var y = (byte)0; y < yEnd; ++y)
 					for(var z = bz; z < zEnd; ++z)
-						for(var x = bx; x < xEnd; ++x, ++index)
+						for(int x = bx, index = ChunkData.CalculateBlockIndex(bx, y, z); x < xEnd; ++x, ++index)
 							data[sectionEnd][index] = value;
 			}
 
