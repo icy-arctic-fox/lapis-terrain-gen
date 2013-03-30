@@ -16,17 +16,10 @@ namespace Lapis.Level.Data
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
 	public class ChunkData : ISerializable
 	{
-		internal const int SectionLength     = Chunk.SectionHeight * Chunk.Size * Chunk.Size;
-		internal const int HalfSectionLength = SectionLength / 2;
-
 		private bool _terrainPopulated;
 		private readonly int _cx, _cz;
 		private long _lastUpdate;
-		private readonly BlockType[][] _blockTypes = new BlockType[Chunk.SectionCount][];
-		private readonly byte[][]
-			_blockData  = new byte[Chunk.SectionCount][],
-			_skyLight   = new byte[Chunk.SectionCount][],
-			_blockLight = new byte[Chunk.SectionCount][];
+		private readonly ChunkSectionData[] _sections;
 		private readonly BiomeData _biomes;
 		private readonly HeightData _heightMap;
 
@@ -82,15 +75,99 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public HeightData HeightMap
 		{
-			get { return _heightMap; } // TODO: Where should the height-map be updated when block data is updated?
+			get { return _heightMap; }
 		}
 
 		/// <summary>
-		/// Values for block types
+		/// Sections contained within the chunk
 		/// </summary>
-		internal BlockType[][] BlockTypes
+		/// <remarks>The sections are arranged 0 to 15 (bedrock to sky).
+		/// Updating any of the sections will update this chunk.</remarks>
+		public ChunkSectionData[] Sections
 		{
-			get { return _blockTypes; }
+			get
+			{
+				var sections = new ChunkSectionData[_sections.Length];
+				for(var i = 0; i < sections.Length; ++i)
+					sections[i] = _sections[i];
+				return sections;
+			}
+		}
+
+		/// <summary>
+		/// Block types contained within the chunk
+		/// </summary>
+		/// <remarks>The first dimension is the chunk section, arranged from 0 to 15.
+		/// The second dimension is the block types arranged by index.
+		/// It is ideal to use CalculateSectionIndex() with this property since it can be used to get the section index and block index.
+		/// However, for faster access, don't constantly compute the index, instead, use YZX ordering.
+		/// Updating any of the block values will update this chunk.</remarks>
+		public BlockType[][] BlockTypes
+		{
+			get
+			{
+				var sections = new BlockType[_sections.Length][];
+				for(var i = 0; i < sections.Length; ++i)
+					sections[i] = _sections[i].BlockTypes;
+				return sections;
+			}
+		}
+
+		/// <summary>
+		/// Block data contained within the chunk
+		/// </summary>
+		/// <remarks>Each element is a section within the chunk, arranged from 0 to 15.
+		/// Each nibble array contains the block data arranged by index.
+		/// It is ideal to use CalculateSectionIndex() with this property since it can be used to get the section index and block index.
+		/// However, for faster access, don't constantly compute the index, instead, use YZX ordering.
+		/// Updating any of the block values will update this chunk.</remarks>
+		public NibbleArray[] BlockData
+		{
+			get
+			{
+				var sections = new NibbleArray[_sections.Length];
+				for(var i = 0; i < sections.Length; ++i)
+					sections[i] = _sections[i].BlockData;
+				return sections;
+			}
+		}
+
+		/// <summary>
+		/// Sky light values contained within the chunk
+		/// </summary>
+		/// <remarks>Each element is a section within the chunk, arranged from 0 to 15.
+		/// Each nibble array contains the sky light values arranged by index.
+		/// It is ideal to use CalculateSectionIndex() with this property since it can be used to get the section index and block index.
+		/// However, for faster access, don't constantly compute the index, instead, use YZX ordering.
+		/// Updating any of the block values will update this chunk.</remarks>
+		public NibbleArray[] SkyLight
+		{
+			get
+			{
+				var sections = new NibbleArray[_sections.Length];
+				for(var i = 0; i < sections.Length; ++i)
+					sections[i] = _sections[i].SkyLight;
+				return sections;
+			}
+		}
+
+		/// <summary>
+		/// Block light values contained within the chunk
+		/// </summary>
+		/// <remarks>Each element is a section within the chunk, arranged from 0 to 15.
+		/// Each nibble array contains the block light values arranged by index.
+		/// It is ideal to use CalculateSectionIndex() with this property since it can be used to get the section index and block index.
+		/// However, for faster access, don't constantly compute the index, instead, use YZX ordering.
+		/// Updating any of the block values will update this chunk.</remarks>
+		public NibbleArray[] BlockLight
+		{
+			get
+			{
+				var sections = new NibbleArray[_sections.Length];
+				for(var i = 0; i < sections.Length; ++i)
+					sections[i] = _sections[i].BlockLight;
+				return sections;
+			}
 		}
 		#endregion
 
@@ -106,35 +183,6 @@ namespace Lapis.Level.Data
 			_lastUpdate = 0;
 			_biomes     = new BiomeData();
 			_heightMap  = new HeightData();
-
-			for(var i = 0; i < Chunk.SectionCount; ++i)
-			{
-				_blockTypes[i] = new BlockType[SectionLength];
-				_blockData[i]  = new byte[HalfSectionLength];
-				_blockLight[i] = new byte[HalfSectionLength];
-				_skyLight[i]   = new byte[HalfSectionLength];
-			}
-		}
-
-		private static void checkBounds (byte bx, byte bz)
-		{
-			if(Chunk.Size <= bx)
-				throw new ArgumentOutOfRangeException("bx", "The x-position of the block must be less than " + Chunk.Size);
-			if(Chunk.Size <= bz)
-				throw new ArgumentOutOfRangeException("bz", "The z-position of the block must be less than " + Chunk.Size);
-		}
-
-		/// <summary>
-		/// Calculates the index of a block within a chunk section
-		/// </summary>
-		/// <param name="bx">X-position of the block relative to the chunk</param>
-		/// <param name="by">Y-position of the block relative to the chunk section</param>
-		/// <param name="bz">Z-position of the block relative to the chunk</param>
-		/// <returns>Flattened index of the block</returns>
-		internal static int CalculateIndex (byte bx, byte by, byte bz)
-		{
-			var index = (by * Chunk.SectionHeight * Chunk.SectionHeight) + (bz * Chunk.Size) + bx;
-			return index;
 		}
 
 		#region Block information
@@ -147,7 +195,9 @@ namespace Lapis.Level.Data
 		/// <returns>The block's type</returns>
 		public BlockType GetBlockType (byte bx, byte by, byte bz)
 		{
-			return getBlock(bx, by, bz, _blockTypes);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			return _sections[sy].GetBlockType(bx, by, bz);
 		}
 
 		/// <summary>
@@ -159,7 +209,9 @@ namespace Lapis.Level.Data
 		/// <param name="type">New block type</param>
 		public void SetBlockType (byte bx, byte by, byte bz, BlockType type)
 		{
-			setBlock(bx, by, bz, _blockTypes, type);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			_sections[sy].SetBlockType(bx, by, bz, type);
 		}
 
 		/// <summary>
@@ -171,7 +223,9 @@ namespace Lapis.Level.Data
 		/// <returns>The block's data</returns>
 		public byte GetBlockData (byte bx, byte by, byte bz)
 		{
-			return getBlockNibble(bx, by, bz, _blockData);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			return _sections[sy].GetBlockData(bx, by, bz);
 		}
 
 		/// <summary>
@@ -180,10 +234,12 @@ namespace Lapis.Level.Data
 		/// <param name="bx">X-position of the block relative to the chunk</param>
 		/// <param name="by">Y-position of the block relative to the chunk</param>
 		/// <param name="bz">Z-position of the block relative to the chunk</param>
-		/// <param name="data">New block data</param>
-		public void SetBlockData (byte bx, byte by, byte bz, byte data)
+		/// <param name="value">New block data</param>
+		public void SetBlockData (byte bx, byte by, byte bz, byte value)
 		{
-			setBlockNibble(bx, by, bz, _blockData, data);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			_sections[sy].SetBlockData(bx, by, bz, value);
 		}
 
 		/// <summary>
@@ -195,7 +251,9 @@ namespace Lapis.Level.Data
 		/// <returns>The amount of block light (0 - 15)</returns>
 		public byte GetBlockLight (byte bx, byte by, byte bz)
 		{
-			return getBlockNibble(bx, by, bz, _blockLight);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			return _sections[sy].GetBlockLight(bx, by, bz);
 		}
 
 		/// <summary>
@@ -204,10 +262,12 @@ namespace Lapis.Level.Data
 		/// <param name="bx">X-position of the block relative to the chunk</param>
 		/// <param name="by">Y-position of the block relative to the chunk</param>
 		/// <param name="bz">Z-position of the block relative to the chunk</param>
-		/// <param name="value">New block light amount (0 - 15)</param>
-		public void SetBlockLight (byte bx, byte by, byte bz, byte value)
+		/// <param name="amount">New block light amount (0 - 15)</param>
+		public void SetBlockLight (byte bx, byte by, byte bz, byte amount)
 		{
-			setBlockNibble(bx, by, bz, _blockLight, value);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			_sections[sy].SetBlockLight(bx, by, bz, amount);
 		}
 
 		/// <summary>
@@ -219,7 +279,9 @@ namespace Lapis.Level.Data
 		/// <returns>The amount of sky light (0 - 15)</returns>
 		public byte GetSkyLight (byte bx, byte by, byte bz)
 		{
-			return getBlockNibble(bx, by, bz, _skyLight);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			return _sections[sy].GetSkyLight(bx, by, bz);
 		}
 
 		/// <summary>
@@ -228,57 +290,13 @@ namespace Lapis.Level.Data
 		/// <param name="bx">X-position of the block relative to the chunk</param>
 		/// <param name="by">Y-position of the block relative to the chunk</param>
 		/// <param name="bz">Z-position of the block relative to the chunk</param>
-		/// <param name="value">New sky light amount (0 - 15)</param>
-		public void SetSkyLight (byte bx, byte by, byte bz, byte value)
+		/// <param name="amount">New sky light amount (0 - 15)</param>
+		public void SetSkyLight (byte bx, byte by, byte bz, byte amount)
 		{
-			setBlockNibble(bx, by, bz, _skyLight, value);
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			_sections[sy].SetSkyLight(bx, by, bz, amount);
 		}
-
-		#region Block get/set utility
-		private static T getBlock<T> (byte bx, byte by, byte bz, T[][] blocks)
-		{
-			checkBounds(bx, bz);
-
-			var section = by / Chunk.SectionHeight;
-			var secBy   = (byte)(by % Chunk.SectionHeight);
-			var index   = CalculateIndex(bx, secBy, bz);
-
-			return blocks[section][index];
-		}
-
-		private static void setBlock<T> (byte bx, byte by, byte bz, T[][] blocks, T value)
-		{
-			checkBounds(bx, bz);
-
-			var section = by / Chunk.SectionHeight;
-			var newBy   = (byte)(by % Chunk.SectionHeight);
-			var index   = CalculateIndex(bx, newBy, bz);
-
-			blocks[section][index] = value;
-		}
-
-		private static byte getBlockNibble (byte bx, byte by, byte bz, byte[][] blocks)
-		{
-			checkBounds(bx, bz);
-
-			var section = by / Chunk.SectionHeight;
-			var secBy   = (byte)(by % Chunk.SectionHeight);
-			var index   = CalculateIndex(bx, secBy, bz);
-
-			return blocks[section].GetNibble(index);
-		}
-
-		private static void setBlockNibble (byte bx, byte by, byte bz, byte[][] blocks, byte value)
-		{
-			checkBounds(bx, bz);
-
-			var section = by / Chunk.SectionHeight;
-			var secBy   = (byte)(by % Chunk.SectionHeight);
-			var index   = CalculateIndex(bx, secBy, bz);
-
-			blocks[section].SetNibble(index, value);
-		}
-		#endregion
 		#endregion
 
 		#region Serialization
@@ -293,17 +311,10 @@ namespace Lapis.Level.Data
 		protected const string EntitiesNodeName         = "Entities";
 		protected const string TileEntitiesNodeName     = "TileEntities";
 		protected const string SectionsNodeName         = "Sections";
-
-		protected const string ChunkSectionNodeName     = "ChunkSection";
-		protected const string YPositionNodeName        = "Y";
-		protected const string BlockTypesNodeName       = "Blocks";
-		protected const string BlockDataNodeName        = "Data";
-		protected const string SkyLightNodeName         = "SkyLight";
-		protected const string BlockLightNodeName       = "BlockLight";
 		#endregion
 
 		/// <summary>
-		/// Writes the contents of the chunk to a stream.
+		/// Writes the contents of the chunk to a stream
 		/// </summary>
 		/// <param name="bw">Stream writer</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="bw"/> is null</exception>
@@ -315,7 +326,7 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Reads the contents of the chunk from a stream.
+		/// Reads the contents of the chunk from a stream
 		/// </summary>
 		/// <param name="br">Stream reader</param>
 		/// <returns>Chunk data read from a stream</returns>
@@ -327,7 +338,7 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Constructs an NBT node from the chunk data.
+		/// Constructs an NBT node from the chunk data
 		/// </summary>
 		/// <param name="name">Name to give the node</param>
 		/// <returns>An NBT node that contains the chunk data</returns>
@@ -340,7 +351,7 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Creates new chunk data from the data contained in an NBT node.
+		/// Creates new chunk data from the data contained in an NBT node
 		/// </summary>
 		/// <param name="node">Node that contains the chunk data</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
@@ -356,7 +367,7 @@ namespace Lapis.Level.Data
 			_lastUpdate       = validateLastUpdateNode(rootNode);
 			_biomes           = validateBiomesNode(rootNode);
 			_heightMap        = validateHeightMapNode(rootNode);
-			validateSectionsNode(rootNode);
+			_sections         = validateSectionsNode(rootNode);
 		}
 
 		#region NBT construction
@@ -426,26 +437,8 @@ namespace Lapis.Level.Data
 			var chunkSections = new ListNode(SectionsNodeName, NodeType.Compound);
 			var sectionCount  = (_heightMap.Maximum / Chunk.SectionHeight) + 1;
 			for(var i = 0; i < sectionCount; ++i)
-				chunkSections.Add(constructChunkSectionNode(i));
+				chunkSections.Add(_sections[i].ConstructNbtNode(ChunkSectionData.DefaultNodeName));
 			return chunkSections;
-		}
-
-		private Node constructChunkSectionNode (int level)
-		{
-			var chunkSection   = new CompoundNode(ChunkSectionNodeName);
-			var yPosNode       = new ByteNode(YPositionNodeName, (byte)level);
-			var blocksNode     = new ByteArrayNode(BlockTypesNodeName, _blockTypes[level].GetBytes());
-			var dataNode       = new ByteArrayNode(BlockDataNodeName, _blockData[level]);
-			var skyLightNode   = new ByteArrayNode(SkyLightNodeName, _skyLight[level]);
-			var blockLightNode = new ByteArrayNode(BlockLightNodeName, _blockLight[level]);
-
-			chunkSection.Add(yPosNode);
-			chunkSection.Add(blocksNode);
-			chunkSection.Add(dataNode);
-			chunkSection.Add(skyLightNode);
-			chunkSection.Add(blockLightNode);
-
-			return chunkSection;
 		}
 		#endregion
 
@@ -531,8 +524,9 @@ namespace Lapis.Level.Data
 			return new HeightData();
 		}
 
-		private void validateSectionsNode (CompoundNode rootNode)
+		private static ChunkSectionData[] validateSectionsNode (CompoundNode rootNode)
 		{
+			var sections = new ChunkSectionData[Chunk.SectionCount];
 			if(rootNode.Contains(SectionsNodeName))
 			{
 				var tempNode = rootNode[SectionsNodeName];
@@ -543,108 +537,84 @@ namespace Lapis.Level.Data
 					{
 						// Retrieve existing data from NBT
 						foreach(var chunkSection in node)
-							validateChunkSectionNode((CompoundNode)chunkSection);
+						{
+							byte sy;
+							var section = validateChunkSectionNode((CompoundNode) chunkSection, out sy);
+							sections[sy] = section;
+						}
 
 						// Create empty data for any remaining chunks
-						for(var i = 0; i < Chunk.SectionCount; ++i)
-						{
-							if(null == _blockTypes[i])
-							{
-								_blockTypes[i] = new BlockType[SectionLength];
-								_blockData[i]  = new byte[HalfSectionLength];
-								_blockLight[i] = new byte[HalfSectionLength];
-								_skyLight[i]   = new byte[HalfSectionLength];	// TODO: Possible problem here with setting light to 0
-							}
-						}
+						for(var i = (byte)0; i < sections.Length; ++i)
+							if(null == sections[i])
+								sections[i] = new ChunkSectionData(i);
 					}
 				}
 			}
+			return sections;
 		}
 
-		private void validateChunkSectionNode (CompoundNode chunkSection)
+		private static ChunkSectionData validateChunkSectionNode (CompoundNode node, out byte sy)
 		{
-			int? yPos = validateYPositionNode(chunkSection);
-			if(yPos.HasValue)
+			var section = new ChunkSectionData(node);
+			if(section.ValidSection)
 			{
-				var y = yPos.Value;
-				_blockTypes[y] = validateBlockTypesNode(chunkSection);
-				_blockData[y]  = validateBlockDataNode(chunkSection);
-				_skyLight[y]   = validateSkyLightNode(chunkSection);
-				_blockLight[y] = validateBlockLightNode(chunkSection);
+				sy = section.SectionIndex;
+				return section;
 			}
-		}
-
-		private static byte? validateYPositionNode (CompoundNode chunkSection)
-		{
-			if(chunkSection.Contains(YPositionNodeName))
-			{
-				Node tempNode = chunkSection[YPositionNodeName];
-				if(tempNode.Type == NodeType.Byte)
-					return ((ByteNode)tempNode).Value;
-			}
+			sy = 0;
 			return null;
 		}
-
-		private static BlockType[] validateBlockTypesNode (CompoundNode chunkSection)
-		{
-			if(chunkSection.Contains(BlockTypesNodeName))
-			{
-				var tempNode = chunkSection[BlockTypesNodeName];
-				if(tempNode.Type == NodeType.ByteArray)
-				{
-					var node = (ByteArrayNode)tempNode;
-					if(node.Data.Length == SectionLength)
-						return node.Data.ToBlockTypes();
-				}
-			}
-			return new BlockType[SectionLength];
-		}
-
-		private static byte[] validateBlockDataNode (CompoundNode chunkSection)
-		{
-			if(chunkSection.Contains(BlockDataNodeName))
-			{
-				var tempNode = chunkSection[BlockDataNodeName];
-				if(tempNode.Type == NodeType.ByteArray)
-				{
-					var node = (ByteArrayNode)tempNode;
-					if(node.Data.Length == HalfSectionLength)
-						return node.Data;
-				}
-			}
-			return new byte[HalfSectionLength];
-		}
-
-		private static byte[] validateSkyLightNode (CompoundNode chunkSection)
-		{
-			if(chunkSection.Contains(SkyLightNodeName))
-			{
-				var tempNode = chunkSection[SkyLightNodeName];
-				if(tempNode.Type == NodeType.ByteArray)
-				{
-					var node = (ByteArrayNode)tempNode;
-					if(node.Data.Length == HalfSectionLength)
-						return node.Data;
-				}
-			}
-			return new byte[HalfSectionLength];
-		}
-
-		private static byte[] validateBlockLightNode (CompoundNode chunkSection)
-		{
-			if(chunkSection.Contains(BlockLightNodeName))
-			{
-				var tempNode = chunkSection[BlockLightNodeName];
-				if(tempNode.Type == NodeType.ByteArray)
-				{
-					var node = (ByteArrayNode)tempNode;
-					if(node.Data.Length == HalfSectionLength)
-						return node.Data;
-				}
-			}
-			return new byte[HalfSectionLength];
-		}
 		#endregion
+		#endregion
+
+		#region Utility methods
+		/// <summary>
+		/// Calculates the index of a section (sy) and the y-position within it (by)
+		/// </summary>
+		/// <param name="by">Y-position of the block within the chunk, not the section</param>
+		/// <param name="sy">Index of the section that the block is in (0 - 15)</param>
+		/// <returns>New y-position of the block within the section</returns>
+		public static byte CalculateSectionIndex (byte by, out byte sy)
+		{
+			sy = (byte)(by / Chunk.SectionHeight);
+			return (byte)(by % Chunk.SectionHeight);
+		}
+
+		/// <summary>
+		/// Calculates the index of a section (sy) and the index of a block within a section
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <param name="sy">Index of the section that the block is in</param>
+		/// <returns>Flattened index of the block within the section</returns>
+		public static int CalculateSectionIndex (byte bx, byte by, byte bz, out byte sy)
+		{
+			by = CalculateSectionIndex(by, out sy);
+			return CalculateBlockIndex(bx, by, bz);
+		}
+
+		/// <summary>
+		/// Calculates the index of a block within a chunk section
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk section</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <returns>Flattened index of the block</returns>
+		/// <remarks>Bounds are not checked in this method.</remarks>
+		public static int CalculateBlockIndex (byte bx, byte by, byte bz)
+		{
+			var index = (by * Chunk.SectionHeight * Chunk.SectionHeight) + (bz * Chunk.Size) + bx;
+			return index;
+		}
+
+		private static void checkBounds (byte bx, byte bz)
+		{
+			if(Chunk.Size <= bx)
+				throw new ArgumentOutOfRangeException("bx", "The x-position of the block must be less than " + Chunk.Size);
+			if(Chunk.Size <= bz)
+				throw new ArgumentOutOfRangeException("bz", "The z-position of the block must be less than " + Chunk.Size);
+		}
 		#endregion
 	}
 }
