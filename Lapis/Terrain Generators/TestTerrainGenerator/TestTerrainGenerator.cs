@@ -110,7 +110,7 @@ namespace TestTerrainGenerator
 					}
 					else
 					{
-						data.SetBlockType(bx, (byte)height, bz, height > 220 ? Lapis.Blocks.BlockType.Snow : Lapis.Blocks.BlockType.Grass);
+						data.SetBlockType(bx, (byte)height, bz, height > 220 ? Lapis.Blocks.BlockType.SnowCover : Lapis.Blocks.BlockType.Grass);
 					}
 					data.SetBlockType(bx, 0, bz, Lapis.Blocks.BlockType.Bedrock);
 					data.HeightMap[bx, bz] = (byte)height;
