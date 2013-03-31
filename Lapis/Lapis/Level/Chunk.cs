@@ -150,7 +150,7 @@ namespace Lapis.Level
 		public void SetBlock (byte bx, byte by, byte bz, Block block)
 		{
 			throw new NotImplementedException();
-			// TODO: Update height map
+			updateHeightMap(bx, bz);
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace Lapis.Level
 			lock(this)
 			{
 				_data.SetBlock(bx, by, bz, block);
-				// TODO: Update height map
+				updateHeightMap(bx, bz);
 			}
 		}
 		#endregion
@@ -280,6 +280,15 @@ namespace Lapis.Level
 		{
 			lock(this)
 				return _data.HeightMap[bx, bz];
+		}
+
+		private void updateHeightMap (byte bx, byte bz)
+		{
+			int y;
+			for(y = Chunk.Height - 1; y > 0; --y)
+				if(_data.GetBlockType(bx, (byte)y, bz) != BlockType.Air)
+					break;
+			_data.HeightMap[bx, bz] = y;
 		}
 		#endregion
 
