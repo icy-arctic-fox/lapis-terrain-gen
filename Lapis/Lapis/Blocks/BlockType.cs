@@ -38,12 +38,12 @@
 		/// <summary>
 		/// Wood-like blocks obtained from logs. Comes in four different types.
 		/// </summary>
-		Planks = 5,
+		WoodPlanks = 5,
 
 		/// <summary>
 		/// Plant these to grow trees. There's a different sapling for each type of tree.
 		/// </summary>
-		Saplings = 6,
+		Sapling = 6,
 
 		/// <summary>
 		/// Bedrock, sometimes called Adminium. Unbreakable, and indestructible. Acts as defense from falling into the void.
@@ -128,7 +128,7 @@
 		/// <summary>
 		/// A block crafted out of nine pieces of Lapis Lazuli. Good for compact storage and decoration.
 		/// </summary>
-		LapisBlock = 22,
+		Lapis = 22,
 
 		/// <summary>
 		/// Powered by redstone, dispenses items that are placed into it. Can place boats on water and minecarts on rails.
@@ -143,7 +143,7 @@
 		/// <summary>
 		/// Notes can be selected by right clicking. Plays a tune when left-clicked once or powered by redstone. Different sounds play depending on the block under it.
 		/// </summary>
-		NoteBlock = 25,
+		Note = 25,
 
 		/// <summary>
 		/// Used to sleep through the night and change your spawn point.
@@ -228,27 +228,27 @@
 		/// <summary>
 		/// Crafted from nine gold ingots. Used for compact storage.
 		/// </summary>
-		GoldBlock = 41,
+		Gold = 41,
 
 		/// <summary>
 		/// Crafted from nine iron ingots. Used for compact storage.
 		/// </summary>
-		IronBlock = 42,
+		Iron = 42,
 
 		/// <summary>
 		/// The block created from two slabs being placed on one another.
 		/// </summary>
-		DoubleSlabs = 43,
+		DoubleStoneSlab = 43,
 
 		/// <summary>
 		/// Pretty much half of a block. Useful for making stairs. 
 		/// </summary>
-		Slab = 44,
+		StoneSlab = 44,
 
 		/// <summary>
 		/// Made from clay.
 		/// </summary>
-		Bricks = 45,
+		Brick = 45,
 
 		/// <summary>
 		/// An explosive block crafted from sand and gunpowder. A great mining tool if used carefully.
@@ -263,7 +263,7 @@
 		/// <summary>
 		/// Naturally occurring inside dungeons. No real use outside of decoration. 
 		/// </summary>
-		MossyCobblestone = 48,
+		MossStone = 48,
 
 		/// <summary>
 		/// Primarily used to make Nether portals. Cannot be destroyed by anything other than a diamond pickaxe.
@@ -283,12 +283,12 @@
 		/// <summary>
 		/// Mean things come out of this. Spawns naturally inside of dungeons. Comes in zombie, skeleton, and spider.
 		/// </summary>
-		MobSpawner = 52,
+		MonsterSpawner = 52,
 
 		/// <summary>
 		/// Stairs made out of Oak planks.
 		/// </summary>
-		OakWoodStairs = 53,
+		WoodStairs = 53,
 
 		/// <summary>
 		/// Useful item used for item storage. Place two together for a double-chest.
@@ -308,7 +308,7 @@
 		/// <summary>
 		/// Crafted from nine diamonds. Used for compact storage. Or if you just want to brag.
 		/// </summary>
-		DiamondBlock = 57,
+		Diamond = 57,
 
 		/// <summary>
 		/// Basic need for survival. Used to make almost everything in the game.
@@ -333,17 +333,17 @@
 		/// <summary>
 		/// Things are being cooked, yo. Check the progress bar.
 		/// </summary>
-		BurningFurnace = 62,
+		LitFurnace = 62,
 
 		/// <summary>
 		/// Can record notes written by the player.
 		/// </summary>
-		Sign = 63,
+		SignPost = 63,
 
 		/// <summary>
 		/// Basic door. It keeps you separated from the mean mobs... ssssometimes.
 		/// </summary>
-		WoodenDoor = 64,
+		WoodDoor = 64,
 
 		/// <summary>
 		/// Used to vertically climb walls. 
@@ -353,7 +353,7 @@
 		/// <summary>
 		/// Used for minecart travel.
 		/// </summary>
-		Rails = 66,
+		Rail = 66,
 
 		/// <summary>
 		/// Stairs made out of cobblestone.
@@ -368,12 +368,12 @@
 		/// <summary>
 		/// Used to activate or deactivate redstone currents.
 		/// </summary>
-		Level = 69,
+		Lever = 69,
 
 		/// <summary>
 		/// Can only be activated by a player or mob standing on it.
 		/// </summary>
-		StonePressurePlate = 70,
+		StonePlate = 70,
 
 		/// <summary>
 		/// Can only be opened by one of the five switch types.
@@ -383,7 +383,7 @@
 		/// <summary>
 		/// Can be activated by any item, mobs, or the player.
 		/// </summary>
-		WoodenPressurePlate = 72,
+		WoodPlate = 72,
 
 		/// <summary>
 		/// Found deep underground. Drops 4-5 redstone dust when mined with an iron pickaxe or higher.
@@ -398,7 +398,7 @@
 		/// <summary>
 		/// A redstone torch in an "off" state.
 		/// </summary>
-		RedstoneTorchOff = 75,
+		DisabledRedstoneTorch = 75,
 
 		/// <summary>
 		/// A redstone torch in an "on" state.
@@ -408,12 +408,12 @@
 		/// <summary>
 		/// Can be placed on walls. Sends a short burst of power to redstone currents.
 		/// </summary>
-		Button = 77,
+		StoneButton = 77,
 
 		/// <summary>
 		/// A thin layer of snow caused from snowfall.
 		/// </summary>
-		Snow = 78,
+		SnowCover = 78,
 
 		/// <summary>
 		/// Solid, but transparent. Found in snowy biomes. Occurs when water is in contact with the sky above. 
@@ -428,7 +428,7 @@
 		/// <summary>
 		/// Found naturally in certain parts of the world. Can be made from pieces of clay.
 		/// </summary>
-		ClayBlock = 82,
+		Clay = 82,
 
 		/// <summary>
 		/// Source of sugar and paper. Found naturally in the world. Can also be planted and harvested.
@@ -463,7 +463,7 @@
 		/// <summary>
 		/// Normally found in the Nether up on the ceiling. Yields 2-4 glowstone dust when broken. 
 		/// </summary>
-		GlowstoneBlock = 89,
+		Glowstone = 89,
 
 		/// <summary>
 		/// The block which makes up the "portal" part of the Nether portal.
@@ -483,12 +483,12 @@
 		/// <summary>
 		/// A repeater in an "off" state.
 		/// </summary>
-		RedstoneRepeaterOff = 93,
+		DisabledDiode = 93,
 
 		/// <summary>
 		/// A repeater in an "on" state.
 		/// </summary>
-		RedstoneRepeater = 94,
+		Diode = 94,
 
 		/// <summary>
 		/// A joke implemented for April Fool's.
@@ -502,14 +502,14 @@
 		Trapdoor = 96,
 
 		/// <summary>
-		/// Sometimes known as "Silverfish Block", or "Block 97". Can look like stone, stone brick, or cobblestone. When broken, Silverfish swarm the player. Found naturally in strongholds.
+		/// Sometimes known as "Monster Egg", or "Block 97". Can look like stone, stone brick, or cobblestone. When broken, Silverfish swarm the player. Found naturally in strongholds.
 		/// </summary>
-		MonsterEgg = 97,
+		Silverfish = 97,
 
 		/// <summary>
 		/// Comes in four types; Regular, Cracked, Mossy, and Chiseled. All types except for regular stone brick cannot be crafted, but can be used in crafting recipes. Found in strongholds and jungle temples.
 		/// </summary>
-		StoneBricks = 98,
+		StoneBrick = 98,
 
 		/// <summary>
 		/// Occurs when bonemeal is used on a brown mushroom. Also found naturally in Mushroom Island biomes. 
@@ -554,7 +554,7 @@
 		/// <summary>
 		/// Used as a door for fences. Always opens away from the player. Can be opened with redstone. 
 		/// </summary>
-		FenceGate = 107,
+		Gate = 107,
 
 		/// <summary>
 		/// Stairs made out of brick.
@@ -634,22 +634,22 @@
 		/// <summary>
 		/// A redstone lamp in an "off" state.
 		/// </summary>
-		RedstoneLampOff = 123,
+		InactiveLamp = 123,
 
 		/// <summary>
 		/// A redstone lamp in an "on" state.
 		/// </summary>
-		RedstoneLamp = 124,
+		Lamp = 124,
 
 		/// <summary>
 		/// A double slab made of wood.
 		/// </summary>
-		WoodenDoubleSlab = 125,
+		WoodDoubleSlab = 125,
 
 		/// <summary>
 		/// A half-slab made of wood.
 		/// </summary>
-		WoodenSlab = 126,
+		WoodSlab = 126,
 
 		/// <summary>
 		/// Found naturally on jungle trees. Can be harvested and replanted. Drops three cocoa beans when harvested.
@@ -704,12 +704,12 @@
 		/// <summary>
 		/// Used to support Adventure mode. Can only be placed by admins. It functions as a direct line to the server when powered by redstone.
 		/// </summary>
-		CommandBlock = 137,
+		Command = 137,
 
 		/// <summary>
 		/// Gives temporary buffs to the player. May also provide buffs for multiple players if chosen in the GUI.
 		/// </summary>
-		BeaconBlock = 138,
+		Beacon = 138,
 
 		/// <summary>
 		/// A decorative block, used for an alternative to fences.
@@ -734,11 +734,81 @@
 		/// <summary>
 		/// One variation of the button switch. Can be activated with arrows. 
 		/// </summary>
-		WoodenButton = 143,
+		WoodButton = 143,
 
 		/// <summary>
 		/// Decorative block that comes in five variations. Wither heads are needed to craft the Wither boss mob.
 		/// </summary>
-		Head = 144
+		MobHead = 144,
+
+		/// <summary>
+		/// Used to repair and rename weapons and armor
+		/// </summary>
+		Anvil = 145,
+
+		/// <summary>
+		/// A chest that activates a redstone signal - useful for traps
+		/// </summary>
+		TrapChest = 146,
+
+		/// <summary>
+		/// A golden pressure plate that gives off a redstone signal for some items on it
+		/// </summary>
+		LightPlate = 147,
+
+		/// <summary>
+		/// An iron pressure plate that gives off a redstone signal for a lot of items on it
+		/// </summary>
+		HeavyPlate = 148,
+
+		/// <summary>
+		/// A redstone comparator that is turned off
+		/// </summary>
+		InactiveComparator = 149,
+
+		/// <summary>
+		/// A redstone comparator that is turned on
+		/// </summary>
+		Comparator = 150,
+
+		/// <summary>
+		/// A sensor that gives off a redstone signal when light hits it
+		/// </summary>
+		DaylightSensor = 151,
+
+		/// <summary>
+		/// A redstone block crafted from redstone dust
+		/// </summary>
+		Redstone = 152,
+
+		/// <summary>
+		/// Quartz ore found in the nether
+		/// </summary>
+		NetherQuartzOre = 153,
+
+		/// <summary>
+		/// A block that funnels items
+		/// </summary>
+		Hopper = 154,
+
+		/// <summary>
+		/// A solid block of quartz formed from nether quartz ore
+		/// </summary>
+		Quartz = 155,
+
+		/// <summary>
+		/// Stairs made of quartz block
+		/// </summary>
+		QuartzStairs = 156,
+
+		/// <summary>
+		/// Rail that activates objects, like TNT, when powered by a redstone signal
+		/// </summary>
+		ActivatorRail = 157,
+
+		/// <summary>
+		/// Similar to a dispenser, but drops all items in it, instead of "transforming" some items
+		/// </summary>
+		Dropper = 158
 	}
 }
