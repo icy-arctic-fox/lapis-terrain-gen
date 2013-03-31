@@ -20,9 +20,19 @@ namespace Lapis.Blocks
 		public abstract BlockType Type { get; }
 
 		/// <summary>
-		/// Whether or not the block is solid (non solid blocks can be passed through)
+		/// Whether or not the block is solid (non-solid blocks can be passed through)
 		/// </summary>
 		public abstract bool IsSolid { get; }
+
+		/// <summary>
+		/// Whether or not the block obeys physics
+		/// </summary>
+		public abstract bool Physics { get; }
+
+		/// <summary>
+		/// Whether or not the block can catch fire
+		/// </summary>
+		public abstract bool Flammable { get; }
 
 		/// <summary>
 		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
