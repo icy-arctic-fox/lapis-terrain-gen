@@ -47,7 +47,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Amount of resistance to blasts before being destroyed
 		/// </summary>
-		public abstract int BlastResistance { get; }
+		public abstract float BlastResistance { get; }
 
 		/// <summary>
 		/// Raw meta-data associated with the block
