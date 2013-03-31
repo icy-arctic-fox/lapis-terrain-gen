@@ -73,6 +73,7 @@
     <Compile Include="Level\Chunk.cs" />
     <Compile Include="Level\ChunkRef.cs" />
     <Compile Include="Level\Data\BiomeData.cs" />
+    <Compile Include="Level\Data\BlockInformation.cs" />
     <Compile Include="Level\Data\ChunkData.cs" />
     <Compile Include="Level\Data\HeightData.cs" />
     <Compile Include="Level\Data\LevelData.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Level\Generation\Population\SkyLightPopulator.cs" />
     <Compile Include="Level\RealmRef.cs" />
     <Compile Include="Level\WorldRef.cs" />
+    <Compile Include="Spatial\XYZCoordinate.cs" />
     <Compile Include="Spatial\XZYSection.cs" />
     <Compile Include="Threading\BulkGenerator.cs" />
     <Compile Include="Threading\GenerationSpeed.cs" />

@@ -152,6 +152,22 @@ namespace Lapis.Level
 			throw new NotImplementedException();
 			// TODO: Update height map
 		}
+
+		/// <summary>
+		/// Sets the values of a block at the given coordinates in the chunk
+		/// </summary>
+		/// <param name="bx">X-position of the block within the chunk</param>
+		/// <param name="by">Y-position of the block within the chunk</param>
+		/// <param name="bz">Z-position of the block within the chunk</param>
+		/// <param name="block">Block information to store</param>
+		/// <remarks>If you need to get and set multiple blocks and there concurrent threads, lock the chunk object.
+		/// This class guarantees that blocks will not get corrupt when multiple threads call SetBlock simultaneously,
+		/// but it cannot guarantee that nothing will happen to the state between a GetBlock() and SetBlock() call.</remarks>
+		public void SetBlock (byte bx, byte by, byte bz, BlockInformation block)
+		{
+			throw new NotImplementedException();
+			// TODO: Update height map
+		}
 		#endregion
 
 		#region Sky light
