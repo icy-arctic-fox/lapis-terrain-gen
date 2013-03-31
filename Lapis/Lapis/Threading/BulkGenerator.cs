@@ -106,6 +106,8 @@ namespace Lapis.Threading
 
 						popList.WaitAll();
 					}
+
+					// TODO: Mark chunks as populated
 				}
 			}
 

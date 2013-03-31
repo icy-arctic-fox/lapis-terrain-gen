@@ -65,7 +65,7 @@ namespace IslandsTerrainGenerator
 		/// </summary>
 		public IEnumerable<IChunkPopulator> Populators
 		{
-			get { return null; }
+			get { return new[] { new SkyLightPopulator() }; }
 		}
 
 		/// <summary>
