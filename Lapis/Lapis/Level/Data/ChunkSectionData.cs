@@ -24,11 +24,8 @@ namespace Lapis.Level.Data
 		private const byte InvalidSection = byte.MaxValue;
 
 		private readonly byte _sy;
-		private readonly BlockType[] _blockTypes = new BlockType[SectionLength];
-		private readonly NibbleArray
-			_blockData  = new NibbleArray(SectionLength),
-			_skyLight   = new NibbleArray(SectionLength),
-			_blockLight = new NibbleArray(SectionLength);
+		private readonly BlockType[] _blockTypes;
+		private readonly NibbleArray _blockData, _skyLight, _blockLight;
 
 		/// <summary>
 		/// Creates an arbitrary chunk section
@@ -37,6 +34,11 @@ namespace Lapis.Level.Data
 		public ChunkSectionData ()
 		{
 			_sy = InvalidSection;
+
+			_blockTypes = new BlockType[SectionLength];
+			_blockData  = new NibbleArray(SectionLength);
+			_skyLight   = new NibbleArray(SectionLength);
+			_blockLight = new NibbleArray(SectionLength);
 		}
 
 		/// <summary>
@@ -50,6 +52,11 @@ namespace Lapis.Level.Data
 				throw new ArgumentOutOfRangeException("sy", "The chunk section index must be less than " + Chunk.SectionCount);
 
 			_sy = sy;
+
+			_blockTypes = new BlockType[SectionLength];
+			_blockData  = new NibbleArray(SectionLength);
+			_skyLight   = new NibbleArray(SectionLength);
+			_blockLight = new NibbleArray(SectionLength);
 		}
 
 		/// <summary>
@@ -57,7 +64,7 @@ namespace Lapis.Level.Data
 		/// </summary>
 		public bool ValidSection
 		{
-			get { return Chunk.SectionCount <= _sy; }
+			get { return Chunk.SectionCount > _sy; }
 		}
 
 		/// <summary>

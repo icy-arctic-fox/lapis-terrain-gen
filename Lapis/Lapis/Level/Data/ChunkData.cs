@@ -41,8 +41,8 @@ namespace Lapis.Level.Data
 			_biomes    = new BiomeData();
 			_heightMap = new HeightData();
 
-			for(var i = 0; i < _sections.Length; ++i)
-				_sections[i] = new ChunkSectionData();
+			for(var i = (byte)0; i < _sections.Length; ++i)
+				_sections[i] = new ChunkSectionData(i);
 		}
 
 		#region Properties
@@ -551,27 +551,25 @@ namespace Lapis.Level.Data
 				if(tempNode.Type == NodeType.List)
 				{
 					var node = (ListNode)tempNode;
-					if(node.ElementType == NodeType.Compound)
-					{
-						// Retrieve existing data from NBT
-						foreach(var chunkSection in node)
-						{
-							byte sy;
-							var section = validateChunkSectionNode((CompoundNode) chunkSection, out sy);
+					foreach(var chunkSection in node)
+					{// Retrieve existing data from NBT
+						byte sy;
+						var section = validateChunkSectionNode(chunkSection, out sy);
+						if(null != section)
 							sections[sy] = section;
-						}
-
-						// Create empty data for any remaining chunks
-						for(var i = (byte)0; i < sections.Length; ++i)
-							if(null == sections[i])
-								sections[i] = new ChunkSectionData(i);
 					}
 				}
 			}
+
+			// Create empty data for any remaining chunks
+			for(var i = (byte)0; i < sections.Length; ++i)
+				if(null == sections[i])
+					sections[i] = new ChunkSectionData(i);
+
 			return sections;
 		}
 
-		private static ChunkSectionData validateChunkSectionNode (CompoundNode node, out byte sy)
+		private static ChunkSectionData validateChunkSectionNode (Node node, out byte sy)
 		{
 			var section = new ChunkSectionData(node);
 			if(section.ValidSection)
