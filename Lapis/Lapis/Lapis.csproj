@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockType.cs" />
+    <Compile Include="Blocks\SolidBlock.cs" />
     <Compile Include="IO\AnvilFile.cs" />
     <Compile Include="IO\AnvilFileManager.cs" />
     <Compile Include="IO\Endian.cs" />
