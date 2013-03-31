@@ -122,6 +122,14 @@ namespace Lapis.Level
 			get { return _levelData.Initialized; }
 			set { _levelData.Initialized = value; }
 		}
+
+		/// <summary>
+		/// Terrain generator used to create chunks for the realm
+		/// </summary>
+		public ITerrainGenerator TerrainGenerator
+		{
+			get { return _generator; }
+		}
 		#endregion
 
 		private static bool isOverworld (int realmId)
