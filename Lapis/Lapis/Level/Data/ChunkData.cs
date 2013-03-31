@@ -16,7 +16,7 @@ namespace Lapis.Level.Data
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
 	public class ChunkData : ISerializable
 	{
-		private bool _terrainPopulated;
+		private bool _terrainPopulated = true; // TODO: Don't mark chunks as populated here
 		private readonly int _cx, _cz;
 		private long _lastUpdate;
 		private readonly ChunkSectionData[] _sections;
@@ -25,6 +25,25 @@ namespace Lapis.Level.Data
 
 		// TODO: Add TileTicks support
 		// TODO: Add TileEntities support
+
+		/// <summary>
+		/// Creates new chunk data
+		/// </summary>
+		/// <param name="cx">X-position of the chunk within the realm</param>
+		/// <param name="cz">Z-position of the chunk within the realm</param>
+		public ChunkData (int cx, int cz)
+		{
+			_cx = cx;
+			_cz = cz;
+			_lastUpdate = Timestamp.Now * 1000; // Milliseconds
+
+			_sections  = new ChunkSectionData[Chunk.SectionCount];
+			_biomes    = new BiomeData();
+			_heightMap = new HeightData();
+
+			for(var i = 0; i < _sections.Length; ++i)
+				_sections[i] = new ChunkSectionData();
+		}
 
 		#region Properties
 		/// <summary>
@@ -53,8 +72,7 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Last time the world was updated
-		/// TODO: Investigate the units this uses
+		/// Last time the world was updated (Unix time in milliseconds)
 		/// </summary>
 		public long LastUpdate
 		{
@@ -170,20 +188,6 @@ namespace Lapis.Level.Data
 			}
 		}
 		#endregion
-
-		/// <summary>
-		/// Creates new chunk data that is completely empty
-		/// </summary>
-		/// <param name="cx">X-position of the chunk within the realm</param>
-		/// <param name="cz">Z-position of the chunk within the realm</param>
-		public ChunkData (int cx, int cz)
-		{
-			_cx         = cx;
-			_cz         = cz;
-			_lastUpdate = 0;
-			_biomes     = new BiomeData();
-			_heightMap  = new HeightData();
-		}
 
 		#region Block information
 		/// <summary>

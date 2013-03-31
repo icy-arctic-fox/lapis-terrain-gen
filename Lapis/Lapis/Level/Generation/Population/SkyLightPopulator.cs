@@ -50,26 +50,28 @@ namespace Lapis.Level.Generation.Population
 		/// <param name="c">Chunk to populate</param>
 		public void PopulateChunk (Chunk c)
 		{
-			// TODO: Lock
-			for(var bx = (byte)0; bx < Chunk.Size; ++bx)
-				for (var bz = (byte)0; bz < Chunk.Size; ++bz)
-				{
-					// Quickly fill air blocks
-					var height = c.GetHighestBlockAt(bx, bz);
-					for(var by = (byte)(Chunk.Height - 1); by > height; --by)
-						c.SetSkyLight(bx, by, bz, Chunk.FullBrightness);
-
-					// Reduce amount of sky light through semi-transparent blocks
-					var light = Chunk.FullBrightness;
-					for(var by = (byte)height; by > 0; --by)
+			lock(c)
+			{
+				for(var bx = (byte)0; bx < Chunk.Size; ++bx)
+					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 					{
-						var block = c.GetBlock(bx, by, bz);
-						light     = (byte)Math.Max(0, light - block.Opacity);
-						c.SetSkyLight(bx, by, bz, light);
-					}
-				}
+						// Quickly fill air blocks
+						var height = c.GetHighestBlockAt(bx, bz);
+						for(var by = (byte)(Chunk.Height - 1); by > height; --by)
+							c.SetSkyLight(bx, by, bz, Chunk.FullBrightness);
 
-			// TODO: Add fading (for things like overhangs)
+						// Reduce amount of sky light through semi-transparent blocks
+						var light = Chunk.FullBrightness;
+						for(var by = (byte)height; by > 0; --by)
+						{
+							var block = c.GetBlock(bx, by, bz);
+							light = (byte)Math.Max(0, light - block.Opacity);
+							c.SetSkyLight(bx, by, bz, light);
+						}
+					}
+
+				// TODO: Add fading (for things like overhangs)
+			}
 		}
 	}
 }
