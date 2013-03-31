@@ -162,7 +162,7 @@ namespace Lapis.Level.Generation
 			lock(c)
 			{
 				foreach(var item in chunks)
-				{
+				{// Go through each chunk that is affected
 					var chunk  = item.Key;
 					var blocks = item.Value;
 
@@ -175,7 +175,7 @@ namespace Lapis.Level.Generation
 					lock(chunk)
 					{
 						foreach(var tuple in blocks)
-						{
+						{// Apply all of the actions to the chunk
 							var coord = tuple.Item1;
 							var block = tuple.Item2;
 
@@ -186,7 +186,8 @@ namespace Lapis.Level.Generation
 						}
 					}
 
-					Monitor.Enter(c);
+					if(chunk != c)
+						Monitor.Enter(c);
 				}
 			}
 		}
@@ -206,7 +207,7 @@ namespace Lapis.Level.Generation
 				var sy = by / Chunk.SectionHeight;
 
 				if(0 <= sy && Chunk.SectionCount > sy)
-				{
+				{// Block is in bounds
 					var cxOff = bx / Chunk.Size;
 					var czOff = bz / Chunk.Size;
 

@@ -165,8 +165,11 @@ namespace Lapis.Level
 		/// but it cannot guarantee that nothing will happen to the state between a GetBlock() and SetBlock() call.</remarks>
 		public void SetBlock (byte bx, byte by, byte bz, BlockInformation block)
 		{
-			throw new NotImplementedException();
-			// TODO: Update height map
+			lock(this)
+			{
+				_data.SetBlock(bx, by, bz, block);
+				// TODO: Update height map
+			}
 		}
 		#endregion
 
