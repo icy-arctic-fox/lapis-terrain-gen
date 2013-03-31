@@ -90,7 +90,7 @@ sub createClassFile	{
 		print CLASS<<END_CLASS_FILE;
 namespace Lapis.Blocks
 {
-	public class $name
+	public class $name : Block
 	{
 		#region Properties
 		/// <summary>
@@ -99,7 +99,7 @@ namespace Lapis.Blocks
 		/// <remarks>By using this property, you can safely cast the block object.</remarks>
 		public override BlockType Type
 		{
-			get { return $type; }
+			get { return BlockType.$type; }
 		}
 
 		/// <summary>

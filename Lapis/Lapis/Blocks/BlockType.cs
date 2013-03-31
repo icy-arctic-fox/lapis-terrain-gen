@@ -123,12 +123,12 @@
 		/// <summary>
 		/// A block that rarely occurs deep underground. When mined, it drops 4-8 pieces of Lapis Lazuli.
 		/// </summary>
-		LapisOre = 21,
+		LapisLazuliOre = 21,
 
 		/// <summary>
 		/// A block crafted out of nine pieces of Lapis Lazuli. Good for compact storage and decoration.
 		/// </summary>
-		Lapis = 22,
+		LapisLazuli = 22,
 
 		/// <summary>
 		/// Powered by redstone, dispenses items that are placed into it. Can place boats on water and minecarts on rails.
@@ -199,6 +199,11 @@
 		/// A block moved by a piston.
 		/// </summary>
 		PistonTechBlock = 36,
+
+		/// <summary>
+		/// A technical block (such as a block moved by a piston)
+		/// </summary>
+		Technical = 36,
 
 		/// <summary>
 		/// Retains block information.
@@ -403,7 +408,7 @@
 		/// <summary>
 		/// A redstone torch in an "on" state.
 		/// </summary>
-		RestoneTorch = 76,
+		RedstoneTorch = 76,
 
 		/// <summary>
 		/// Can be placed on walls. Sends a short burst of power to redstone currents.
@@ -421,9 +426,14 @@
 		Ice = 79,
 
 		/// <summary>
+		/// A solid block of packed snow
+		/// </summary>
+		Snow = 80,
+
+		/// <summary>
 		/// Naturally spawns in desert biomes. Harms player when touched.
 		/// </summary>
-		Cactus = 80,
+		Cactus = 81,
 
 		/// <summary>
 		/// Found naturally in certain parts of the world. Can be made from pieces of clay.
@@ -478,7 +488,7 @@
 		/// <summary>
 		/// The only edible block in the game. Has to be placed in order to eat it.
 		/// </summary>
-		CakeBlock = 92,
+		Cake = 92,
 
 		/// <summary>
 		/// A repeater in an "off" state.
@@ -644,7 +654,7 @@
 		/// <summary>
 		/// A double slab made of wood.
 		/// </summary>
-		WoodDoubleSlab = 125,
+		DoubleWoodSlab = 125,
 
 		/// <summary>
 		/// A half-slab made of wood.
@@ -684,7 +694,7 @@
 		/// <summary>
 		/// A block crafted out of nine pieces of Emerald. Good for compact storage and decoration.
 		/// </summary>
-		EmeraldBlock = 133,
+		Emerald = 133,
 
 		/// <summary>
 		/// Stairs made out of spruce wood.

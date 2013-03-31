@@ -126,7 +126,7 @@ Type,Name,Solid,Physics,Flammable,Opacity,Luminance,Blast Resistance,Meta-data,N
 124,Lamp,Yes,No,No,15,15,1.5,No,,
 125,Double Wood Slab,Yes,No,Yes,15,0,15,Yes,,
 126,Wood Slab,Yes,No,Yes,0,0,15,Yes,,
-127,Cocoa,Yes,No,No,0,0,15,Yes,,
+127,Cocoa Plant,Yes,No,No,0,0,15,Yes,,
 128,Sandstone Stairs,Yes,No,No,15,0,30,Yes,,
 129,Emerald Ore,Yes,No,No,15,0,15,No,,
 130,Ender Chest,Yes,No,No,0,7,3000,Yes,EnderChest,
