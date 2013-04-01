@@ -39,7 +39,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
 		/// </summary>
-		public override int Opacity
+		public override byte Opacity
 		{
 			get { return 15; }
 		}
@@ -47,7 +47,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Amount of block light that the block gives off
 		/// </summary>
-		public override int Luminance
+		public override byte Luminance
 		{
 			get { return 9; }
 		}

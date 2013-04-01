@@ -134,7 +134,14 @@ namespace Lapis.Level
 		/// To update the chunk, use SetBlock().</remarks>
 		public Block GetBlock (byte bx, byte by, byte bz)
 		{
-			throw new NotImplementedException();
+			BlockType type;
+			byte data;
+			lock(this)
+			{// TODO: This could be faster
+				type = _data.GetBlockType(bx, by, bz);
+				data = _data.GetBlockData(bx, by, bz);
+			}
+			return Block.Create(type, data);
 		}
 
 		/// <summary>
@@ -149,8 +156,12 @@ namespace Lapis.Level
 		/// but it cannot guarantee that nothing will happen to the state between a GetBlock() and SetBlock() call.</remarks>
 		public void SetBlock (byte bx, byte by, byte bz, Block block)
 		{
-			throw new NotImplementedException();
-			updateHeightMap(bx, bz);
+			var blockInfo = new BlockInformation(block.Type, block.Data, 0, block.Luminance);
+			lock(this)
+			{
+				_data.SetBlock(bx, by, bz, blockInfo);
+				updateHeightMap(bx, bz);
+			}
 		}
 
 		/// <summary>
