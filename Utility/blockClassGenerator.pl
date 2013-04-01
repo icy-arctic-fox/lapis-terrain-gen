@@ -24,6 +24,9 @@ sub main	{
 			print STDERR 'Failed to create class file for - ' . $entry->{Name} . "\n";
 		}
 	}
+
+	# Produce registration snippet
+	createRegisterSnippet($contents);
 }
 
 # Functions #
@@ -179,5 +182,30 @@ END_CLASS_FILE
 
 	else	{
 		return undef;
+	}
+}
+
+sub createRegisterSnippet	{
+	my($blockTypes) = @_;
+
+	# Find the longest name
+	my $longest = 0;
+	foreach my $values (@$blockTypes)	{
+		my $type = $values->{Name};
+		$type =~ s/\s+//g;
+		my $length = length($type);
+		$longest = $length if($length > $longest);
+	}
+
+	if(open(SNIPPET, '>', 'Block.Registry.cs.snippet'))	{
+		foreach my $values (@$blockTypes)	{
+			my $type = $values->{Name};	$type =~ s/\s+//g;
+			my $name = $type . 'Block';
+			my $spacing = ' ' x ($longest - length($type));
+			print SNIPPET "_knownBlockTypes[(byte)BlockType.$type]$spacing = (data, tileData) => new $name(data);\n"
+		}
+		close(SNIPPET);
+	}	else	{
+		print STDERR "Failed to create block registry snippet - $!\n";
 	}
 }
