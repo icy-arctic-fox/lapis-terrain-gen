@@ -40,7 +40,7 @@ namespace Lapis.Level.Generation
 			lock(_terrainGeneratorTypes)
 			{
 				discoverGenerators();
-				// TODO: Add terrain populator loading
+				// TODO: Add chunk populator loading
 			}
 		}
 
@@ -103,6 +103,7 @@ namespace Lapis.Level.Generation
 			return _terrainGeneratorType.IsAssignableFrom(t) &&
 					null != t.GetConstructor(Type.EmptyTypes) &&
 					!t.IsInterface &&
+					!t.IsAbstract &&
 					_terrainGeneratorType != t;
 		}
 		#endregion
