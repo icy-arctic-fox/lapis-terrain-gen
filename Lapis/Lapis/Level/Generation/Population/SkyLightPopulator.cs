@@ -62,11 +62,11 @@ namespace Lapis.Level.Generation.Population
 
 						// Reduce amount of sky light through semi-transparent blocks
 						var light = Chunk.FullBrightness;
-						for(var by = (byte)height; by > 0; --by)
+						for(var by = (byte)height; by > 0 && light > 0; --by)
 						{
+							c.AddSkyLight(bx, by, bz, light);
 							var block = c.GetBlock(bx, by, bz);
 							light = (byte)Math.Max(0, light - block.Opacity);
-							c.AddSkyLight(bx, by, bz, light);
 						}
 					}
 

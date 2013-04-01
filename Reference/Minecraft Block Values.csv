@@ -17,7 +17,7 @@ Type,Name,Solid,Physics,Flammable,Opacity,Luminance,Blast Resistance,Meta-data,N
 15,Iron Ore,Yes,No,No,15,0,15,No,,
 16,Coal Ore,Yes,No,No,15,0,15,No,,
 17,Wood,Yes,No,Yes,15,0,10,Yes,,
-18,Leaves,Yes,No,Yes,5,0,1,Yes,,
+18,Leaves,Yes,No,Yes,1,0,1,Yes,,
 19,Sponge,Yes,No,No,15,0,3,No,,
 20,Glass,Yes,No,No,0,0,1.5,No,,
 21,Lapis Lazuli Ore,Yes,No,No,15,0,15,No,,
