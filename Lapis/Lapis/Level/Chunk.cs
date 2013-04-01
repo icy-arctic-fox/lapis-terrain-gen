@@ -296,7 +296,7 @@ namespace Lapis.Level
 		private void updateHeightMap (byte bx, byte bz)
 		{
 			int y;
-			for(y = Chunk.Height - 1; y > 0; --y)
+			for(y = Height - 1; y > 0; --y)
 				if(_data.GetBlockType(bx, (byte)y, bz) != BlockType.Air)
 					break;
 			_data.HeightMap[bx, bz] = y;

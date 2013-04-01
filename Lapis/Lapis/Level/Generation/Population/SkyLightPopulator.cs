@@ -66,7 +66,7 @@ namespace Lapis.Level.Generation.Population
 						{
 							var block = c.GetBlock(bx, by, bz);
 							light = (byte)Math.Max(0, light - block.Opacity);
-							c.SetSkyLight(bx, by, bz, light);
+							c.AddSkyLight(bx, by, bz, light);
 						}
 					}
 
