@@ -75,9 +75,9 @@ namespace IslandsTerrainGenerator
 		public void Initialize (string options)
 		{
 			// ...
-			var floorGenerator = new PerlinNoiseGenerator(0);
+			var floorGenerator = new PerlinNoiseGenerator(1);
 			floorGenerator.AddPostProcess(new RangePostProcessor(-1.0, -0.7));
-			var surfaceGenerator = new PerlinNoiseGenerator(1);
+			var surfaceGenerator = new PerlinNoiseGenerator(2);
 			surfaceGenerator.AddPreProcess(new ScalePreProcessor(1.0 / 5.0));
 			surfaceGenerator.AddPostProcess(new RangePostProcessor(-0.6, 0.5));
 			_noise = new NoiseCombiner(floorGenerator, surfaceGenerator);
