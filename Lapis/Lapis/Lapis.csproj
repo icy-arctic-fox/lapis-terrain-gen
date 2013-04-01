@@ -52,6 +52,7 @@
     <Compile Include="Blocks\BedrockBlock.cs" />
     <Compile Include="Blocks\BirchWoodStairsBlock.cs" />
     <Compile Include="Blocks\Block.cs" />
+    <Compile Include="Blocks\Block.Registry.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BookshelfBlock.cs" />
     <Compile Include="Blocks\BrewingStandBlock.cs" />
