@@ -37,12 +37,12 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
 		/// </summary>
-		public abstract int Opacity { get; }
+		public abstract byte Opacity { get; }
 
 		/// <summary>
-		/// Amount of block light that the block gives off
+		/// Amount of block light that the block gives off (0 for none and 15 for full brightness)
 		/// </summary>
-		public abstract int Luminance { get; }
+		public abstract byte Luminance { get; }
 
 		/// <summary>
 		/// Amount of resistance to blasts before being destroyed
