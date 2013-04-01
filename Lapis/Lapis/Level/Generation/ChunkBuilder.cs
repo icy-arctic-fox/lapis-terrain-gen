@@ -192,12 +192,12 @@ namespace Lapis.Level.Generation
 
 			var y = 0;
 			if(sectionEnd > sectionStart)
-			{// Mutliple sections
-				for(var index = startIndex; index < ChunkSectionData.SectionLength; index += step)
+			{// Multiple sections
+				for(int by = yOff, index = startIndex; by < Chunk.SectionHeight; ++by, index += step)
 					sections[sectionStart][index] = column[y++];
 				var baseIndex = ChunkData.CalculateBlockIndex(bx, 0, bz);
 				for(var section = sectionStart + 1; section < sectionEnd; ++section)
-					for(var index = baseIndex; index < Chunk.SectionHeight; index += step)
+					for(int by = 0, index = baseIndex; by < Chunk.SectionHeight; ++by, index += step)
 						sections[section][index] = column[y++];
 				for(var index = baseIndex; index < endIndex; index += step)
 					sections[sectionEnd][index] = column[y++];
