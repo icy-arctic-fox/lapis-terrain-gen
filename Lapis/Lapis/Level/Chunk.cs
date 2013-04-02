@@ -394,7 +394,8 @@ namespace Lapis.Level
 		/// </summary>
 		public void Save ()
 		{
-			_realm.SaveChunk(ChunkX, ChunkZ, _data);
+			lock(this)
+				_realm.SaveChunk(ChunkX, ChunkZ, _data);
 		}
 
 		#region Cleanup

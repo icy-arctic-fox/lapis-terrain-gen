@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Lapis.IO;
 using Lapis.IO.NBT;
 
@@ -151,6 +152,7 @@ namespace Lapis.Level.Data
 		{
 			var iaNode = validateNode(node);
 			_data = validateIntArray(iaNode);
+			Maximum = _data.Max();
 		}
 
 		#region Validation
