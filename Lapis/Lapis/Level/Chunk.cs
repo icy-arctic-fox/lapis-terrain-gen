@@ -7,7 +7,7 @@ namespace Lapis.Level
 	/// <summary>
 	/// A manageable collection of blocks within a realm
 	/// </summary>
-	public sealed class Chunk : IDisposable
+	public sealed class Chunk : IDisposable, IModifiable
 	{
 		#region Constants
 		/// <summary>
@@ -101,6 +101,27 @@ namespace Lapis.Level
 			get { return _data.ChunkZ; }
 		}
 		#endregion
+
+		/// <summary>
+		/// Whether or not the chunk has been modified
+		/// </summary>
+		public bool Modified
+		{
+			get
+			{
+				lock(this)
+					return _data.Modified;
+			}
+		}
+
+		/// <summary>
+		/// Marks the chunk as being unmodified
+		/// </summary>
+		public void ClearModificationFlag ()
+		{
+			lock(this)
+				_data.ClearModificationFlag();
+		}
 
 		/// <summary>
 		/// Gets a reference to a block within the chunk
@@ -432,8 +453,9 @@ namespace Lapis.Level
 		/// <param name="disposing">True if we should clean up all of our own resources (code called Dispose) or false if we should only cleanup ourselves (GC called Dispose)</param>
 		private void Dispose (bool disposing)
 		{
-			// It appears that _data is always alive when entering this method.
-			// TODO: The chunk should be saved when entering this method (and if there were changes).
+			// It appears that _data is always alive when entering this method, but we check for null just in case
+			if(null != _data && _data.Modified)
+				_realm.SaveChunk(ChunkX, ChunkZ, _data);
 			if(!disposing)
 				_realm.FreeChunk(ChunkX, ChunkZ);
 		}
