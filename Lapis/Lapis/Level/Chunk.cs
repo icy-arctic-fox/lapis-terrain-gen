@@ -301,6 +301,17 @@ namespace Lapis.Level
 					break;
 			_data.HeightMap[bx, bz] = y;
 		}
+
+		/// <summary>
+		/// Creates a snapshot of the chunk that contains all of the block information within the chunk
+		/// </summary>
+		/// <returns>A copy of the underlying block chunk data</returns>
+		/// <remarks>A snapshot is useful for getting the full contents of a chunk without affecting it.
+		/// This can also be useful in multi-threaded situations.</remarks>
+		public ChunkData GetSnapshot ()
+		{
+			throw new NotImplementedException();
+		}
 		#endregion
 
 		#region Neighbors
