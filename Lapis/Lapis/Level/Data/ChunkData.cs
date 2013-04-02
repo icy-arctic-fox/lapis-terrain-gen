@@ -620,7 +620,7 @@ namespace Lapis.Level.Data
 		/// <remarks>Bounds are not checked in this method.</remarks>
 		public static int CalculateBlockIndex (byte bx, byte by, byte bz)
 		{
-			var index = (by * Chunk.SectionHeight * Chunk.SectionHeight) + (bz * Chunk.Size) + bx;
+			var index = (by * Chunk.SectionHeight * Chunk.Size) + (bz * Chunk.Size) + bx;
 			return index;
 		}
 
