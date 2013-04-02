@@ -143,7 +143,10 @@ namespace Lapis.Threading
 				var lastZ     = work.StartZ + work.CountZ;
 				for(var x = work.StartX; x <= lastX; ++x)
 					for(var z = work.StartZ; z <= lastZ; ++z)
-						populator.PopulateChunk(realm[x, z]);
+					{
+						var chunk = realm[x, z];
+						populator.PopulateChunk(chunk);
+					}
 				Thread.Sleep(_generationDelay[(int)_speed]);
 				work.Done();
 			}

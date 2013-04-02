@@ -237,6 +237,7 @@
     <Compile Include="Level\Data\BlockInformation.cs" />
     <Compile Include="Level\Data\ChunkData.cs" />
     <Compile Include="Level\Data\HeightData.cs" />
+    <Compile Include="Level\Data\IModifiable.cs" />
     <Compile Include="Level\Data\LevelData.cs" />
     <Compile Include="Level\Data\LevelDataUtility.cs" />
     <Compile Include="Level\Dimension.cs" />
