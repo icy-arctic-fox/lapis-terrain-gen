@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Lapis.Blocks;
 using Lapis.IO;
 using Lapis.IO.NBT;
@@ -22,6 +23,7 @@ namespace Lapis.Level.Data
 		private readonly ChunkSectionData[] _sections;
 		private readonly BiomeData _biomes;
 		private readonly HeightData _heightMap;
+		private bool _modified;
 
 		// TODO: Add TileTicks support
 		// TODO: Add TileEntities support
@@ -52,7 +54,11 @@ namespace Lapis.Level.Data
 		public bool TerrainPopulated
 		{
 			get { return _terrainPopulated; }
-			set { _terrainPopulated = value; }
+			set
+			{
+				_modified = true;
+				_terrainPopulated = value;
+			}
 		}
 
 		/// <summary>
@@ -77,7 +83,11 @@ namespace Lapis.Level.Data
 		public long LastUpdate
 		{
 			get { return _lastUpdate; }
-			set { _lastUpdate = value; }
+			set
+			{
+				_modified   = true;
+				_lastUpdate = value;
+			}
 		}
 
 		/// <summary>
@@ -316,6 +326,33 @@ namespace Lapis.Level.Data
 			_sections[sy].SetBlock(bx, by, bz, block);
 		}
 		#endregion
+
+		/// <summary>
+		/// Whether or not the chunk data has been modified
+		/// </summary>
+		public bool Modified
+		{
+			get
+			{
+				if(_modified)
+					return true;
+				if(_biomes.Modified || _heightMap.Modified)
+					return true;
+				return _sections.Any(s => s.Modified);
+			}
+		}
+
+		/// <summary>
+		/// Resets the modified property so that the chunk data appears as unmodified
+		/// </summary>
+		public void ClearModificationFlag ()
+		{
+			_modified = false;
+			_biomes.ClearModificationFlag();
+			_heightMap.ClearModificationFlag();
+			foreach(var s in _sections)
+				s.ClearModificationFlag();
+		}
 
 		#region Serialization
 		#region Node names

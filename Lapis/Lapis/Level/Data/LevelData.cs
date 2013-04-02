@@ -11,7 +11,7 @@ namespace Lapis.Level.Data
 	/// <remarks>This class is not tied to any active world data.
 	/// The purpose of this class is for creating levels, loading level data from disk, and saving level data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
-	public class LevelData : ISerializable
+	public class LevelData : ISerializable, IModifiable
 	{
 		private bool _initialized, _hardcore, _cheats, _mapFeatures, _raining, _storm;
 		private int _spawnX, _spawnY = 65, _spawnZ;
@@ -20,6 +20,7 @@ namespace Lapis.Level.Data
 		private long _gameTicks, _time;
 		private GameMode _mode = GameMode.Survival;
 		private Dimension? _dimension;
+		private bool _modified;
 
 		// Required fields
 		private readonly string _name, _generatorName, _generatorOptions;
@@ -37,7 +38,11 @@ namespace Lapis.Level.Data
 		public bool Initialized
 		{
 			get { return _initialized; }
-			set { _initialized = value; }
+			set
+			{
+				_modified    = true;
+				_initialized = value;
+			}
 		}
 
 		/// <summary>
@@ -100,7 +105,11 @@ namespace Lapis.Level.Data
 		public Dimension Dimension
 		{
 			get { return _dimension.GetValueOrDefault(Dimension.Normal); }
-			set { _dimension = value; }
+			set
+			{
+				_modified  = true;
+				_dimension = value;
+			}
 		}
 
 		/// <summary>
@@ -111,7 +120,11 @@ namespace Lapis.Level.Data
 		public bool MapFeatures
 		{
 			get { return _mapFeatures; }
-			set { _mapFeatures = value; }
+			set
+			{
+				_modified    = true;
+				_mapFeatures = value;
+			}
 		}
 
 		/// <summary>
@@ -130,7 +143,11 @@ namespace Lapis.Level.Data
 		public long DiskUsage
 		{
 			get { return _size; }
-			set { _size = value; }
+			set
+			{
+				_modified = true;
+				_size     = value;
+			}
 		}
 
 		/// <summary>
@@ -139,7 +156,11 @@ namespace Lapis.Level.Data
 		public bool Cheats
 		{
 			get { return _cheats; }
-			set { _cheats = value; }
+			set
+			{
+				_modified = true;
+				_cheats   = value;
+			}
 		}
 
 		/// <summary>
@@ -149,7 +170,11 @@ namespace Lapis.Level.Data
 		public bool Hardcore
 		{
 			get { return _hardcore; }
-			set { _hardcore = value; }
+			set
+			{
+				_modified = true;
+				_hardcore = value;
+			}
 		}
 
 		/// <summary>
@@ -158,7 +183,11 @@ namespace Lapis.Level.Data
 		public GameMode Mode
 		{
 			get { return _mode; }
-			set { _mode = value; }
+			set
+			{
+				_modified = true;
+				_mode     = value;
+			}
 		}
 
 		/// <summary>
@@ -167,7 +196,11 @@ namespace Lapis.Level.Data
 		public long Age
 		{
 			get { return _gameTicks; }
-			set { _gameTicks = value; }
+			set
+			{
+				_modified  = true;
+				_gameTicks = value;
+			}
 		}
 
 		/// <summary>
@@ -176,7 +209,11 @@ namespace Lapis.Level.Data
 		public long Time
 		{
 			get { return _time; }
-			set { _time = value; }
+			set
+			{
+				_modified = true;
+				_time     = value;
+			}
 		}
 
 		/// <summary>
@@ -186,7 +223,11 @@ namespace Lapis.Level.Data
 		public int SpawnX
 		{
 			get { return _spawnX; }
-			set { _spawnX = value; }
+			set
+			{
+				_modified = true;
+				_spawnX   = value;
+			}
 		}
 
 		/// <summary>
@@ -196,7 +237,11 @@ namespace Lapis.Level.Data
 		public int SpawnY
 		{
 			get { return _spawnY; }
-			set { _spawnY = value; }
+			set
+			{
+				_modified = true;
+				_spawnY   = value;
+			}
 		}
 
 		/// <summary>
@@ -206,7 +251,11 @@ namespace Lapis.Level.Data
 		public int SpawnZ
 		{
 			get { return _spawnZ; }
-			set { _spawnZ = value; }
+			set
+			{
+				_modified = true;
+				_spawnZ   = value;
+			}
 		}
 
 		/// <summary>
@@ -215,7 +264,11 @@ namespace Lapis.Level.Data
 		public bool Downfall
 		{
 			get { return _raining; }
-			set { _raining = value; }
+			set
+			{
+				_modified = true;
+				_raining  = value;
+			}
 		}
 
 		/// <summary>
@@ -225,7 +278,11 @@ namespace Lapis.Level.Data
 		public int DownfallTime
 		{
 			get { return _rainTime; }
-			set { _rainTime = value; }
+			set
+			{
+				_modified = true;
+				_rainTime = value;
+			}
 		}
 
 		/// <summary>
@@ -235,7 +292,11 @@ namespace Lapis.Level.Data
 		public bool IsThunderstorm
 		{
 			get { return _storm; }
-			set { _storm = value; }
+			set
+			{
+				_modified = true;
+				_storm    = value;
+			}
 		}
 
 		/// <summary>
@@ -245,7 +306,11 @@ namespace Lapis.Level.Data
 		public int ThunderstormTime
 		{
 			get { return _stormTime; }
-			set { _stormTime = value; }
+			set
+			{
+				_modified  = true;
+				_stormTime = value;
+			}
 		}
 		#endregion
 
@@ -270,6 +335,22 @@ namespace Lapis.Level.Data
 			_generatorName    = generatorName;
 			_generatorVersion = generatorVersion;
 			_generatorOptions = generatorOptions ?? string.Empty;
+		}
+
+		/// <summary>
+		/// Whether or not the level data has been modified
+		/// </summary>
+		public bool Modified
+		{
+			get { return _modified; }
+		}
+
+		/// <summary>
+		/// Resets the modified property so that the level data appears as unmodified
+		/// </summary>
+		public void ClearModificationFlag ()
+		{
+			_modified = false;
 		}
 
 		#region Serialization

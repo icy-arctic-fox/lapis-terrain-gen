@@ -10,11 +10,31 @@ namespace Lapis.Level.Data
 	/// <remarks>This class is not tied to any active world data.
 	/// The purpose of this class is for creating chunks, load chunk data from disk, and save chunk data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
-	public sealed class BiomeData : ISerializable
+	public sealed class BiomeData : ISerializable, IModifiable
 	{
 		private const string DefaultNodeName = "BiomeData";
 
 		private readonly BiomeType[] _data;
+		private bool _modified;
+
+		/// <summary>
+		/// Creates new biome data for a chunk
+		/// </summary>
+		/// <remarks>The data will be set to BiomeType.Ocean</remarks>
+		public BiomeData ()
+		{
+			_data = new BiomeType[Chunk.Size * Chunk.Size];
+		}
+
+		/// <summary>
+		/// Creates new biome data for a chunk
+		/// </summary>
+		/// <param name="initialType">Biome type to set for the entire chunk</param>
+		public BiomeData (BiomeType initialType)
+		{
+			_data = new BiomeType[Chunk.Size * Chunk.Size];
+			_data.Fill(initialType);
+		}
 
 		/// <summary>
 		/// The biome type at an index (0 - 255)
@@ -24,7 +44,11 @@ namespace Lapis.Level.Data
 		public BiomeType this[byte index]
 		{
 			get { return _data[index]; }
-			set { _data[index] = value; }
+			set
+			{
+				_modified    = true;
+				_data[index] = value;
+			}
 		}
 
 		/// <summary>
@@ -44,28 +68,26 @@ namespace Lapis.Level.Data
 
 			set
 			{
-				var index = CalculateIndex(bx, bz);
+				var index    = CalculateIndex(bx, bz);
+				_modified    = true;
 				_data[index] = value;
 			}
 		}
 
 		/// <summary>
-		/// Creates new biome data for a chunk
+		/// Whether or not the biome data has been modified
 		/// </summary>
-		/// <remarks>The data will be set to BiomeType.Ocean</remarks>
-		public BiomeData ()
+		public bool Modified
 		{
-			_data = new BiomeType[Chunk.Size * Chunk.Size];
+			get { return _modified; }
 		}
 
 		/// <summary>
-		/// Creates new biome data for a chunk
+		/// Resets the modified property so that the biome data appears as unmodified
 		/// </summary>
-		/// <param name="initialType">Biome type to set for the entire chunk</param>
-		public BiomeData (BiomeType initialType)
+		public void ClearModificationFlag ()
 		{
-			_data = new BiomeType[Chunk.Size * Chunk.Size];
-			_data.Fill(initialType);
+			_modified = false;
 		}
 
 		/// <summary>

@@ -11,11 +11,34 @@ namespace Lapis.Level.Data
 	/// <remarks>This class is not tied to any active world data.
 	/// The purpose of this class is for creating chunks, load chunk data from disk, and save chunk data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
-	public sealed class HeightData : ISerializable
+	public sealed class HeightData : ISerializable, IModifiable
 	{
 		private const string DefaultNodeName = "HeightMap";
 
 		private readonly int[] _data;
+		private bool _modified;
+
+		/// <summary>
+		/// Creates new height map for a chunk
+		/// </summary>
+		/// <remarks>The data will be set to 0</remarks>
+		public HeightData ()
+		{
+			_data   = new int[Chunk.Size * Chunk.Size];
+			Maximum = 0;
+		}
+
+		/// <summary>
+		/// Creates new biome data for a chunk
+		/// </summary>
+		/// <param name="initialHeight">Height to set for the entire chunk</param>
+		public HeightData (int initialHeight)
+		{
+			_data = new int[Chunk.Size * Chunk.Size];
+			for(var i = 0; i < _data.Length; ++i)
+				_data[i] = initialHeight;
+			Maximum = initialHeight;
+		}
 
 		/// <summary>
 		/// The height of the highest block an index (0 - 255)
@@ -63,25 +86,19 @@ namespace Lapis.Level.Data
 		public int Maximum { get; private set; }
 
 		/// <summary>
-		/// Creates new height map for a chunk
+		/// Whether or not the height data has been modified
 		/// </summary>
-		/// <remarks>The data will be set to 0</remarks>
-		public HeightData ()
+		public bool Modified
 		{
-			_data = new int[Chunk.Size * Chunk.Size];
-			Maximum  = 0;
+			get { return _modified; }
 		}
 
 		/// <summary>
-		/// Creates new biome data for a chunk
+		/// Resets the modified property so that the height data appears as unmodified
 		/// </summary>
-		/// <param name="initialHeight">Height to set for the entire chunk</param>
-		public HeightData (int initialHeight)
+		public void ClearModificationFlag ()
 		{
-			_data = new int[Chunk.Size * Chunk.Size];
-			for(var i = 0; i < _data.Length; ++i)
-				_data[i] = initialHeight;
-			Maximum = initialHeight;
+			_modified = false;
 		}
 
 		/// <summary>
