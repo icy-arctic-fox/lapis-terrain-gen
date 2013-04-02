@@ -52,13 +52,15 @@ namespace Lapis.Level.Generation.Population
 		{
 			lock(c)
 			{
+				// TODO: Blank out all sky light
+
 				for(var bx = (byte)0; bx < Chunk.Size; ++bx)
 					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 					{
 						// Quickly fill air blocks
 						var height = c.GetHighestBlockAt(bx, bz);
 						for(var by = (byte)(Chunk.Height - 1); by > height; --by)
-							c.SetSkyLight(bx, by, bz, Chunk.FullBrightness);
+							c.SetSkyLight(bx, by, bz, Chunk.FullBrightness); // TODO: Add a method like SetSpan(startIndex, endIndex) to NibbleArray
 
 						// Reduce amount of sky light through semi-transparent blocks
 						var light = Chunk.FullBrightness;
@@ -71,6 +73,7 @@ namespace Lapis.Level.Generation.Population
 					}
 
 				// TODO: Add fading (for things like overhangs)
+				// Fading should go horizontal only for sky light, block light goes in all directions (verify this)
 			}
 		}
 	}

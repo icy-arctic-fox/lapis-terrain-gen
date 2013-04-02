@@ -9,7 +9,7 @@ namespace Lapis.Level.Data
 	/// <summary>
 	/// Contains block information for just a section of a chunk
 	/// </summary>
-	public class ChunkSectionData : ISerializable
+	public class ChunkSectionData : ISerializable, IModifiable
 	{
 		/// <summary>
 		/// Number of bytes/items in a chunk section
@@ -26,6 +26,7 @@ namespace Lapis.Level.Data
 		private readonly byte _sy;
 		private readonly BlockType[] _blockTypes;
 		private readonly NibbleArray _blockData, _skyLight, _blockLight;
+		private bool _modified;
 
 		/// <summary>
 		/// Creates an arbitrary chunk section
@@ -139,6 +140,7 @@ namespace Lapis.Level.Data
 		public void SetBlockType (int index, BlockType type)
 		{
 			checkIndex(index);
+			_modified = true;
 			_blockTypes[index] = type;
 		}
 
@@ -167,6 +169,7 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, by, bz);
 			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_modified = true;
 			_blockTypes[index] = type;
 		}
 		#endregion
@@ -210,6 +213,7 @@ namespace Lapis.Level.Data
 		public void SetBlockData (int index, byte data)
 		{
 			checkIndex(index);
+			_modified = true;
 			_blockData[index] = data;
 		}
 
@@ -238,6 +242,7 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, by, bz);
 			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_modified = true;
 			_blockData[index] = data;
 		}
 		#endregion
@@ -281,6 +286,7 @@ namespace Lapis.Level.Data
 		public void SetSkyLight (int index, byte amount)
 		{
 			checkIndex(index);
+			_modified = true;
 			_skyLight[index] = amount;
 		}
 
@@ -309,6 +315,7 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, by, bz);
 			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_modified = true;
 			_skyLight[index] = amount;
 		}
 		#endregion
@@ -352,6 +359,7 @@ namespace Lapis.Level.Data
 		public void SetBlockLight (int index, byte amount)
 		{
 			checkIndex(index);
+			_modified = true;
 			_blockLight[index] = amount;
 		}
 
@@ -380,6 +388,7 @@ namespace Lapis.Level.Data
 		{
 			checkBounds(bx, by, bz);
 			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_modified = true;
 			_blockLight[index] = amount;
 		}
 		#endregion
@@ -394,12 +403,29 @@ namespace Lapis.Level.Data
 		public void SetBlock (byte bx, byte by, byte bz, BlockInformation block)
 		{
 			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
+			_modified = true;
 			_blockTypes[index] = block.Type;
 			_blockData[index]  = block.Data;
 			_skyLight[index]   = block.SkyLight;
 			_blockLight[index] = block.BlockLight;
 		}
 		#endregion
+
+		/// <summary>
+		/// Whether or not the chunk section data has been modified
+		/// </summary>
+		public bool Modified
+		{
+			get { return _modified; }
+		}
+
+		/// <summary>
+		/// Resets the modified property so that the chunk section data appears as unmodified
+		/// </summary>
+		public void ClearModificationFlag ()
+		{
+			_modified = false;
+		}
 
 		#region Serialization
 		#region Node names

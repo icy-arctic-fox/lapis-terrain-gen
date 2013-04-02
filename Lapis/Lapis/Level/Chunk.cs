@@ -432,6 +432,8 @@ namespace Lapis.Level
 		/// <param name="disposing">True if we should clean up all of our own resources (code called Dispose) or false if we should only cleanup ourselves (GC called Dispose)</param>
 		private void Dispose (bool disposing)
 		{
+			// It appears that _data is always alive when entering this method.
+			// TODO: The chunk should be saved when entering this method (and if there were changes).
 			if(!disposing)
 				_realm.FreeChunk(ChunkX, ChunkZ);
 		}
