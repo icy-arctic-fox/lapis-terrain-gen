@@ -74,9 +74,9 @@ namespace IslandsTerrainGenerator
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
 		public void Initialize (string options)
 		{
-			var floorGenerator = new PerlinNoiseGenerator(1);
+			var floorGenerator = new PerlinNoiseGenerator(100);
 			floorGenerator.AddPostProcess(new RangePostProcessor(-1.0, -0.7));
-			var surfaceGenerator = new PerlinNoiseGenerator(2);
+			var surfaceGenerator = new PerlinNoiseGenerator(200);
 			surfaceGenerator.AddPreProcess(new ScalePreProcessor(1.0 / 5.0));
 			surfaceGenerator.AddPostProcess(new RangePostProcessor(-0.6, 0.5));
 			_noise = new NoiseCombiner(floorGenerator, surfaceGenerator);
@@ -84,8 +84,10 @@ namespace IslandsTerrainGenerator
 		}
 
 		private NoiseGenerator _noise;
-		private const double Scale = 1 / 128.0;
-		private const byte SeaLevel = 64;
+		private const double Scale = 1 / 128.0; // TODO: Make customizable
+		private const byte SeaLevel = 64; // TODO: Make customizable
+		private const byte Raise = 2; // TODO: Make customizable
+		// TODO: Add additional properties
 
 		/// <summary>
 		/// Generates a chunk at the given coordinate
@@ -106,7 +108,7 @@ namespace IslandsTerrainGenerator
 						LevelDataUtility.LocalToGlobalXZ(cx, cz, bx, bz, out gx, out gz);
 						var x = gx * Scale;
 						var z = gz * Scale;
-						var height = _noise.GenerateNoise(x, z, 0);
+						var height = _noise.GenerateNoise(x, z, 0) + Raise;
 						var by = (byte)height;
 
 						for(var i = by; i < SeaLevel; ++i)
