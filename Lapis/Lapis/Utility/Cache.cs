@@ -12,7 +12,7 @@ namespace Lapis.Utility
 	/// <remarks>This class uses the Low Inter-reference Recency Set cache technique.
 	/// A description of this algorithm can be found here: http://en.wikipedia.org/wiki/LIRS_caching_algorithm
 	/// Items that are no longer cached will be disposed (have Dispose() called on them) if the disposed flag is set.</remarks>
-	public class Cache<TKey, TValue> : IDictionary<TKey, TValue> where TValue : IDisposable
+	public class Cache<TKey, TValue> : IDictionary<TKey, TValue> where TValue : class, IDisposable
 	{
 		#region Preset Constants
 		/// <summary>
@@ -46,8 +46,8 @@ namespace Lapis.Utility
 		/// <param name="dispose">Flag determining whether or not cached items are forcefully disposed when evicted from the cache</param>
 		public Cache (bool dispose = true)
 		{
-			_maxHotSize     = calculateMaxHotSize(_maxSize);
 			_maxSize        = DefaultCacheSize;
+			_maxHotSize     = calculateMaxHotSize(_maxSize);
 			_cacheEntries   = new Dictionary<TKey, CacheEntry>(_maxSize);
 			_header         = new CacheEntry(this);
 			_disposeEntries = dispose;
@@ -60,8 +60,8 @@ namespace Lapis.Utility
 		/// <param name="dispose">Flag determining whether or not cached items are forcefully disposed when evicted from the cache</param>
 		public Cache (int maxSize, bool dispose = true)
 		{
-			_maxHotSize     = calculateMaxHotSize(_maxSize);
 			_maxSize        = maxSize;
+			_maxHotSize     = calculateMaxHotSize(_maxSize);
 			_cacheEntries   = new Dictionary<TKey, CacheEntry>(_maxSize);
 			_header         = new CacheEntry(this);
 			_disposeEntries = dispose;
@@ -194,7 +194,9 @@ namespace Lapis.Utility
 				TValue value;
 				if(TryGetValue(key, out value))
 					return value; // Already exists in cache
-				return this[key] = missFunc(key); // Doesn't exist
+				// Doesn't exist
+				var item = missFunc(key);
+				return this[key] = item;
 			}
 		}
 
@@ -381,7 +383,7 @@ namespace Lapis.Utility
 		{
 			private readonly Cache<TKey, TValue> _parent;
 			private readonly TKey _key;
-			private readonly TValue _value;
+			private TValue _value;
 
 			private EntryStatus _status = EntryStatus.NonResident;
 
@@ -407,7 +409,7 @@ namespace Lapis.Utility
 			{
 				_parent = parent;
 				_key    = default(TKey);
-				_value  = default(TValue);
+				_value  = null;
 
 				PreviousInStack = this;
 				NextInStack     = this;
@@ -667,6 +669,7 @@ namespace Lapis.Utility
 				markNonResident();
 				if(_parent._disposeEntries)
 					_value.Dispose();
+				_value = null;
 			}
 
 			/// <summary>
