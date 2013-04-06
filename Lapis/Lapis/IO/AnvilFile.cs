@@ -304,7 +304,7 @@ namespace Lapis.IO
 		/// <param name="path">Path to the Anvil file</param>
 		/// <returns>The loaded file</returns>
 		/// <exception cref="IOException">Thrown if there was an error loading the region file</exception>
-		public static AnvilFile FromFile (string path)
+		public static AnvilFile Load (string path)
 		{
 			AnvilFile af;
 
@@ -353,8 +353,8 @@ namespace Lapis.IO
 		/// Otherwise, let the garbage collector decide when to remove it, which is better for performance.</remarks>
 		public void Dispose ()
 		{
-			GC.SuppressFinalize(this);
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		private void Dispose (bool disposing)
