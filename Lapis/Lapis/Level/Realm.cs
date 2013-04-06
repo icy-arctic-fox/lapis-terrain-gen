@@ -430,7 +430,6 @@ namespace Lapis.Level
 			var data = _generator.GenerateChunk(cx, cz);
 			if(null == data)
 				throw new ApplicationException("The chunk data can't be null.");
-			_afm.PutChunk(cx, cz, data);
 			return data;
 		}
 
@@ -455,10 +454,11 @@ namespace Lapis.Level
 				lock(_locker)
 				{// TODO: What could happen if this lock is released and re-acquired?
 					cleanupInactiveChunks();
-					var key   = new XZCoordinate(cx, cz);
+					var coord = new XZCoordinate(cx, cz);
 					var chunk = new Chunk(this, data);
-					_activeChunks[key] = new WeakReference(chunk);
-					_chunkCache[key]   = chunk;
+					_activeChunks[coord] = new WeakReference(chunk);
+					_chunkCache[coord]   = chunk;
+					flushChunk(coord, data);
 				}
 			}
 		}

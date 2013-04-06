@@ -32,6 +32,11 @@ namespace Lapis.Level.Generation
 		/// <returns>Chunk data</returns>
 		public ChunkData GetChunkData ()
 		{
+			// Mark the sections that we touched as modified
+			var sectionCount = _data.HeightMap.Maximum / Chunk.SectionHeight;
+			for(var i = 0; i <= sectionCount; ++i)
+				_data.Sections[i].MarkAsModified();
+
 			return _data;
 		}
 
