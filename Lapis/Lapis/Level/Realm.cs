@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Ionic.Zlib;
 using Lapis.IO;
 using Lapis.Level.Data;
@@ -256,9 +257,15 @@ namespace Lapis.Level
 			if(!Directory.Exists(_regionPath))
 				Directory.CreateDirectory(_regionPath);
 
-			// TODO: Save all chunks
+			lock(_activeChunks)
+			{
+				cleanupDisposedChunks();
+				var toSave = (from wr in _activeChunks.Values where wr.IsAlive select (Chunk)wr.Target).ToList();
+				foreach(var chunk in toSave.Where(chunk => null != chunk && chunk.Modified))
+					chunk.Save();
 
-			saveLevelData(_levelFilePath, _levelData);
+				saveLevelData(_levelFilePath, _levelData);
+			}
 		}
 
 		/// <summary>
@@ -352,20 +359,31 @@ namespace Lapis.Level
 		/// <param name="cx">X-position of the chunk to release</param>
 		/// <param name="cz">Z-position of the chunk to release</param>
 		/// <remarks>This method should ONLY be called from within a Chunk's Dispose() method.</remarks>
-		internal void FreeChunk (int cx, int cz)
+		internal void ReleaseChunk (int cx, int cz)
 		{
 			var coord = new XZCoordinate(cx, cz);
 			lock(_activeChunks)
+			{
+				_chunkCache.Remove(coord);
 				_activeChunks.Remove(coord);
+			}
 		}
 
 		private Chunk getOrCreateChunk (XZCoordinate coord)
 		{
+			if(_activeChunks.ContainsKey(coord))
+			{// Possibly still active in memory somewhere
+				var chunk = _activeChunks[coord].Target as Chunk;
+				if(null != chunk)
+					return chunk;
+			}
+
+			// Not in memory, load from disk
 			ChunkData data = null;
 			if(_afm.ChunkExists(coord.X, coord.Z))
 				data = _afm.GetChunk(coord.X, coord.Z);
 			if(null == data) // The chunk provider might return null for a chunk
-				data = generate(coord.X, coord.Z);
+				data = generate(coord.X, coord.Z); // Not on disk, generate it
 
 			// NOTE: We do *NOT* populate the chunk here - that would cause a cycle between generation and population
 
@@ -400,8 +418,12 @@ namespace Lapis.Level
 			{
 				var data = generate(cx, cz);
 				lock(_activeChunks)
-				{
-					// TODO: Add chunk to activeChunks
+				{// TODO: What could happen if this lock is released and re-acquired?
+					cleanupDisposedChunks();
+					var key   = new XZCoordinate(cx, cz);
+					var chunk = new Chunk(this, data);
+					_activeChunks[key] = new WeakReference(chunk);
+					_chunkCache[key]   = chunk;
 				}
 			}
 		}
@@ -417,6 +439,13 @@ namespace Lapis.Level
 		public void PopulateChunk (int cx, int cz, bool repopulate = false)
 		{
 			throw new NotImplementedException();
+		}
+
+		private void cleanupDisposedChunks ()
+		{
+			var disposedChunks = (from item in _activeChunks let wr = item.Value where !wr.IsAlive || null == wr.Target select item.Key).ToList();
+			foreach(var coord in disposedChunks)
+				_activeChunks.Remove(coord);
 		}
 		#endregion
 

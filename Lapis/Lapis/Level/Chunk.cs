@@ -437,6 +437,7 @@ namespace Lapis.Level
 		public void Dispose ()
 		{
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>
@@ -457,8 +458,24 @@ namespace Lapis.Level
 			if(null != _data && _data.Modified)
 				_realm.SaveChunk(ChunkX, ChunkZ, _data);
 			if(!disposing)
-				_realm.FreeChunk(ChunkX, ChunkZ);
+				_realm.ReleaseChunk(ChunkX, ChunkZ);
 		}
 		#endregion
+
+		/// <summary>
+		/// Creates a string that represents the chunk
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The format of the string will be "Chunk (X, Z)"</remarks>
+		public override string ToString ()
+		{
+			var sb = new System.Text.StringBuilder();
+			sb.Append("Chunk (");
+			sb.Append(ChunkX);
+			sb.Append(", ");
+			sb.Append(ChunkZ);
+			sb.Append(')');
+			return sb.ToString();
+		}
 	}
 }

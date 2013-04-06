@@ -9,7 +9,7 @@ namespace Lapis.Level.Data
 	/// <summary>
 	/// Contains block information for just a section of a chunk
 	/// </summary>
-	public class ChunkSectionData : ISerializable, IModifiable
+	public class ChunkSectionData : ISerializable, IModifiable // TODO: Implement IDisposable
 	{
 		/// <summary>
 		/// Number of bytes/items in a chunk section

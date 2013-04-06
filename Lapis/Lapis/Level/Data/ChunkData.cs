@@ -15,7 +15,7 @@ namespace Lapis.Level.Data
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).
 	/// This class will verify the validity of NBT nodes it requires, but will not fix them if they are wrong.
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
-	public class ChunkData : ISerializable
+	public class ChunkData : ISerializable // TODO: Implement IDisposable
 	{
 		private bool _terrainPopulated = true; // TODO: Don't mark chunks as populated here
 		private readonly int _cx, _cz;
