@@ -158,7 +158,7 @@ namespace Lapis.Threading
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is null</exception>
 		public void QueueWork (WaitCallback callback, object state, Priority priority = Priority.Medium)
 		{
-			var work = new WorkItem(callback);
+			var work = new WorkItem(callback, state);
 
 			Queue<WorkItem> queue;
 			switch(priority)
