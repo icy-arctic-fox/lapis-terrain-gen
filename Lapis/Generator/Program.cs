@@ -8,7 +8,7 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 16;
+		private const int Radius = 128;
 		private const string DesiredGeneratorName = "Islands Terrain Generator";
 
 		static void Main (string[] args)
@@ -34,11 +34,13 @@ namespace Generator
 			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
 			generator.Initialize(opts);
 			var realm = world.CreateRealm(generator);
-			realm.GenerateRectange(-Radius, -Radius, Radius * 2, Radius * 2);
+			var totalChunks = realm.GenerateRectange(-Radius, -Radius, Radius * 2, Radius * 2);
 			world.Save();
 
 			watch.Stop();
-			Console.WriteLine(watch.Elapsed);
+			var timeTaken = watch.Elapsed;
+			Console.WriteLine(timeTaken);
+			Console.WriteLine((totalChunks / timeTaken.TotalSeconds) + " chunks/sec.");
 			Console.Write("Generation completed, press any key to exit");
 			Console.ReadKey();
 		}

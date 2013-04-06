@@ -8,6 +8,7 @@ using Lapis.IO;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
 using Lapis.Spatial;
+using Lapis.Threading;
 using Lapis.Utility;
 using P = System.IO.Path;
 
@@ -43,7 +44,6 @@ namespace Lapis.Level
 		private readonly string _diskName, _path, _levelFilePath, _regionPath;
 
 		private readonly object _locker = new object();
-		private readonly Thread _workerThread;
 		private readonly ManualResetEventSlim _flushing = new ManualResetEventSlim();
 		private volatile bool _disposed;
 
@@ -214,12 +214,6 @@ namespace Lapis.Level
 			if(!Directory.Exists(_regionPath)) // TODO: Move directory creation to Create()
 				Directory.CreateDirectory(_regionPath);
 			_afm = new AnvilFileManager(_regionPath);
-
-			_workerThread = new Thread(doWork) {
-				Name         = ToString(),
-				IsBackground = true
-			};
-			_workerThread.Start();
 		}
 
 		#region Creation and loading
@@ -300,6 +294,7 @@ namespace Lapis.Level
 				var toSave = (from wr in _activeChunks.Values where wr.IsAlive select (Chunk)wr.Target).ToList();
 				foreach(var chunk in toSave.Where(chunk => null != chunk && chunk.Modified))
 					chunk.Save();
+				PriorityThreadPool.StaticPool.QueueWork(doWork, Priority.High); // Flush remaining chunks
 
 				saveLevelData(_levelFilePath, _levelData);
 			}
@@ -401,7 +396,7 @@ namespace Lapis.Level
 				_afm.PutChunk(cx, cz, data);
 			else
 				lock(_locker)
-					flushChunk(new XZCoordinate(cx, cz), data);
+					markForFlush(new XZCoordinate(cx, cz), data);
 		}
 
 		private Chunk getOrCreateChunk (XZCoordinate coord)
@@ -458,7 +453,7 @@ namespace Lapis.Level
 					var chunk = new Chunk(this, data);
 					_activeChunks[coord] = new WeakReference(chunk);
 					_chunkCache[coord]   = chunk;
-					flushChunk(coord, data);
+					markForFlush(coord, data);
 				}
 			}
 		}
@@ -484,7 +479,6 @@ namespace Lapis.Level
 		{
 			lock(_locker)
 				Dispose(true);
-			_workerThread.Join(); // Wait for chunks to flush
 			GC.SuppressFinalize(this);
 		}
 
@@ -508,7 +502,7 @@ namespace Lapis.Level
 					saveLevelData(_levelFilePath, _levelData);
 			}
 			_disposed = true;
-			_flushing.Set(); // Flush remaining chunks
+			PriorityThreadPool.StaticPool.QueueWork(doWork, Priority.High); // Flush remaining chunks
 		}
 
 		/// <summary>
@@ -525,7 +519,7 @@ namespace Lapis.Level
 			{
 				_chunkCache.Remove(coord);
 				_activeChunks.Remove(coord);
-				flushChunk(coord, data);
+				markForFlush(coord, data);
 			}
 		}
 
@@ -534,42 +528,41 @@ namespace Lapis.Level
 		/// </summary>
 		/// <param name="coord">Coordinate of the chunk within the realm</param>
 		/// <param name="data">Chunk data to flush</param>
-		private void flushChunk (XZCoordinate coord, ChunkData data)
+		private void markForFlush (XZCoordinate coord, ChunkData data)
 		{
 			_flushQueue.Enqueue(new Tuple<XZCoordinate, ChunkData>(coord, data));
 			if(!_flushing.IsSet && _flushQueue.Count >= FlushCount)
+			{
 				_flushing.Set();
+				PriorityThreadPool.StaticPool.QueueWork(doWork, Priority.High);
+			}
 		}
 
 		/// <summary>
 		/// Background thread method that flushes chunk data to disk
 		/// </summary>
-		private void doWork ()
+		private void doWork (object state)
 		{
-			while(!_disposed)
+			var toFlush = new List<Tuple<XZCoordinate, ChunkData>>();
+			lock(_locker)
 			{
-				_flushing.Wait();
-				var toFlush = new List<Tuple<XZCoordinate, ChunkData>>();
-				lock(_locker)
+				while(0 < _flushQueue.Count)
 				{
-					while(0 < _flushQueue.Count)
-					{
-						var item = _flushQueue.Dequeue();
-						if(item.Item2.Modified)
-							toFlush.Add(item);
-					}
-					_flushing.Reset();
+					var item = _flushQueue.Dequeue();
+					if(item.Item2.Modified)
+						toFlush.Add(item);
 				}
+				_flushing.Reset();
+			}
 
 #if TRACE
-				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks");
+			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks");
 #endif
-				foreach(var item in toFlush)
-				{
-					var coord = item.Item1;
-					var data  = item.Item2;
-					_afm.PutChunk(coord.X, coord.Z, data);
-				}
+			foreach(var item in toFlush)
+			{
+				var coord = item.Item1;
+				var data  = item.Item2;
+				_afm.PutChunk(coord.X, coord.Z, data);
 			}
 		}
 
