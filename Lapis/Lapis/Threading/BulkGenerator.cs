@@ -121,7 +121,9 @@ namespace Lapis.Threading
 			var work = state as GenerationUnit;
 			if(null != work)
 			{
+#if TRACE
 				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Generation: " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
+#endif
 				var realm = work.Realm;
 				var lastX = work.StartX + work.CountX;
 				var lastZ = work.StartZ + work.CountZ;
@@ -138,7 +140,9 @@ namespace Lapis.Threading
 			var work = state as PopulationUnit;
 			if(null != work)
 			{
+#if TRACE
 				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Population: " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
+#endif
 				var realm     = work.Realm;
 				var populator = work.Populator;
 				var lastX     = work.StartX + work.CountX;
