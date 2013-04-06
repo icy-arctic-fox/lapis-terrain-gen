@@ -17,7 +17,7 @@ namespace Lapis.IO
 		/// </summary>
 		private const string FileExtension = ".mca";
 
-		private readonly Cache<XZCoordinate, AnvilFile> _cache = new Cache<XZCoordinate, AnvilFile>(true);
+		private readonly Cache<XZCoordinate, AnvilFile> _cache = new Cache<XZCoordinate, AnvilFile>();
 		private readonly string _basePath;
 
 		/// <summary>
@@ -62,10 +62,11 @@ namespace Lapis.IO
 		/// <returns>Chunk data or null if the chunk doesn't exist</returns>
 		public ChunkData GetChunk (int cx, int cz)
 		{
+			int rcx, rcz;
+			relativeCoordinate(cx, cz, out rcx, out rcz);
 			var coord = toRegionCoordinate(cx, cz);
-			var rc    = relativeCoordinate(cx, cz);
 			var file  = _cache.GetItem(coord, getFile);
-			return file.GetChunk(rc.Item1, rc.Item2);
+			return file.GetChunk(rcx, rcz);
 		}
 
 		/// <summary>
@@ -79,10 +80,11 @@ namespace Lapis.IO
 			if(null == data)
 				throw new ArgumentNullException("data", "The chunk data can't be null.");
 
+			int rcx, rcz;
+			relativeCoordinate(cx, cz, out rcx, out rcz);
 			var coord = toRegionCoordinate(cx, cz);
-			var rc    = relativeCoordinate(cx, cz);
 			var file  = _cache.GetItem(coord, getFile);
-			file.PutChunk(rc.Item1, rc.Item2, data);
+			file.PutChunk(rcx, rcz, data);
 		}
 
 		/// <summary>
@@ -93,10 +95,11 @@ namespace Lapis.IO
 		/// <returns>True if the chunk exists or false if it doesn't</returns>
 		public bool ChunkExists (int cx, int cz)
 		{
+			int rcx, rcz;
+			relativeCoordinate(cx, cz, out rcx, out rcz);
 			var coord = toRegionCoordinate(cx, cz);
-			var rc    = relativeCoordinate(cx, cz);
 			var file  = _cache.GetItem(coord, getFile);
-			return file.ChunkExists(rc.Item1, rc.Item2);
+			return file.ChunkExists(rcx, rcz);
 		}
 		#endregion
 
@@ -122,16 +125,17 @@ namespace Lapis.IO
 		/// </summary>
 		/// <param name="cx">X-position of the chunk</param>
 		/// <param name="cz">Z-position of the chunk</param>
+		/// <param name="rcx">Relative x-position of the chunk</param>
+		/// <param name="rcz">Relative z-position of the chunk</param>
 		/// <returns>Relative x and z-position of the chunk</returns>
-		private static Tuple<int, int> relativeCoordinate (int cx, int cz)
+		private static void relativeCoordinate (int cx, int cz, out int rcx, out int rcz)
 		{
-			var rcx = cx % AnvilFile.ChunkCount;
-			var rcz = cz % AnvilFile.ChunkCount;
+			rcx = cx % AnvilFile.ChunkCount;
+			rcz = cz % AnvilFile.ChunkCount;
 			if(0 > rcx)
 				rcx += AnvilFile.ChunkCount;
 			if(0 > rcz)
 				rcz += AnvilFile.ChunkCount;
-			return new Tuple<int, int>(rcx, rcz);
 		}
 
 		/// <summary>
