@@ -49,6 +49,14 @@ namespace Lapis.Level
 
 		#region Properties
 		/// <summary>
+		/// Name of the realm
+		/// </summary>
+		public string Name
+		{
+			get { return _levelData.Name; }
+		}
+
+		/// <summary>
 		/// ID number of the realm
 		/// </summary>
 		/// <remarks>For vanilla Minecraft compatible realms, this will just be an integer value of a dimension.</remarks>
@@ -553,6 +561,9 @@ namespace Lapis.Level
 					_flushing.Reset();
 				}
 
+#if TRACE
+				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks");
+#endif
 				foreach(var item in toFlush)
 				{
 					var coord = item.Item1;
@@ -612,6 +623,37 @@ namespace Lapis.Level
 			}
 
 			return realmIds;
+		}
+
+		/// <summary>
+		/// Gets a string that represents the realm
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will have the format: Realm ("NAME" ID[DIM] - WORLD)</remarks>
+		public override string ToString ()
+		{
+			var sb = new System.Text.StringBuilder();
+			sb.Append("Realm (\"");
+			sb.Append(Name);
+			sb.Append("\" ");
+			sb.Append(Id);
+
+			switch(Dimension)
+			{
+			case Dimension.Normal:
+			case Dimension.Nether:
+			case Dimension.End:
+				sb.Append('[');
+				sb.Append(Dimension);
+				sb.Append(']');
+				break;
+			}
+
+			sb.Append(" - ");
+			sb.Append(_world.Name);
+			sb.Append(')');
+
+			return sb.ToString();
 		}
 	}
 }
