@@ -38,7 +38,7 @@ namespace Lapis.IO
 			// Append slash if needed
 			var lastChar = _basePath[_basePath.Length - 1];
 			if(lastChar != '/' && lastChar != '\\')
-				_basePath += '/';
+				_basePath += Path.DirectorySeparatorChar;
 		}
 
 		#region Get and store
@@ -160,7 +160,7 @@ namespace Lapis.IO
 		private AnvilFile getFile (XZCoordinate coord)
 		{
 			var path = _basePath + generateFileName(coord.X, coord.Z);
-			return File.Exists(path) ? AnvilFile.FromFile(path) : AnvilFile.Create(path);
+			return File.Exists(path) ? AnvilFile.Load(path) : AnvilFile.Create(path);
 		}
 	}
 }
