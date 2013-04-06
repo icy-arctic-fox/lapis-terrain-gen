@@ -9,6 +9,23 @@ namespace Lapis.Threading
 	/// </summary>
 	public class PriorityThreadPool : IDisposable
 	{
+		#region Static instance
+		private static readonly PriorityThreadPool _instance;
+
+		static PriorityThreadPool ()
+		{
+			_instance = new PriorityThreadPool();
+		}
+
+		/// <summary>
+		/// Static thread pool that can be shared throughout the program
+		/// </summary>
+		public static PriorityThreadPool StaticPool
+		{
+			get { return _instance; }
+		}
+		#endregion
+
 		private volatile int _minThreads, _maxThreads;
 		private readonly Queue<WorkItem>
 			_lowQueue    = new Queue<WorkItem>(),
@@ -17,6 +34,8 @@ namespace Lapis.Threading
 		private readonly List<Tuple<Thread, ManualResetEventSlim>> _pool = new List<Tuple<Thread, ManualResetEventSlim>>();
 		private readonly object _locker = new object();
 		private volatile bool _disposed;
+
+		// TODO: Implement auto-adjusting thread count
 		
 		/// <summary>
 		/// Creates a new priority thread pool
