@@ -278,6 +278,7 @@
     <Compile Include="Level\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spatial\XZCoordinate.cs" />
+    <Compile Include="Threading\PriorityThreadPool.cs" />
     <Compile Include="Utility\ByteArrayUtility.cs" />
     <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\EndianUtility.cs" />
