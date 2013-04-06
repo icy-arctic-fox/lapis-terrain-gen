@@ -420,6 +420,16 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
+		/// Marks the chunk section as being modified
+		/// </summary>
+		/// <remarks>This is used by classes like ChunkBuilder since it has optimized methods.</remarks>
+		/// <seealso cref="Lapis.Level.Generation.ChunkBuilder"/>
+		internal void MarkAsModified ()
+		{
+			_modified = true;
+		}
+
+		/// <summary>
 		/// Resets the modified property so that the chunk section data appears as unmodified
 		/// </summary>
 		public void ClearModificationFlag ()
