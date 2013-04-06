@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Ionic.Zlib;
 using Lapis.IO;
 using Lapis.Level.Data;
@@ -21,12 +22,17 @@ namespace Lapis.Level
 	/// <remarks>Realms can have a different ID numbers, which are used for directory names (i.e.: DIM1 and realm5).
 	/// However, realms must have a vanilla dimension type.
 	/// The dimension type is used to be compatible with vanilla Minecraft.</remarks>
-	public sealed class Realm
+	public sealed class Realm : IDisposable
 	{
 		private const string DimensionPrefix   = "DIM";
 		private const string RealmPrefix       = "realm";
 		private const string LevelDataFilename = "level.dat";
 		private const string RegionDirectory   = "region";
+
+		/// <summary>
+		/// Number of chunks to wait for before flushing chunk changes to disk
+		/// </summary>
+		private const int FlushCount = 64;
 
 		private static readonly string _directorySeparator = P.DirectorySeparatorChar.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
@@ -35,6 +41,8 @@ namespace Lapis.Level
 		private readonly int _id;
 		private readonly LevelData _levelData;
 		private readonly string _diskName, _path, _levelFilePath, _regionPath;
+		private readonly object _locker = new object();
+		private bool _flushing;
 
 		#region Properties
 		/// <summary>
@@ -257,7 +265,7 @@ namespace Lapis.Level
 			if(!Directory.Exists(_regionPath))
 				Directory.CreateDirectory(_regionPath);
 
-			lock(_activeChunks)
+			lock(_locker)
 			{
 				cleanupDisposedChunks();
 				var toSave = (from wr in _activeChunks.Values where wr.IsAlive select (Chunk)wr.Target).ToList();
@@ -319,8 +327,17 @@ namespace Lapis.Level
 		/// <remarks>Active chunks are the chunks that are referenced somewhere in the program.
 		/// After all references (not ChunkRefs) have been removed, garbage collection will cleanup the chunk.
 		/// At that point, the weak reference to the chunk is removed from this collection.
-		/// This collection is needed because the same Chunk object has to be retrieved for multiple GetChunk() calls.</remarks>
+		/// This collection is needed because the same Chunk object has to be returned for multiple GetChunk() calls.</remarks>
 		private readonly Dictionary<XZCoordinate, WeakReference> _activeChunks = new Dictionary<XZCoordinate, WeakReference>();
+
+		/// <summary>
+		/// Maintains a list of chunks that have been disposed
+		/// </summary>
+		/// <remarks>These chunks have been disposed and should be flushed out to disk if there were any modifications.
+		/// The GC and finalizer don't flush the chunk because that causes a massive backlog of objects to be cleaned up by the GC.
+		/// We can't use the ChunkX and ChunkZ properties because they might be invalid, so we store the coordinate along with the data.
+		/// A queue is used to make sure chunks are flushed out in order.</remarks>
+		private readonly Queue<Tuple<XZCoordinate, ChunkData>> _disposedChunks = new Queue<Tuple<XZCoordinate, ChunkData>>();
 
 		// Both the _chunkCache and _activeChunks collections are needed.
 		// The _chunkCache collection prevents chunks from being unloaded when they might be referenced again soon.
@@ -338,7 +355,7 @@ namespace Lapis.Level
 		public Chunk GetChunk (int cx, int cz)
 		{
 			var coord = new XZCoordinate(cx, cz);
-			lock(_activeChunks)
+			lock(_locker)
 				return _chunkCache.GetItem(coord, getOrCreateChunk);
 		}
 
@@ -351,22 +368,6 @@ namespace Lapis.Level
 		internal void SaveChunk (int cx, int cz, ChunkData data)
 		{
 			_afm.PutChunk(cx, cz, data);
-		}
-
-		/// <summary>
-		/// Removes a chunk from being considered active
-		/// </summary>
-		/// <param name="cx">X-position of the chunk to release</param>
-		/// <param name="cz">Z-position of the chunk to release</param>
-		/// <remarks>This method should ONLY be called from within a Chunk's Dispose() method.</remarks>
-		internal void ReleaseChunk (int cx, int cz)
-		{
-			var coord = new XZCoordinate(cx, cz);
-			lock(_activeChunks)
-			{
-				_chunkCache.Remove(coord);
-				_activeChunks.Remove(coord);
-			}
 		}
 
 		private Chunk getOrCreateChunk (XZCoordinate coord)
@@ -411,13 +412,13 @@ namespace Lapis.Level
 		public void GenerateChunk (int cx, int cz, bool replace = false)
 		{
 			bool create;
-			lock(_activeChunks)
+			lock(_locker)
 				create = (!_afm.ChunkExists(cx, cz) || replace);
 
 			if(create)
 			{
 				var data = generate(cx, cz);
-				lock(_activeChunks)
+				lock(_locker)
 				{// TODO: What could happen if this lock is released and re-acquired?
 					cleanupDisposedChunks();
 					var key   = new XZCoordinate(cx, cz);
@@ -441,12 +442,95 @@ namespace Lapis.Level
 			throw new NotImplementedException();
 		}
 
+		#region Cleanup
+		/// <summary>
+		/// Disposes the chunk and removes its contents from memory
+		/// </summary>
+		public void Dispose ()
+		{
+			lock(_locker)
+				Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Finalizer - simply calls Dispose()
+		/// </summary>
+		~Realm ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes the realm (and its chunks) and removes its contents from memory
+		/// </summary>
+		/// <param name="disposing">True if we should clean up all of our own resources (code called Dispose) or false if we should only cleanup ourselves (GC called Dispose)</param>
+		private void Dispose (bool disposing)
+		{
+			if(disposing)
+			{// Forced disposal
+				if(_levelData.Modified)
+					saveLevelData(_levelFilePath, _levelData);
+			}
+			ThreadPool.QueueUserWorkItem(flushDisposedChunks);
+		}
+
+		/// <summary>
+		/// Marks a chunk as being inactive and queues it for removal
+		/// </summary>
+		/// <param name="cx">X-position of the chunk to release</param>
+		/// <param name="cz">Z-position of the chunk to release</param>
+		/// <param name="data">Chunk data that was associated with the chunk (used for flushing to disk)</param>
+		/// <remarks>This method should ONLY be called from within a Chunk's Dispose() method.</remarks>
+		internal void ReleaseChunk (int cx, int cz, ChunkData data)
+		{
+			var coord = new XZCoordinate(cx, cz);
+			lock(_locker)
+			{
+				_chunkCache.Remove(coord);
+				_activeChunks.Remove(coord);
+				_disposedChunks.Enqueue(new Tuple<XZCoordinate, ChunkData>(coord, data));
+				if(!_flushing && _disposedChunks.Count >= FlushCount)
+				{
+					_flushing = true;
+					ThreadPool.QueueUserWorkItem(flushDisposedChunks);
+				}
+			}
+		}
+
+		private void flushDisposedChunks (object state)
+		{
+			var toFlush = new List<Tuple<XZCoordinate, ChunkData>>();
+			lock(_locker)
+			{
+				while(0 < _disposedChunks.Count)
+				{
+					var item = _disposedChunks.Dequeue();
+					if(item.Item2.Modified)
+						toFlush.Add(item);
+				}
+				_flushing = false;
+			}
+
+			foreach(var item in toFlush)
+			{
+				var coord = item.Item1;
+				var data  = item.Item2;
+				_afm.PutChunk(coord.X, coord.Z, data);
+			}
+		}
+
 		private void cleanupDisposedChunks ()
 		{
 			var disposedChunks = (from item in _activeChunks let wr = item.Value where !wr.IsAlive || null == wr.Target select item.Key).ToList();
 			foreach(var coord in disposedChunks)
 				_activeChunks.Remove(coord);
 		}
+
+		private class CleanupState
+		{
+		}
+		#endregion
 		#endregion
 
 		/// <summary>
