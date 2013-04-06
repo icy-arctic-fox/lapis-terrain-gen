@@ -58,8 +58,12 @@ namespace Lapis.Utility
 		/// </summary>
 		/// <param name="maxSize">Maximum number of items to keep in the cache</param>
 		/// <param name="dispose">Flag determining whether or not cached items are forcefully disposed when evicted from the cache</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="maxSize"/> is less than 1</exception>
 		public Cache (int maxSize, bool dispose = true)
 		{
+			if(1 > maxSize)
+				throw new ArgumentOutOfRangeException("maxSize", "The maximum size of the cache must be at least 1.");
+
 			_maxSize        = maxSize;
 			_maxHotSize     = calculateMaxHotSize(_maxSize);
 			_cacheEntries   = new Dictionary<TKey, CacheEntry>(_maxSize);
@@ -83,7 +87,8 @@ namespace Lapis.Utility
 		/// <returns>True if the cache contains the item or false if it doesn't</returns>
 		public bool ContainsKey (TKey key)
 		{
-			throw new NotImplementedException();
+			lock(_cacheEntries)
+				return _cacheEntries.ContainsKey(key);
 		}
 
 		/// <summary>
@@ -94,7 +99,13 @@ namespace Lapis.Utility
 		/// <exception cref="ArgumentException">Thrown if an item already exists in the cache with the same key as <paramref name="key"/></exception>
 		public void Add (TKey key, TValue value)
 		{
-			throw new NotImplementedException();
+			lock(_cacheEntries)
+			{
+				var entry = new CacheEntry(this, key, value);
+				if(_cacheEntries.ContainsKey(key))
+					throw new ArgumentException("The item specified by the key already exists in the cache.", "key");
+				_cacheEntries[key] = entry;
+			}
 		}
 
 		/// <summary>
@@ -241,7 +252,7 @@ namespace Lapis.Utility
 		/// <exception cref="ArgumentException">Thrown if an item already exists in the cache with the same key provided by <paramref name="item"/></exception>
 		public void Add (KeyValuePair<TKey, TValue> item)
 		{
-			throw new NotImplementedException();
+			Add(item.Key, item.Value);
 		}
 
 		/// <summary>
@@ -383,7 +394,6 @@ namespace Lapis.Utility
 		{
 			private readonly Cache<TKey, TValue> _parent;
 			private readonly TKey _key;
-			private TValue _value;
 
 			private EntryStatus _status = EntryStatus.NonResident;
 
@@ -397,7 +407,7 @@ namespace Lapis.Utility
 			{
 				_parent = parent;
 				_key    = key;
-				_value  = value;
+				Value   = value;
 				Miss();
 			}
 
@@ -409,7 +419,7 @@ namespace Lapis.Utility
 			{
 				_parent = parent;
 				_key    = default(TKey);
-				_value  = null;
+				Value   = null;
 
 				PreviousInStack = this;
 				NextInStack     = this;
@@ -428,10 +438,7 @@ namespace Lapis.Utility
 			/// <summary>
 			/// Value of the item in the cache
 			/// </summary>
-			public TValue Value
-			{
-				get { return _value; }
-			}
+			public TValue Value { get; private set; }
 
 			/// <summary>
 			/// Current status of the entry
@@ -452,7 +459,7 @@ namespace Lapis.Utility
 			/// <summary>
 			/// Whether or not this entry is in the stack
 			/// </summary>
-			public bool InStack
+			private bool InStack
 			{
 				get { return null != NextInStack; }
 			}
@@ -460,7 +467,7 @@ namespace Lapis.Utility
 			/// <summary>
 			/// Whether or not this entry is in the queue
 			/// </summary>
-			public bool InQueue
+			private bool InQueue
 			{
 				get { return null != NextInQueue; }
 			}
@@ -528,7 +535,7 @@ namespace Lapis.Utility
 
 			private void warmupMiss ()
 			{
-				hotHit();
+				markHot();
 				moveToStackTop();
 			}
 
@@ -541,7 +548,7 @@ namespace Lapis.Utility
 
 				if(inStack)
 				{
-					hotHit();
+					markHot();
 					_parent.StackBottom.migrateToQueue();
 					_parent.pruneStack();
 				}
@@ -568,13 +575,16 @@ namespace Lapis.Utility
 
 			private void markNonResident ()
 			{
-				if(EntryStatus.Hot == _status)
+				switch(_status)
 				{
+				case EntryStatus.Hot:
 					--_parent._hotSize;
 					--_parent._size;
-				}
-				else if(EntryStatus.Cold == _status)
+					break;
+				case EntryStatus.Cold:
 					--_parent._size;
+					break;
+				}
 				_status = EntryStatus.NonResident;
 			}
 			#endregion
@@ -668,8 +678,8 @@ namespace Lapis.Utility
 				_parent._cacheEntries.Remove(_key);
 				markNonResident();
 				if(_parent._disposeEntries)
-					_value.Dispose();
-				_value = null;
+					Value.Dispose();
+				Value = null;
 			}
 
 			/// <summary>
