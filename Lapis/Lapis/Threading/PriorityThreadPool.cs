@@ -7,15 +7,16 @@ namespace Lapis.Threading
 	/// <summary>
 	/// Collection of threads that process tasks with varying priorities
 	/// </summary>
-	public class PriorityThreadPool
+	public class PriorityThreadPool : IDisposable
 	{
 		private volatile int _minThreads, _maxThreads;
 		private readonly Queue<WorkItem>
 			_lowQueue    = new Queue<WorkItem>(),
 			_mediumQueue = new Queue<WorkItem>(),
 			_highQueue   = new Queue<WorkItem>();
-		private readonly List<Thread> _pool = new List<Thread>();
+		private readonly List<Tuple<Thread, ManualResetEventSlim>> _pool = new List<Tuple<Thread, ManualResetEventSlim>>();
 		private readonly object _locker = new object();
+		private volatile bool _disposed;
 		
 		/// <summary>
 		/// Creates a new priority thread pool
@@ -162,6 +163,40 @@ namespace Lapis.Threading
 			}
 		}
 
+		#region Cleanup
+		/// <summary>
+		/// Whether or not the thread pool is disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get
+			{
+				return _disposed;
+			}
+		}
+
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~PriorityThreadPool ()
+		{
+			Dispose(false);
+		}
+
+		protected virtual void Dispose (bool disposing)
+		{
+			_disposed = true;
+			foreach(var worker in _pool)
+				worker.Item2.Reset(); // Signal to the thread that it should exit
+			if(disposing) // Wait for each thread to exit
+				foreach(var worker in _pool)
+					worker.Item1.Join();
+		}
+		#endregion
+
 		#region Thread pool worker
 		private WorkItem getWork ()
 		{
@@ -179,37 +214,34 @@ namespace Lapis.Threading
 
 		private void doWork (object state)
 		{
-			var workerIndex = (int)state;
-			try
+			var self = (Tuple<Thread, ManualResetEventSlim>)state;
+			while(self.Item2.IsSet)
 			{
-				while(true)
+				WorkItem work;
+				lock(_locker)
 				{
-					WorkItem work;
-					lock(_locker)
+					work = getWork();
+					while(null == work && self.Item2.IsSet)
 					{
+						Monitor.Wait(_locker);
 						work = getWork();
-						while(null == work)
-							Monitor.Wait(_locker);
 					}
-					work.Callback.Invoke(work.State);
 				}
-			}
-			finally
-			{
-				lock(_pool)
-					_pool[workerIndex] = null;
+				if(null != work)
+					work.Callback.Invoke(work.State);
 			}
 		}
 
 		private void startWorker ()
 		{
-			var threadNum    = _pool.Count;
+			var threadNum    = _pool.Count + 1;
 			var workerThread = new Thread(doWork) {
-				Name = "Priority Thread Pool Worker #" + (threadNum + 1),
+				Name = "Priority Thread Pool Worker #" + threadNum,
 				IsBackground = true
 			};
-			workerThread.Start(threadNum);
-			_pool.Add(workerThread);
+			var worker = new Tuple<Thread, ManualResetEventSlim>(workerThread, new ManualResetEventSlim(true));
+			_pool.Add(worker);
+			workerThread.Start(worker);
 		}
 		#endregion
 
