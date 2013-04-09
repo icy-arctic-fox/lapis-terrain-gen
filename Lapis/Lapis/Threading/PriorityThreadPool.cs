@@ -43,7 +43,8 @@ namespace Lapis.Threading
 		/// <remarks>The minimum and maximum thread count is set to an ideal amount for the current processor.</remarks>
 		public PriorityThreadPool ()
 		{
-			_minThreads = _maxThreads = Environment.ProcessorCount;
+			_minThreads = Environment.ProcessorCount;
+			_maxThreads = _minThreads + _minThreads / 2;
 			while(_pool.Count < _minThreads)
 				startWorker();
 		}
@@ -165,6 +166,9 @@ namespace Lapis.Threading
 			{
 			case Priority.High:
 				queue = _highQueue;
+				lock(_pool)
+					if(_pool.Count < _maxThreads)
+						startWorker(true);
 				break;
 			case Priority.Low:
 				queue = _lowQueue;
@@ -217,17 +221,20 @@ namespace Lapis.Threading
 		#endregion
 
 		#region Thread pool worker
-		private WorkItem getWork ()
+		private WorkItem getWork (bool highPriority = false)
 		{
 			lock(_highQueue)
 				if(_highQueue.Count > 0)
 					return _highQueue.Dequeue();
-			lock(_mediumQueue)
-				if(_mediumQueue.Count > 0)
-					return _mediumQueue.Dequeue();
-			lock(_lowQueue)
-				if(_lowQueue.Count > 0)
-					return _lowQueue.Dequeue();
+			if(!highPriority)
+			{
+				lock(_mediumQueue)
+					if(_mediumQueue.Count > 0)
+						return _mediumQueue.Dequeue();
+				lock(_lowQueue)
+					if(_lowQueue.Count > 0)
+						return _lowQueue.Dequeue();
+			}
 			return null;
 		}
 
@@ -236,14 +243,16 @@ namespace Lapis.Threading
 			var self = (Tuple<Thread, ManualResetEventSlim>)state;
 			while(self.Item2.IsSet)
 			{
+				var highPriority = (ThreadPriority.AboveNormal == Thread.CurrentThread.Priority ||
+									ThreadPriority.Highest     == Thread.CurrentThread.Priority);
 				WorkItem work;
 				lock(_locker)
 				{
-					work = getWork();
+					work = getWork(highPriority);
 					while(null == work && self.Item2.IsSet)
 					{
 						Monitor.Wait(_locker);
-						work = getWork();
+						work = getWork(highPriority);
 					}
 				}
 				if(null != work)
@@ -251,12 +260,13 @@ namespace Lapis.Threading
 			}
 		}
 
-		private void startWorker ()
+		private void startWorker (bool highPriority = false)
 		{
 			var threadNum    = _pool.Count + 1;
 			var workerThread = new Thread(doWork) {
 				Name = "Priority Thread Pool Worker #" + threadNum,
-				IsBackground = true
+				IsBackground = true,
+				Priority = highPriority ? ThreadPriority.AboveNormal : ThreadPriority.Normal
 			};
 			var worker = new Tuple<Thread, ManualResetEventSlim>(workerThread, new ManualResetEventSlim(true));
 			_pool.Add(worker);
