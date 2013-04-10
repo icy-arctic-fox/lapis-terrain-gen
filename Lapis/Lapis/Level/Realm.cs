@@ -294,7 +294,7 @@ namespace Lapis.Level
 				var toSave = (from wr in _activeChunks.Values where wr.IsAlive select (Chunk)wr.Target).ToList();
 				foreach(var chunk in toSave.Where(chunk => null != chunk && chunk.Modified))
 					chunk.Save();
-				PriorityThreadPool.StaticPool.QueueWork(doWork, Priority.High); // Flush remaining chunks
+				PriorityThreadPool.StaticPool.QueueWork(flushChunks, Priority.High); // Flush remaining chunks
 
 				saveLevelData(_levelFilePath, _levelData);
 			}
@@ -502,7 +502,7 @@ namespace Lapis.Level
 					saveLevelData(_levelFilePath, _levelData);
 			}
 			_disposed = true;
-			PriorityThreadPool.StaticPool.QueueWork(doWork, Priority.High); // Flush remaining chunks
+			PriorityThreadPool.StaticPool.QueueWork(flushChunks, Priority.High); // Flush remaining chunks
 		}
 
 		/// <summary>
@@ -534,14 +534,19 @@ namespace Lapis.Level
 			if(!_flushing.IsSet && _flushQueue.Count >= FlushCount)
 			{
 				_flushing.Set();
-				PriorityThreadPool.StaticPool.QueueWork(doWork, Priority.High);
+				PriorityThreadPool.StaticPool.QueueWork(flushChunks, Priority.High);
 			}
 		}
 
 		/// <summary>
-		/// Background thread method that flushes chunk data to disk
+		/// Forces modified chunks to be written to disk
 		/// </summary>
-		private void doWork (object state)
+		internal void FlushChunks () // TODO: Possibly make this public
+		{
+			flushChunks(null);
+		}
+		
+		private void flushChunks (object state)
 		{
 			var toFlush = new List<Tuple<XZCoordinate, ChunkData>>();
 			lock(_locker)
@@ -558,8 +563,9 @@ namespace Lapis.Level
 #if TRACE
 			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks");
 #endif
-			foreach(var item in toFlush)
+			for(var i = 0; i < toFlush.Count; ++i)
 			{
+				var item  = toFlush[i];
 				var coord = item.Item1;
 				var data  = item.Item2;
 				_afm.PutChunk(coord.X, coord.Z, data);

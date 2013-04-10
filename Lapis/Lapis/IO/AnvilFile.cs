@@ -10,7 +10,7 @@ namespace Lapis.IO
 	/// <summary>
 	/// A single file that contains data about chunks
 	/// </summary>
-	sealed class AnvilFile : IDisposable
+	sealed class AnvilFile : IDisposable // TODO: Thrown exceptions in some methods if disposed
 	{
 		#region Constants
 		/// <summary>
@@ -53,6 +53,7 @@ namespace Lapis.IO
 		private readonly SortedSet<int> _freeSectors;
 		private readonly EndianBinaryReader _reader;
 		private readonly EndianBinaryWriter _writer;
+		private volatile bool _disposed;
 
 		#region Get and store
 		/// <summary>
@@ -359,6 +360,7 @@ namespace Lapis.IO
 
 		private void Dispose (bool disposing)
 		{
+			_disposed = true;
 			if(disposing)
 			{
 				lock(_headerData)
@@ -370,6 +372,14 @@ namespace Lapis.IO
 					_reader.Dispose();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Whether or not the underlying file handles have been disposed
+		/// </summary>
+		public bool Diposed
+		{
+			get { return _disposed; }
 		}
 
 		/// <summary>
