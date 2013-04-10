@@ -140,13 +140,13 @@ namespace Lapis.Threading
 			var work = state as PopulationUnit;
 			if(null != work)
 			{
-#if TRACE
-				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Population: " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
-#endif
 				var realm     = work.Realm;
 				var populator = work.Populator;
 				var lastX     = work.StartX + work.CountX;
 				var lastZ     = work.StartZ + work.CountZ;
+#if TRACE
+				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] " + populator.Name + ": " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
+#endif
 				for(var x = work.StartX; x <= lastX; ++x)
 					for(var z = work.StartZ; z <= lastZ; ++z)
 					{

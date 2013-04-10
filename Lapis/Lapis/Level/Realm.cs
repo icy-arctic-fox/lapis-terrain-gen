@@ -545,10 +545,12 @@ namespace Lapis.Level
 		{
 			flushChunks(null);
 		}
+
+		private int _flushCount;
 		
 		private void flushChunks (object state)
 		{
-			var toFlush = new List<Tuple<XZCoordinate, ChunkData>>();
+			var toFlush = new List<Tuple<XZCoordinate, ChunkData>>(FlushCount);
 			lock(_locker)
 			{
 				while(0 < _flushQueue.Count)
@@ -557,11 +559,12 @@ namespace Lapis.Level
 					if(item.Item2.Modified)
 						toFlush.Add(item);
 				}
+				_flushCount += toFlush.Count;
 				_flushing.Reset();
 			}
 
 #if TRACE
-			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks");
+			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks (" + _flushCount + " total)");
 #endif
 			for(var i = 0; i < toFlush.Count; ++i)
 			{

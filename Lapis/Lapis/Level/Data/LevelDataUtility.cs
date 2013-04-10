@@ -361,7 +361,7 @@ namespace Lapis.Level.Data
 			if(null == column)
 				throw new ArgumentNullException("column", "The column of block types can't be null.");
 
-			for(var i = column.Length - 1; i >= 0; --i)
+			for(var i = column.Length - 1; i > 0; --i)
 				if(BlockType.Air != column[i])
 					return i; // TODO: This could be optimized
 			return 0;
