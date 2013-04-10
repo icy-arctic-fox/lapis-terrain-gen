@@ -17,7 +17,9 @@ namespace Lapis.IO
 		/// </summary>
 		private const string FileExtension = ".mca";
 
-		private readonly Cache<XZCoordinate, AnvilFile> _cache = new Cache<XZCoordinate, AnvilFile>();
+		private const int FileCacheCount = 16;
+
+		private readonly Cache<XZCoordinate, AnvilFile> _cache = new Cache<XZCoordinate, AnvilFile>(FileCacheCount);
 		private readonly string _basePath;
 
 		/// <summary>

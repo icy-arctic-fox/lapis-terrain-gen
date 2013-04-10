@@ -91,7 +91,10 @@ namespace Lapis.Level.Generation.Noise
 
 		private double postProcess (double noise)
 		{
-			return _postProcessors.Aggregate(noise, (current, processor) => processor.ProcessNoise(current));
+			// Do not convert this to LINQ, it adds a huge unnecessary overhead
+			foreach(var processor in _postProcessors)
+				noise = processor.ProcessNoise(noise);
+			return noise;
 		}
 		#endregion
 

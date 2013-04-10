@@ -8,7 +8,7 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 128;
+		private const int Radius = 48;
 		private const string DesiredGeneratorName = "Islands Terrain Generator";
 
 		static void Main (string[] args)
@@ -39,8 +39,10 @@ namespace Generator
 
 			watch.Stop();
 			var timeTaken = watch.Elapsed;
+			var rate = totalChunks / timeTaken.TotalSeconds;
 			Console.WriteLine(timeTaken);
-			Console.WriteLine((totalChunks / timeTaken.TotalSeconds) + " chunks/sec.");
+			Console.WriteLine(totalChunks + " chunks generated");
+			Console.WriteLine(rate + " chunks/sec.");
 			Console.Write("Generation completed, press any key to exit");
 			Console.ReadKey();
 		}
