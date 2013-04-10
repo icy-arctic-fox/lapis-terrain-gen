@@ -41,7 +41,7 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// The height of the highest block an index (0 - 255)
+		/// The height of the highest block at an index (0 - 255)
 		/// </summary>
 		/// <param name="index">Index of the cell</param>
 		/// <returns>The height of the block at the given cell index</returns>
@@ -50,6 +50,7 @@ namespace Lapis.Level.Data
 			get { return _data[index]; }
 			set
 			{
+				_modified = true;
 				_data[index] = value;
 				if(value > Maximum)
 					Maximum = value;
@@ -73,6 +74,7 @@ namespace Lapis.Level.Data
 
 			set
 			{
+				_modified = true;
 				var index = CalculateIndex(bx, bz);
 				_data[index] = value;
 				if(value > Maximum)

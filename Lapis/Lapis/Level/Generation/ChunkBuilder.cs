@@ -137,7 +137,7 @@ namespace Lapis.Level.Generation
 			}
 
 			setSectionSpan(bx, bz, _types, yOff, column);
-			_data.HeightMap[bx, bz] = column.FindHighestBlock();
+			_data.HeightMap[bx, bz] = column.FindHighestBlock() + 1;
 		}
 		#endregion
 
@@ -223,7 +223,7 @@ namespace Lapis.Level.Generation
 			int height;
 			if(reduce)
 			{// Air blocks (lower height if needed)
-				height = (0 == yCount) ? by : by + yCount - 1;
+				height = (0 == yCount) ? by + 1 : by + yCount;
 				for(var x = bx; x < xEnd; ++x)
 					for(var z = bz; z < zEnd; ++z)
 						if(height < heightMap[x, z])
@@ -232,7 +232,7 @@ namespace Lapis.Level.Generation
 
 			else
 			{// Solid blocks (raise height if needed)
-				height = (0 == by) ? 0 : by - 1;
+				height = (0 == by) ? 0 : by;
 				for(var x = bx; x < xEnd; ++x)
 					for(var z = bz; z < zEnd; ++z)
 						if(height > heightMap[x, z])
