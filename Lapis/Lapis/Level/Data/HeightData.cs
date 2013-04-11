@@ -8,7 +8,9 @@ namespace Lapis.Level.Data
 	/// <summary>
 	/// Contains information about the highest blocks in a chunk
 	/// </summary>
-	/// <remarks>This class is not tied to any active world data.
+	/// <remarks>Height values are the y-position of the highest air block (non-air block +1).
+	/// Height data can be used to drastically speed up processing of lighting and chunk processing.
+	/// This class is not tied to any active world data.
 	/// The purpose of this class is for creating chunks, load chunk data from disk, and save chunk data to disk.
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
 	public sealed class HeightData : ISerializable, IModifiable
@@ -34,6 +36,9 @@ namespace Lapis.Level.Data
 		/// <param name="initialHeight">Height to set for the entire chunk</param>
 		public HeightData (int initialHeight)
 		{
+			if(0 > initialHeight || Chunk.Height < initialHeight)
+				throw new ArgumentOutOfRangeException("initialHeight", "The values for the height must be at least 0 and no higher than " + Chunk.Height);
+
 			_data = new int[Chunk.Size * Chunk.Size];
 			for(var i = 0; i < _data.Length; ++i)
 				_data[i] = initialHeight;
@@ -50,6 +55,9 @@ namespace Lapis.Level.Data
 			get { return _data[index]; }
 			set
 			{
+				if(0 > value || Chunk.Height < value)
+					throw new ArgumentOutOfRangeException("value", "The values for the height must be at least 0 and no higher than " + Chunk.Height);
+
 				_modified = true;
 				_data[index] = value;
 				if(value > Maximum)
@@ -74,6 +82,9 @@ namespace Lapis.Level.Data
 
 			set
 			{
+				if(0 > value || Chunk.Height < value)
+					throw new ArgumentOutOfRangeException("value", "The values for the height must be at least 0 and no higher than " + Chunk.Height);
+
 				_modified = true;
 				var index = CalculateIndex(bx, bz);
 				_data[index] = value;
@@ -188,6 +199,14 @@ namespace Lapis.Level.Data
 		{
 			if(node.Data.Length != Chunk.Size * Chunk.Size)
 				throw new FormatException("The length of the height map is not valid. Expected: " + (Chunk.Size * Chunk.Size) + ", got: " + node.Data.Length);
+
+			for(var i = 0; i < node.Data.Length; ++i)
+			{// Validate height values
+				if(node.Data[i] < 0)
+					node.Data[i] = 0;
+				else if(node.Data[i] > Chunk.Height)
+					node.Data[i] = Chunk.Height;
+			}
 			return node.Data;
 		}
 		#endregion

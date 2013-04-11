@@ -305,13 +305,14 @@ namespace Lapis.Level
 		/// <param name="bx">X-position</param>
 		/// <param name="bz">Z-position</param>
 		/// <returns>The y-position of the highest block</returns>
-		/// <remarks>The lowest value returned by this method is 0.
-		/// This method gets the highest non-air block in a column.
-		/// If a grass block is the highest at y=64, then the value returned will be 64.</remarks>
+		/// <remarks>This method gets the highest non-air block in a column.
+		/// The lowest value returned by this method is -1 (meaning there are no non-air blocks).
+		/// For example, if a grass block is the highest at y=64 and there's nothing but air above it,
+		/// then the value returned will be 64.</remarks>
 		public int GetHighestBlockAt (byte bx, byte bz)
 		{
 			lock(this)
-				return _data.HeightMap[bx, bz];
+				return _data.HeightMap[bx, bz] - 1;
 		}
 
 		private void updateHeightMap (byte bx, byte bz)
@@ -320,7 +321,7 @@ namespace Lapis.Level
 			for(y = Height - 1; y > 0; --y)
 				if(_data.GetBlockType(bx, (byte)y, bz) != BlockType.Air)
 					break;
-			_data.HeightMap[bx, bz] = y;
+			_data.HeightMap[bx, bz] = y + 1;
 		}
 
 		/// <summary>
