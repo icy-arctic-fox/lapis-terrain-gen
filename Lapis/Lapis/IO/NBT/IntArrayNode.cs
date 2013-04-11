@@ -216,34 +216,27 @@ namespace Lapis.IO.NBT
 			{
 				fixed(int* pSrc = src, pDest = dest)
 				{
-					var ps = pSrc + srcStart;
+					var ps = pSrc  + srcStart;
 					var pd = pDest + destStart;
+
 #if X64
-					var stop = count / 8;
-#else
-					var stop = count / 4;
-#endif
+					var stop = count / 2;
 					for(var i = 0; i < stop; ++i)
 					{
-#if X64
 						*((long*)pd) = *((long*)ps);
-						pd += 8;
-						ps += 8;
+						pd += 2;
+						ps += 2;
 					}
-					stop = count % 8;
-#else
+					if(1 == count % 2)
 						*pd = *ps;
-						pd += 4;
-						ps += 4;
-					}
-					stop = count % 4;
-#endif
-					for(var i = 0; i < stop; ++i)
+#else
+					for(var i = 0; i < count; ++i)
 					{
 						*pd = *ps;
 						++pd;
 						++ps;
 					}
+#endif
 				}
 			}
 #else
