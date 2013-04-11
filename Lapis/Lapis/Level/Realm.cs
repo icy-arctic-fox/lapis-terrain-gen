@@ -292,12 +292,12 @@ namespace Lapis.Level
 			{
 				cleanupInactiveChunks();
 				var toSave = (from wr in _activeChunks.Values where wr.IsAlive select (Chunk)wr.Target).ToList();
-				foreach(var chunk in toSave.Where(chunk => null != chunk && chunk.Modified))
+				foreach(var chunk in toSave.Where(chunk => null != chunk))// && chunk.Modified))
 					chunk.Save();
-				PriorityThreadPool.StaticPool.QueueWork(flushChunks, Priority.High); // Flush remaining chunks
 
 				saveLevelData(_levelFilePath, _levelData);
 			}
+			FlushChunks();
 		}
 
 		/// <summary>
@@ -390,7 +390,7 @@ namespace Lapis.Level
 		/// <param name="cz">Z-position of the chunk within the realm</param>
 		/// <param name="data">Chunk data to save at the position</param>
 		/// <param name="force">Force the chunk to save now instead of buffering</param>
-		internal void SaveChunk (int cx, int cz, ChunkData data, bool force = false)
+		internal void SaveChunkData (int cx, int cz, ChunkData data, bool force = false)
 		{
 			if(force)
 				_afm.PutChunk(cx, cz, data);
@@ -401,10 +401,13 @@ namespace Lapis.Level
 
 		private Chunk getOrCreateChunk (XZCoordinate coord)
 		{
+			Chunk chunk;
 			if(_activeChunks.ContainsKey(coord))
 			{// Possibly still active in memory somewhere
-				var chunk = _activeChunks[coord].Target as Chunk;
-				if(null != chunk)
+				chunk = _activeChunks[coord].Target as Chunk;
+				if(null == chunk)
+					_activeChunks.Remove(coord);
+				else
 					return chunk;
 			}
 
@@ -413,14 +416,16 @@ namespace Lapis.Level
 			if(_afm.ChunkExists(coord.X, coord.Z))
 				data = _afm.GetChunk(coord.X, coord.Z);
 			if(null == data) // The chunk provider might return null for a chunk
-				data = generate(coord.X, coord.Z); // Not on disk, generate it
+				data = doGeneration(coord.X, coord.Z); // Not on disk, generate it
 
 			// NOTE: We do *NOT* populate the chunk here - that would cause a cycle between generation and population
 
-			return new Chunk(this, data);
+			chunk = new Chunk(this, data);
+			_activeChunks[coord] = new WeakReference(chunk);
+			return chunk;
 		}
 
-		private ChunkData generate (int cx, int cz)
+		private ChunkData doGeneration (int cx, int cz)
 		{
 			var data = _generator.GenerateChunk(cx, cz);
 			if(null == data)
@@ -445,7 +450,7 @@ namespace Lapis.Level
 
 			if(create)
 			{
-				var data = generate(cx, cz);
+				var data = doGeneration(cx, cz);
 				lock(_locker)
 				{// TODO: What could happen if this lock is released and re-acquired?
 					cleanupInactiveChunks();
@@ -498,12 +503,9 @@ namespace Lapis.Level
 		private void Dispose (bool disposing)
 		{
 			if(disposing)
-			{// Forced disposal
-				if(_levelData.Modified)
-					saveLevelData(_levelFilePath, _levelData);
-			}
+				Save();
 			_disposed = true;
-			PriorityThreadPool.StaticPool.QueueWork(flushChunks, Priority.High); // Flush remaining chunks
+			PriorityThreadPool.QueueUserWorkItem(flushChunks, Priority.High); // Flush remaining chunks
 		}
 
 		/// <summary>
@@ -532,11 +534,14 @@ namespace Lapis.Level
 		/// <param name="data">Chunk data to flush</param>
 		private void markForFlush (XZCoordinate coord, ChunkData data)
 		{
+#if TRACE
+			Console.WriteLine("Marked chunk " + coord + " for flushing\n" + Environment.StackTrace);
+#endif
 			_flushQueue.Enqueue(new Tuple<XZCoordinate, ChunkData>(coord, data));
 			if(!_flushing.IsSet && _flushQueue.Count >= FlushCount)
 			{
 				_flushing.Set();
-				PriorityThreadPool.StaticPool.QueueWork(flushChunks, Priority.High);
+				PriorityThreadPool.QueueUserWorkItem(flushChunks, Priority.High);
 			}
 		}
 
@@ -573,6 +578,9 @@ namespace Lapis.Level
 				var coord = item.Item1;
 				var data  = item.Item2;
 				_afm.PutChunk(coord.X, coord.Z, data);
+#if TRACE
+				Console.WriteLine("Flushed chunk " + coord);
+#endif
 			}
 		}
 

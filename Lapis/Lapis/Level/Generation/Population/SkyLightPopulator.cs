@@ -58,16 +58,16 @@ namespace Lapis.Level.Generation.Population
 					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 					{
 						// Quickly fill air blocks
-						var height = c.GetHighestBlockAt(bx, bz);
-						for(var by = (byte)(Chunk.Height - 1); by > height; --by)
-							c.SetSkyLight(bx, by, bz, Chunk.FullBrightness); // TODO: Add a method like SetSpan(startIndex, endIndex) to NibbleArray
+						var height = Math.Max(64, c.GetHighestBlockAt(bx, bz)); // TODO: Remove Max
+						for(var by = Chunk.Height - 1; by > height; --by)
+							c.SetSkyLight(bx, (byte)by, bz, Chunk.FullBrightness); // TODO: Add a method like SetSpan(startIndex, endIndex) to NibbleArray
 
 						// Reduce amount of sky light through semi-transparent blocks
 						var light = Chunk.FullBrightness;
-						for(var by = (byte)height; by > 0 && light > 0; --by)
+						for(var by = height; by >= 0 && light > 0; --by)
 						{
-							c.AddSkyLight(bx, by, bz, light);
-							var block = c.GetBlock(bx, by, bz);
+							c.AddSkyLight(bx, (byte)by, bz, light);
+							var block = c.GetBlock(bx, (byte)by, bz);
 							light = (byte)Math.Max(0, light - block.Opacity);
 						}
 					}
