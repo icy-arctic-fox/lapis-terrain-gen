@@ -311,7 +311,7 @@ namespace Lapis.Utility
 		/// <param name="count">Number of bytes to copy (default is -1)</param>
 		public static void Copy (this byte[] src, byte[] dest, int srcStart = 0, int destStart = 0, int count = -1)
 		{
-			if(0 > count)	// Calculate where to stop
+			if(0 > count) // Calculate where to stop
 				count = Math.Min(src.Length - srcStart, dest.Length - destStart);
 
 #if !DEBUG
@@ -319,7 +319,7 @@ namespace Lapis.Utility
 			{
 				fixed(byte* pSrc = src, pDest = dest)
 				{
-					var ps = pSrc + srcStart;
+					var ps = pSrc  + srcStart;
 					var pd = pDest + destStart;
 #if X64
 					var stop = count / sizeof(long);
