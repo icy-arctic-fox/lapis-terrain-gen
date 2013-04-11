@@ -43,8 +43,12 @@ namespace Lapis.Threading
 		/// <remarks>The minimum and maximum thread count is set to an ideal amount for the current processor.</remarks>
 		public PriorityThreadPool ()
 		{
+#if DEBUG
+			_minThreads = _maxThreads = 1;
+#else
 			_minThreads = Environment.ProcessorCount;
 			_maxThreads = _minThreads + _minThreads / 2;
+#endif
 			while(_pool.Count < _minThreads)
 				startWorker();
 		}
