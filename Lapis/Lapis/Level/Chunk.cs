@@ -424,10 +424,14 @@ namespace Lapis.Level
 		/// <summary>
 		/// Forces the chunk to save its contents to disk
 		/// </summary>
+		/// <remarks>Saving the chunk will clear the modification flag.</remarks>
 		public void Save ()
 		{
 			lock(this)
+			{
 				_realm.SaveChunk(ChunkX, ChunkZ, _data);
+				ClearModificationFlag();
+			}
 		}
 
 		#region Cleanup

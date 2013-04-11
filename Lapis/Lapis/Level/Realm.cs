@@ -441,7 +441,7 @@ namespace Lapis.Level
 		{
 			bool create;
 			lock(_locker)
-				create = (!_afm.ChunkExists(cx, cz) || replace);
+				create = (replace || !_afm.ChunkExists(cx, cz));
 
 			if(create)
 			{
@@ -453,6 +453,7 @@ namespace Lapis.Level
 					var chunk = new Chunk(this, data);
 					_activeChunks[coord] = new WeakReference(chunk);
 					_chunkCache[coord]   = chunk;
+					chunk.ClearModificationFlag();
 					markForFlush(coord, data);
 				}
 			}
@@ -519,7 +520,8 @@ namespace Lapis.Level
 			{
 				_chunkCache.Remove(coord);
 				_activeChunks.Remove(coord);
-				markForFlush(coord, data);
+				if(data.Modified)
+					markForFlush(coord, data);
 			}
 		}
 
@@ -556,8 +558,7 @@ namespace Lapis.Level
 				while(0 < _flushQueue.Count)
 				{
 					var item = _flushQueue.Dequeue();
-					if(item.Item2.Modified)
-						toFlush.Add(item);
+					toFlush.Add(item);
 				}
 				_flushCount += toFlush.Count;
 				_flushing.Reset();
