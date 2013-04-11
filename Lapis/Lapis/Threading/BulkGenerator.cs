@@ -80,7 +80,7 @@ namespace Lapis.Threading
 					var zSize  = Math.Min(unitSize, lastZ - cz);
 					var handle = genList.NextHandle();
 					var work   = new GenerationUnit(realm, cx, cz, xSize, zSize, overwrite, handle);
-					PriorityThreadPool.StaticPool.QueueWork(doGenerationWork, work);
+					PriorityThreadPool.QueueUserWorkItem(doGenerationWork, work);
 				}
 
 			genList.WaitAll();
@@ -101,7 +101,7 @@ namespace Lapis.Threading
 								var zSize  = Math.Min(unitSize, lastZ - cz);
 								var handle = popList.NextHandle();
 								var work   = new PopulationUnit(realm, cx, cz, xSize, zSize, populator, handle);
-								PriorityThreadPool.StaticPool.QueueWork(doPopulationWork, work);
+								PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
 							}
 
 						popList.WaitAll();

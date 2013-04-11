@@ -430,7 +430,7 @@ namespace Lapis.Level
 		{
 			lock(this)
 			{
-				_realm.SaveChunk(ChunkX, ChunkZ, _data);
+				_realm.SaveChunkData(ChunkX, ChunkZ, _data);
 				ClearModificationFlag();
 			}
 		}
@@ -462,7 +462,7 @@ namespace Lapis.Level
 			if(disposing)
 			{// Forced disposal
 				if(_data.Modified)
-					_realm.SaveChunk(ChunkX, ChunkZ, _data);
+					_realm.SaveChunkData(ChunkX, ChunkZ, _data);
 			}
 			_realm.ReleaseChunk(ChunkX, ChunkZ, _data);
 		}
