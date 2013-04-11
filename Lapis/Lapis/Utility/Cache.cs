@@ -216,7 +216,11 @@ namespace Lapis.Utility
 		/// </summary>
 		public ICollection<TKey> Keys
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				lock(_cacheEntries)
+					return _cacheEntries.Keys;
+			}
 		}
 
 		/// <summary>
@@ -224,7 +228,16 @@ namespace Lapis.Utility
 		/// </summary>
 		public ICollection<TValue> Values
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				lock(_cacheEntries)
+				{
+					var list = new List<TValue>(_cacheEntries.Count);
+					foreach(var item in _cacheEntries.Values)
+						list.Add(item.Value);
+					return list;
+				}
+			}
 		}
 
 		/// <summary>
@@ -233,7 +246,13 @@ namespace Lapis.Utility
 		/// <returns>An enumerator</returns>
 		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			lock(_cacheEntries)
+			{
+				var list = new List<KeyValuePair<TKey, TValue>>(_cacheEntries.Count);
+				foreach(var entry in _cacheEntries)
+					list.Add(new KeyValuePair<TKey, TValue>(entry.Key, entry.Value.Value));
+				return list.GetEnumerator();
+			}
 		}
 
 		/// <summary>
@@ -260,7 +279,13 @@ namespace Lapis.Utility
 		/// </summary>
 		public void Clear ()
 		{
-			throw new NotImplementedException();
+			lock(_cacheEntries)
+			{
+				var items = new CacheEntry[_cacheEntries.Count];
+				_cacheEntries.Values.CopyTo(items, 0);
+				for(var i = 0; i < items.Length; ++i)
+					items[i].Remove();
+			}
 		}
 
 		/// <summary>
@@ -270,7 +295,8 @@ namespace Lapis.Utility
 		/// <returns>True if the item is cached or false if it isn't</returns>
 		public bool Contains (KeyValuePair<TKey, TValue> item)
 		{
-			throw new NotImplementedException();
+			lock(_cacheEntries)
+				return _cacheEntries.ContainsKey(item.Key) && _cacheEntries[item.Key].Value.Equals(item.Value);
 		}
 
 		/// <summary>
