@@ -127,8 +127,8 @@ namespace Lapis.Threading
 				var realm = work.Realm;
 				var lastX = work.StartX + work.CountX;
 				var lastZ = work.StartZ + work.CountZ;
-				for(var x = work.StartX; x <= lastX; ++x)
-					for(var z = work.StartZ; z <= lastZ; ++z)
+				for(var x = work.StartX; x < lastX; ++x)
+					for(var z = work.StartZ; z < lastZ; ++z)
 						realm.GenerateChunk(x, z, work.Overwrite);
 				Thread.Sleep(_generationDelay[(int)_speed]);
 				work.Done();
@@ -147,8 +147,8 @@ namespace Lapis.Threading
 #if TRACE
 				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] " + populator.Name + ": " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
 #endif
-				for(var x = work.StartX; x <= lastX; ++x)
-					for(var z = work.StartZ; z <= lastZ; ++z)
+				for(var x = work.StartX; x < lastX; ++x)
+					for(var z = work.StartZ; z < lastZ; ++z)
 					{
 						var chunk = realm[x, z];
 						populator.PopulateChunk(chunk);
