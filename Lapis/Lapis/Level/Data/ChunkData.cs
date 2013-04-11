@@ -490,7 +490,7 @@ namespace Lapis.Level.Data
 		private Node constructSectionsNode ()
 		{
 			var chunkSections = new ListNode(SectionsNodeName, NodeType.Compound); // This is bad to assume the node type
-			var sectionCount  = Math.Min(Chunk.SectionCount - 1, Math.Max(0, (_heightMap.Maximum - 1) / Chunk.SectionHeight));
+			var sectionCount  = Math.Min(Chunk.SectionCount - 1, Math.Max(0, _heightMap.Maximum / Chunk.SectionHeight));
 			for(var i = 0; i <= sectionCount; ++i) // TODO: Take advantage of the Modified property
 				chunkSections.Add(_sections[i].ConstructNbtNode(ChunkSectionData.DefaultNodeName));
 			return chunkSections;

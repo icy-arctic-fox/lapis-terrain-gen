@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using Lapis.Level.Data;
 using Lapis.Utility;
 using Lapis.Spatial;
@@ -67,8 +68,23 @@ namespace Lapis.IO
 			int rcx, rcz;
 			relativeCoordinate(cx, cz, out rcx, out rcz);
 			var coord = toRegionCoordinate(cx, cz);
-			var file  = _cache.GetItem(coord, getFile);
-			return file.GetChunk(rcx, rcz);
+
+			AnvilFile file;
+			ChunkData data;
+			lock(_cache)
+			{
+				file = _cache.GetItem(coord, getFile);
+				Monitor.Enter(file);
+			}
+			try
+			{
+				data = file.GetChunk(rcx, rcz);
+			}
+			finally
+			{
+				Monitor.Exit(file);
+			}
+			return data;
 		}
 
 		/// <summary>
@@ -85,8 +101,21 @@ namespace Lapis.IO
 			int rcx, rcz;
 			relativeCoordinate(cx, cz, out rcx, out rcz);
 			var coord = toRegionCoordinate(cx, cz);
-			var file  = _cache.GetItem(coord, getFile);
-			file.PutChunk(rcx, rcz, data);
+
+			AnvilFile file;
+			lock(_cache)
+			{
+				file = _cache.GetItem(coord, getFile);
+				Monitor.Enter(file);
+			}
+			try
+			{
+				file.PutChunk(rcx, rcz, data);
+			}
+			finally
+			{
+				Monitor.Exit(file);
+			}
 		}
 
 		/// <summary>
@@ -100,8 +129,23 @@ namespace Lapis.IO
 			int rcx, rcz;
 			relativeCoordinate(cx, cz, out rcx, out rcz);
 			var coord = toRegionCoordinate(cx, cz);
-			var file  = _cache.GetItem(coord, getFile);
-			return file.ChunkExists(rcx, rcz);
+
+			AnvilFile file;
+			bool exists;
+			lock(_cache)
+			{
+				file = _cache.GetItem(coord, getFile);
+				Monitor.Enter(file);
+			}
+			try
+			{
+				exists = file.ChunkExists(rcx, rcz);
+			}
+			finally
+			{
+				Monitor.Exit(file);
+			}
+			return exists;
 		}
 		#endregion
 

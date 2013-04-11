@@ -360,16 +360,19 @@ namespace Lapis.IO
 
 		private void Dispose (bool disposing)
 		{
-			_disposed = true;
-			if(disposing)
+			lock(this)
 			{
-				lock(_headerData)
+				_disposed = true;
+				if(disposing)
 				{
-//					Compact();
-					_writer.Flush();
-					_writer.Close();
-					_writer.Dispose();
-					_reader.Dispose();
+					lock(_headerData)
+					{
+//						Compact();
+						_writer.Flush();
+						_writer.Close();
+						_writer.Dispose();
+						_reader.Dispose();
+					}
 				}
 			}
 		}
