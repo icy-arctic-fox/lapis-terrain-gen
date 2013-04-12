@@ -50,6 +50,16 @@ namespace Lapis.Level.Generation.Population
 		/// <param name="c">Chunk to populate</param>
 		public void PopulateChunk (Chunk c)
 		{
+			LightChunk(c);
+		}
+
+		/// <summary>
+		/// Lights a chunk with sky light
+		/// </summary>
+		/// <param name="c">Chunk to light up</param>
+		/// <remarks>This method can be used to recalculate sky light for a chunk.</remarks>
+		public static void LightChunk (Chunk c)
+		{
 			lock(c)
 			{
 				// TODO: Blank out all sky light
@@ -58,7 +68,7 @@ namespace Lapis.Level.Generation.Population
 					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 					{
 						// Quickly fill air blocks
-						var height = Math.Max(64, c.GetHighestBlockAt(bx, bz)); // TODO: Remove Max
+						var height = c.GetHighestBlockAt(bx, bz);
 						for(var by = Chunk.Height - 1; by > height; --by)
 							c.SetSkyLight(bx, (byte)by, bz, Chunk.FullBrightness); // TODO: Add a method like SetSpan(startIndex, endIndex) to NibbleArray
 
@@ -66,9 +76,9 @@ namespace Lapis.Level.Generation.Population
 						var light = Chunk.FullBrightness;
 						for(var by = height; by >= 0 && light > 0; --by)
 						{
-							c.AddSkyLight(bx, (byte)by, bz, light);
 							var block = c.GetBlock(bx, (byte)by, bz);
 							light = (byte)Math.Max(0, light - block.Opacity);
+							c.AddSkyLight(bx, (byte)by, bz, light);
 						}
 					}
 
