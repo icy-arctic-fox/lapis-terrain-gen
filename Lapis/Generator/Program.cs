@@ -8,11 +8,19 @@ namespace Generator
 {
 	class Program
 	{
-		private const int Radius = 48;
+		private const int Radius = 128;
 		private const string DesiredGeneratorName = "Islands Terrain Generator";
 
 		static void Main (string[] args)
 		{
+#if DEBUG
+			System.Threading.ThreadPool.SetMinThreads(1, 1);
+			System.Threading.ThreadPool.SetMaxThreads(1, 1);
+#else
+			// We have to set this, otherwise .NET goes nuts and spins up too many threads
+			System.Threading.ThreadPool.SetMaxThreads(Environment.ProcessorCount * 2, Environment.ProcessorCount * 2);
+#endif
+
 			Console.Write("World Name: ");
 			var name = Console.ReadLine();
 			Console.Write("Generator Options: ");
@@ -20,10 +28,6 @@ namespace Generator
 
 			var watch = new Stopwatch();
 			watch.Start();
-#if DEBUG
-			System.Threading.ThreadPool.SetMinThreads(1, 1);
-			System.Threading.ThreadPool.SetMaxThreads(1, 1);
-#endif
 
 			var generatorNames = GeneratorLoader.GeneratorNames;
 			Console.WriteLine("Generators:");
