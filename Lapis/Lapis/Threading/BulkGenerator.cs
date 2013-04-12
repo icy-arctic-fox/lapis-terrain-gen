@@ -84,6 +84,7 @@ namespace Lapis.Threading
 				}
 
 			genList.WaitAll();
+			realm.FlushChunks();
 
 			if(populate)
 			{
