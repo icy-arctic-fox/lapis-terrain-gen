@@ -377,8 +377,8 @@ namespace Lapis.Level
 		/// <remarks>If the chunk doesn't exist, it will be generated and populated</remarks>
 		public Chunk GetChunk (int cx, int cz)
 		{
-			var coord = new XZCoordinate(cx, cz);
 			checkFlushQueue();
+			var coord = new XZCoordinate(cx, cz);
 			lock(_locker)
 				return _chunkCache.GetItem(coord, getOrCreateChunk);
 		}
@@ -507,8 +507,9 @@ namespace Lapis.Level
 		{
 			if(disposing)
 				Save();
+			else // Flush remaining chunks
+				PriorityThreadPool.QueueUserWorkItem(flushChunks, true, Priority.High);
 			_disposed = true;
-			PriorityThreadPool.QueueUserWorkItem(flushChunks, true, Priority.High); // Flush remaining chunks
 		}
 
 		/// <summary>
@@ -541,7 +542,7 @@ namespace Lapis.Level
 			{
 				_flushQueue.Enqueue(new Tuple<XZCoordinate, ChunkData>(coord, data));
 				if(_flushQueue.Count >= FlushCount)
-					PriorityThreadPool.QueueUserWorkItem(flushChunks, true, Priority.High);
+					PriorityThreadPool.QueueUserWorkItem(flushChunks, false, Priority.High);
 			}
 		}
 
