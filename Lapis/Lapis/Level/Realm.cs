@@ -44,7 +44,6 @@ namespace Lapis.Level
 		private readonly string _diskName, _path, _levelFilePath, _regionPath;
 
 		private readonly object _locker = new object();
-		private readonly ManualResetEventSlim _flushing = new ManualResetEventSlim();
 		private volatile bool _disposed;
 
 		#region Properties
@@ -379,6 +378,7 @@ namespace Lapis.Level
 		public Chunk GetChunk (int cx, int cz)
 		{
 			var coord = new XZCoordinate(cx, cz);
+			checkFlushQueue();
 			lock(_locker)
 				return _chunkCache.GetItem(coord, getOrCreateChunk);
 		}
@@ -395,8 +395,7 @@ namespace Lapis.Level
 			if(force)
 				_afm.PutChunk(cx, cz, data);
 			else
-				lock(_locker)
-					markForFlush(new XZCoordinate(cx, cz), data);
+				markForFlush(new XZCoordinate(cx, cz), data);
 		}
 
 		private Chunk getOrCreateChunk (XZCoordinate coord)
@@ -411,12 +410,14 @@ namespace Lapis.Level
 					return chunk;
 			}
 
-			// Not in memory, load from disk
+			// The chunk isn't in memory, attempt to load the chunk from disk
 			ChunkData data = null;
 			if(_afm.ChunkExists(coord.X, coord.Z))
 				data = _afm.GetChunk(coord.X, coord.Z);
+
+			// If we didn't get the chunk from disk, generate it
 			if(null == data) // The chunk provider might return null for a chunk
-				data = doGeneration(coord.X, coord.Z); // Not on disk, generate it
+				data = doGeneration(coord.X, coord.Z);
 
 			// NOTE: We do *NOT* populate the chunk here - that would cause a cycle between generation and population
 
@@ -444,6 +445,8 @@ namespace Lapis.Level
 		/// <remarks>This method won't populate the chunk after it has been generated.</remarks>
 		public void GenerateChunk (int cx, int cz, bool replace = false)
 		{
+			checkFlushQueue();
+
 			bool create;
 			lock(_locker)
 				create = (replace || !_afm.ChunkExists(cx, cz));
@@ -505,7 +508,7 @@ namespace Lapis.Level
 			if(disposing)
 				Save();
 			_disposed = true;
-			PriorityThreadPool.QueueUserWorkItem(flushChunks, Priority.High); // Flush remaining chunks
+			PriorityThreadPool.QueueUserWorkItem(flushChunks, true, Priority.High); // Flush remaining chunks
 		}
 
 		/// <summary>
@@ -518,12 +521,12 @@ namespace Lapis.Level
 		internal void ReleaseChunk (int cx, int cz, ChunkData data)
 		{
 			var coord = new XZCoordinate(cx, cz);
+			if(data.Modified)
+				markForFlush(coord, data);
 			lock(_locker)
 			{
 				_chunkCache.Remove(coord);
 				_activeChunks.Remove(coord);
-				if(data.Modified)
-					markForFlush(coord, data);
 			}
 		}
 
@@ -534,15 +537,17 @@ namespace Lapis.Level
 		/// <param name="data">Chunk data to flush</param>
 		private void markForFlush (XZCoordinate coord, ChunkData data)
 		{
-#if TRACE
-			Console.WriteLine("Marked chunk " + coord + " for flushing\n" + Environment.StackTrace);
-#endif
-			_flushQueue.Enqueue(new Tuple<XZCoordinate, ChunkData>(coord, data));
-			if(!_flushing.IsSet && _flushQueue.Count >= FlushCount)
+			lock(_flushQueue)
 			{
-				_flushing.Set();
-				PriorityThreadPool.QueueUserWorkItem(flushChunks, Priority.High);
+				_flushQueue.Enqueue(new Tuple<XZCoordinate, ChunkData>(coord, data));
+				if(_flushQueue.Count >= FlushCount)
+					PriorityThreadPool.QueueUserWorkItem(flushChunks, true, Priority.High);
 			}
+		}
+
+		private void checkFlushQueue ()
+		{
+			flushChunks(false);
 		}
 
 		/// <summary>
@@ -550,38 +555,42 @@ namespace Lapis.Level
 		/// </summary>
 		internal void FlushChunks () // TODO: Possibly make this public
 		{
-			flushChunks(null);
+			flushChunks(true);
 		}
 
 		private int _flushCount;
 		
 		private void flushChunks (object state)
 		{
-			var toFlush = new List<Tuple<XZCoordinate, ChunkData>>(FlushCount);
-			lock(_locker)
+			var force = (bool)state;
+			Tuple<XZCoordinate, ChunkData>[] toFlush;
+			lock(_flushQueue)
 			{
-				while(0 < _flushQueue.Count)
+				if(force || _flushQueue.Count >= FlushCount)
 				{
-					var item = _flushQueue.Dequeue();
-					toFlush.Add(item);
+					toFlush = new Tuple<XZCoordinate, ChunkData>[_flushQueue.Count];
+					for(var i = 0; 0 < _flushQueue.Count; ++i)
+					{
+						var item = _flushQueue.Dequeue();
+						toFlush[i] = item;
+					}
+					_flushCount += toFlush.Length;
 				}
-				_flushCount += toFlush.Count;
-				_flushing.Reset();
+				else
+					return; // Nothing to do
 			}
 
 #if TRACE
-			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Count + " chunks (" + _flushCount + " total)");
+			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Length + " chunks (" + _flushCount + " total)");
 #endif
-			for(var i = 0; i < toFlush.Count; ++i)
+			for(var i = 0; i < toFlush.Length; ++i)
 			{
 				var item  = toFlush[i];
 				var coord = item.Item1;
 				var data  = item.Item2;
 				_afm.PutChunk(coord.X, coord.Z, data);
-#if TRACE
-				Console.WriteLine("Flushed chunk " + coord);
-#endif
 			}
+			GC.Collect(); // Relieve memory now that the chunk data isn't needed anymore
 		}
 
 		private void cleanupInactiveChunks ()
