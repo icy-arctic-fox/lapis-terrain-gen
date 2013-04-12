@@ -7,10 +7,10 @@ Type,Name,Solid,Physics,Flammable,Opacity,Luminance,Blast Resistance,Meta-data,N
 5,Wood Planks,Yes,No,Yes,15,0,15,Yes,,
 6,Sapling,No,No,No,0,0,0,Yes,,
 7,Bedrock,Yes,No,No,15,0,18000000,No,,
-8,Flowing Water,No,No,No,1,0,500,Yes,,0.2
-9,Water,No,No,No,1,0,500,No,,0.2
-10,Flowing Lava,No,No,No,0,15,0,Yes,,0.033333333
-11,Lava,No,No,No,0,15,500,No,,0.033333333
+8,Flowing Water,No,No,No,3,0,500,Yes,,0.2
+9,Water,No,No,No,3,0,500,No,,0.2
+10,Flowing Lava,No,No,No,0,15,0,Yes,,0.033333333333333
+11,Lava,No,No,No,0,15,500,No,,0.033333333333333
 12,Sand,Yes,Yes,No,15,0,2.5,No,,
 13,Gravel,Yes,Yes,No,15,0,3,No,,
 14,Gold Ore,Yes,No,No,15,0,15,No,,

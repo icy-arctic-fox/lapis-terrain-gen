@@ -41,7 +41,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public override byte Opacity
 		{
-			get { return 1; }
+			get { return 3; }
 		}
 
 		/// <summary>

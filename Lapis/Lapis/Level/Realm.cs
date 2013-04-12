@@ -591,7 +591,6 @@ namespace Lapis.Level
 				var data  = item.Item2;
 				_afm.PutChunk(coord.X, coord.Z, data);
 			}
-			GC.Collect(); // Relieve memory now that the chunk data isn't needed anymore
 		}
 
 		private void cleanupInactiveChunks ()
