@@ -53,6 +53,11 @@ namespace Generator
 		private const string OptionStringTag = "-o";
 
 		/// <summary>
+		/// Seed to use for generation
+		/// </summary>
+		private const string SeedTag = "-s";
+
+		/// <summary>
 		/// Directory to store the world output in
 		/// </summary>
 		private const string DirectoryTag = "-d";
@@ -85,7 +90,7 @@ namespace Generator
 		/// <summary>
 		/// Shape of the generation output
 		/// </summary>
-		private const string ShapeTag = "-s";
+		private const string ShapeTag = "-a";
 
 		/// <summary>
 		/// Radius of the region to generate
@@ -148,6 +153,11 @@ namespace Generator
 		/// Generator options string to provide to the generator
 		/// </summary>
 		private const string ExtendedOptionStringTag = "--options";
+
+		/// <summary>
+		/// Seed to use for generation
+		/// </summary>
+		private const string ExtendedSeedTag = "--seed";
 
 		/// <summary>
 		/// Directory to store the world output in
@@ -218,7 +228,18 @@ namespace Generator
 
 		static void Main (string[] args)
 		{
-			displayHelp();
+			if(null == args || 0 == args.Length || (args.Length == 1 && (HelpTag == args[0] || ExtendedHelpTag == args[0])))
+				displayHelp();
+			else if(args.Length == 1 && (InteractiveTag == args[0] || ExtendedInteractiveTag == args[0]))
+				interactiveMode();
+			else
+			{
+				var parameters = getParameters(args);
+				if(null != parameters)
+				{
+					
+				}
+			}
 			// Generator.exe World1 [options]
 
 			// Needed parameters:
@@ -285,6 +306,145 @@ namespace Generator
 #endif
 		}
 
+		private static GenerationParameters getParameters (string[] args)
+		{
+			GenerationParameters parameters = null;
+
+			if(args.Length >= 1)
+			{// Valid parameter count
+				var worldName = args[0];
+				if(!String.IsNullOrWhiteSpace(worldName))
+				{// Valid world name
+					parameters = new GenerationParameters {
+						WorldName       = args[0].Trim(),
+						PopulateChunks  = true,
+						LightChunks     = true,
+						MarkAsPopulated = true
+					};
+
+					for(var i = 1; i < args.Length; ++i)
+					{// Parse options
+						var tag = args[i];
+						if(!String.IsNullOrWhiteSpace(tag))
+						{
+							tag = tag.Trim();
+
+							switch(tag)
+							{
+							case HelpTag: // Ignore these tags here
+							case ExtendedHelpTag:
+							case InteractiveTag:
+							case ExtendedInteractiveTag:
+								break;
+
+							case LoadTag:
+							case ExtendedLoadTag:
+								parameters.LoadExisting = true;
+								break;
+
+							case GeneratorTag:
+							case ExtendedGeneratorTag:
+								throw new NotImplementedException();
+								break;
+
+							case VersionTag:
+							case ExtendedVersionTag:
+								throw new NotImplementedException();
+								break;
+
+							case OptionStringTag:
+							case ExtendedOptionStringTag:
+								throw new NotImplementedException();
+								break;
+
+							case SeedTag:
+							case ExtendedSeedTag:
+								throw new NotImplementedException();
+								break;
+
+							case DirectoryTag:
+							case ExtendedDirectoryTag:
+								throw new NotImplementedException();
+								break;
+
+							case SpeedTag:
+							case ExtendedSpeedTag:
+								throw new NotImplementedException();
+								break;
+
+							case OverwriteTag:
+							case ExtendedOverwriteTag:
+								parameters.OverwriteChunks = true;
+								break;
+
+							case NoPopulationTag:
+							case ExtendedNoPopulationTag:
+								parameters.PopulateChunks = false;
+								break;
+
+							case EmptyPopulationTag:
+							case ExtendedEmptyPopulationTag:
+								parameters.PopulateChunks  = false;
+								parameters.MarkAsPopulated = true;
+								break;
+
+							case NoLightingTag:
+							case ExtendedNoLightingTag:
+								parameters.LightChunks = false;
+								break;
+
+							case ShapeTag:
+							case ExtendedShapeTag:
+								throw new NotImplementedException();
+								break;
+
+							case RadiusTag:
+							case ExtendedRadiusTag:
+								throw new NotImplementedException();
+								break;
+
+							case LengthTag:
+							case ExtendedLengthTag:
+								throw new NotImplementedException();
+								break;
+
+							case WidthTag:
+							case ExtendedWidthTag:
+								throw new NotImplementedException();
+								break;
+
+							case UnitsTag:
+							case ExtendedUnitsTag:
+								throw new NotImplementedException();
+								break;
+
+							case XTag:
+							case ExtendedXTag:
+								throw new NotImplementedException();
+								break;
+
+							case ZTag:
+							case ExtendedZTag:
+								throw new NotImplementedException();
+								break;
+
+							default:
+								Console.WriteLine("Unrecognized option " + tag);
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			return parameters;
+		}
+
+		private static void interactiveMode ()
+		{
+			throw new NotImplementedException();
+		}
+
 		private static void displayHelp ()
 		{
 			const string progName   = "Generator.exe";
@@ -324,6 +484,13 @@ namespace Generator
 			Console.WriteLine("  Provide extra options to the generator - usually used in conjunction with " + GeneratorTag);
 			Console.WriteLine("  If omitted, a blank string is used");
 			Console.WriteLine(baseSyntax + GeneratorTag + " <Generator Name> " + OptionStringTag + " <Generator Options>");
+			Console.WriteLine();
+
+			Console.WriteLine(String.Join(", ", SeedTag, ExtendedSeedTag));
+			Console.WriteLine("  Seed to use for generating chunks");
+			Console.WriteLine("  If omitted, a random seed is used.");
+			Console.WriteLine("  The seed can be a number or an arbitrary string.");
+			Console.WriteLine(baseSyntax + SeedTag + " <Seed>");
 			Console.WriteLine();
 
 			Console.WriteLine(String.Join(", ", DirectoryTag, ExtendedDirectoryTag));
@@ -412,6 +579,56 @@ namespace Generator
 			Console.WriteLine("  Available units are: blocks, chunks, and regions");
 			Console.WriteLine("  By default, this option is chunks.");
 			Console.WriteLine("  Chunks are 16x16 blocks. Regions are 32x32 chunks (one .mca file).");
+		}
+
+		private class GenerationParameters
+		{
+			public string WorldName { get; set; }
+
+			public bool LoadExisting { get; set; }
+
+			public string GeneratorName { get; set; }
+
+			public int GeneratorVersion { get; set; }
+
+			public string GeneratorOptions { get; set; }
+
+			public long Seed { get; set; }
+
+			public string WorkingDirectory { get; set; }
+
+			public GenerationSpeed GenerationSpeed { get; set; }
+
+			public bool OverwriteChunks { get; set; }
+
+			public bool PopulateChunks { get; set; }
+
+			public bool LightChunks { get; set; }
+
+			public bool MarkAsPopulated { get; set; }
+
+			public bool CircularRegion { get; set; }
+
+			public int Radius { get; set; }
+
+			public int Length { get; set; }
+
+			public int Width { get; set; }
+
+			public int AnchorX { get; set; }
+
+			public int AnchorZ { get; set; }
+
+			public UnitType UnitType { get; set; }
+		}
+
+		private enum UnitType
+		{
+			Blocks,
+
+			Chunks,
+
+			Regions
 		}
 	}
 }
