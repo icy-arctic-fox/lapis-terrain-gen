@@ -235,79 +235,18 @@ namespace Generator
 		{
 			if(null == args || 0 == args.Length || (args.Length == 1 && (HelpTag == args[0] || ExtendedHelpTag == args[0])))
 				displayHelp();
-			else if(args.Length == 1 && (InteractiveTag == args[0] || ExtendedInteractiveTag == args[0]))
-				interactiveMode();
 			else
 			{
-				var parameters = getParameters(args);
-				if(null != parameters)
+				initThreadPool();
+				if(args.Length == 1 && (InteractiveTag == args[0] || ExtendedInteractiveTag == args[0]))
+					interactiveMode();
+				else
 				{
-					var generator = parameters.UseSpecificVersion
-										? GeneratorLoader.GetGenerator(parameters.GeneratorName, parameters.GeneratorVersion)
-										: GeneratorLoader.GetGenerator(parameters.GeneratorName);
-					generator.Initialize(parameters.GeneratorOptions);
-
-					var watch = new Stopwatch();
-					watch.Start();
-
-					// TODO: Implement loading
-					var world = World.Create(parameters.WorldName); // TODO: Add destination directory
-					var realm = world.CreateRealm(generator);
-					// TODO: Implement seed
-
-					var startX = 0; // TODO: Use anchorX
-					var startZ = 0; // TODO: Use anchorZ
-					int countX, countZ;
-
-					// TODO: Implement units
-					if(parameters.UseRadius)
-					{
-						countX = parameters.Radius * 2;
-						countZ = parameters.Radius * 2;
-					}
-					else
-					{
-						countX = parameters.Length;
-						countZ = parameters.Width;
-					}
-
-					ulong totalChunks;
-					if(parameters.CircularRegion)
-						throw new NotImplementedException();
-					else
-						totalChunks = realm.GenerateRectange(startX, startZ, countX, countZ, parameters.PopulateChunks, parameters.OverwriteChunks);
-
-					// TODO: Implement speed options
-
-					// TODO: Implement population flags (no lighting, empty population, no population)
-
-					watch.Stop();
-					var timeTaken = watch.Elapsed;
-					var rate = totalChunks / timeTaken.TotalSeconds;
-
-					Console.WriteLine("Total time:   " + timeTaken);
-					Console.WriteLine("Total chunks: " + totalChunks);
-					Console.WriteLine("Average rate: " + rate + "chunks/sec.");
+					var parameters = getParameters(args);
+					if(null != parameters)
+						doGeneration(parameters);
 				}
 			}
-			// Generator.exe World1 [options]
-
-			// Needed parameters:
-			// New or load (default new) -e
-			// World name (also check .minecraft when loading)
-
-			// Optional parameters
-			// Generator version -v
-			// World directory (default to current '.' for new, default to original for load) -d
-			// Generation speed -p
-			// Generator options string -o
-			// Generation shape (square or circle, default square) -s
-			// Units (blocks, chunks, or regions) -u
-			// Generator name (use default for new, use existing for load) -g
-			// One of (default is -l 64):
-			//	Radius to generate -r
-			//	Length (and width) -l
-			//	Length and width   -l -w
 		}
 
 		private static void initThreadPool ()
@@ -611,6 +550,58 @@ namespace Generator
 		private static void interactiveMode ()
 		{
 			throw new NotImplementedException();
+		}
+
+		private static void doGeneration (GenerationParameters parameters)
+		{
+			var generator = parameters.UseSpecificVersion
+								? GeneratorLoader.GetGenerator(parameters.GeneratorName, parameters.GeneratorVersion)
+								: GeneratorLoader.GetGenerator(parameters.GeneratorName);
+			generator.Initialize(parameters.GeneratorOptions);
+
+			var watch = new Stopwatch();
+			watch.Start();
+
+			// TODO: Implement loading
+			var world = World.Create(parameters.WorldName); // TODO: Add destination directory
+			var realm = world.CreateRealm(generator);
+			// TODO: Implement seed
+
+			var startX = 0; // TODO: Use anchorX
+			var startZ = 0; // TODO: Use anchorZ
+			int countX, countZ;
+
+			// TODO: Implement units
+			if(parameters.UseRadius)
+			{
+				countX = parameters.Radius * 2;
+				countZ = parameters.Radius * 2;
+			}
+			else
+			{
+				countX = parameters.Length;
+				countZ = parameters.Width;
+			}
+
+			ulong totalChunks;
+			if(parameters.CircularRegion)
+				throw new NotImplementedException();
+			else
+				totalChunks = realm.GenerateRectange(startX, startZ, countX, countZ, parameters.PopulateChunks, parameters.OverwriteChunks);
+
+			// TODO: Implement speed options
+
+			// TODO: Implement population flags (no lighting, empty population, no population)
+
+			world.Save();
+
+			watch.Stop();
+			var timeTaken = watch.Elapsed;
+			var rate = totalChunks / timeTaken.TotalSeconds;
+
+			Console.WriteLine("Total time:   " + timeTaken);
+			Console.WriteLine("Total chunks: " + totalChunks);
+			Console.WriteLine("Average rate: " + rate + "chunks/sec.");
 		}
 
 		private static void displayHelp ()

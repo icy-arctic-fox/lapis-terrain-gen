@@ -556,10 +556,20 @@ namespace Lapis.Level
 		/// </summary>
 		internal void FlushChunks () // TODO: Possibly make this public
 		{
-			flushChunks(true);
+			lock(_flushQueue)
+			{// Wait for other threads that are flushing to finish
+				while(1 != Interlocked.Increment(ref _activeFlushThreads))
+				{// Wait on other threads to finish
+					Interlocked.Decrement(ref _activeFlushThreads);
+					Monitor.Wait(_flushQueue);
+				}
+				flushChunks(true);
+				Interlocked.Decrement(ref _activeFlushThreads);
+				Monitor.PulseAll(_flushQueue);
+			}
 		}
 
-		private int _flushCount;
+		private int _flushCount, _activeFlushThreads;
 		
 		private void flushChunks (object state)
 		{
@@ -579,17 +589,30 @@ namespace Lapis.Level
 				}
 				else
 					return; // Nothing to do
+				Interlocked.Increment(ref _activeFlushThreads);
 			}
 
+			try
+			{// Wrap just in case something blows up
 #if TRACE
-			Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Length + " chunks (" + _flushCount + " total)");
+				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Flush: " + toFlush.Length + " chunks (" + _flushCount + " total)");
 #endif
-			for(var i = 0; i < toFlush.Length; ++i)
-			{
-				var item  = toFlush[i];
-				var coord = item.Item1;
-				var data  = item.Item2;
-				_afm.PutChunk(coord.X, coord.Z, data);
+				for(var i = 0; i < toFlush.Length; ++i)
+				{
+					var item  = toFlush[i];
+					var coord = item.Item1;
+					var data  = item.Item2;
+					_afm.PutChunk(coord.X, coord.Z, data);
+				}
+			}
+
+			finally
+			{// It's critical to decrement the counter, otherwise some methods will block indefinitely
+				lock(_flushQueue)
+				{
+					Interlocked.Decrement(ref _activeFlushThreads);
+					Monitor.PulseAll(_flushQueue);
+				}
 			}
 		}
 
