@@ -656,7 +656,7 @@ namespace Lapis.Level
 			if(null == value)
 				throw new ArgumentNullException("value", "The string value can't be null.");
 
-			throw new NotImplementedException();
+			return value.GetBytes().GenerateLongHash();
 		}
 
 		/// <summary>

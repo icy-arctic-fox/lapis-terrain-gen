@@ -382,20 +382,78 @@ namespace Lapis.Utility
 			if(null == data || 0 >= data.Length)
 				return 0;
 
-			var length = data.Length;
+			var length    = data.Length;
 			var remainder = length & 3;
 			length >>= 2;
 
 			var hash = length;
-			var pos = 0;
+			var pos  = 0;
 			unchecked
 			{
 				for(; length > 0; --length)
 				{
 					hash += get16Bits(data, pos);
 					var temp = (get16Bits(data, pos + sizeof(short)) << 11) ^ hash;
-					hash = (hash << 16) ^ temp;
-					pos += 2 * sizeof(short);
+					hash  = (hash << 16) ^ temp;
+					pos  += 2 * sizeof(short);
+					hash += hash >> 11;
+				}
+
+				switch(remainder)
+				{
+				case 3:
+					hash += get16Bits(data, pos);
+					hash ^= hash << 16;
+					hash ^= data[pos + 2] << 18;
+					hash += hash >> 11;
+					break;
+				case 2:
+					hash += get16Bits(data, pos);
+					hash ^= hash << 11;
+					hash += hash >> 17;
+					break;
+				case 1:
+					hash += data[pos];
+					hash ^= hash << 10;
+					hash += hash >> 1;
+					break;
+				}
+
+				hash ^= hash << 3;
+				hash += hash >> 5;
+				hash ^= hash << 4;
+				hash += hash >> 17;
+				hash ^= hash << 25;
+				hash += hash >> 6;
+			}
+
+			return hash;
+		}
+
+		/// <summary>
+		/// Generates a 64-bit hash from an array of bytes
+		/// </summary>
+		/// <param name="data">Array of bytes to hash</param>
+		/// <returns>A hash code</returns>
+		public static long GenerateLongHash (this byte[] data)
+		{
+			if(null == data || 0 >= data.Length)
+				return 0;
+
+			var length    = data.LongLength;
+			var remainder = length & 3;
+			length >>= 2;
+
+			var hash = length;
+			var pos  = 0;
+			unchecked
+			{
+				for(; length > 0; --length)
+				{
+					hash += get16Bits(data, pos);
+					var temp = (get16Bits(data, pos + sizeof(short)) << 11) ^ hash;
+					hash  = (hash << 16) ^ temp;
+					pos  += 2 * sizeof(short);
 					hash += hash >> 11;
 				}
 
