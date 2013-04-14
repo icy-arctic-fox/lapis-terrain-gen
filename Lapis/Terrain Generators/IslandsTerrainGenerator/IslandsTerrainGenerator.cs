@@ -75,9 +75,9 @@ namespace IslandsTerrainGenerator
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
 		public void Initialize (long seed, string options)
 		{
-			var floorGenerator = new PerlinNoiseGenerator(100);
+			var floorGenerator = new PerlinNoiseGenerator(seed);
 			floorGenerator.AddPostProcess(new RangePostProcessor(-1.0, -0.7));
-			var surfaceGenerator = new PerlinNoiseGenerator(200);
+			var surfaceGenerator = new PerlinNoiseGenerator(unchecked(seed + 1));
 			surfaceGenerator.AddPreProcess(new ScalePreProcessor(1.0 / 5.0));
 			surfaceGenerator.AddPostProcess(new RangePostProcessor(-0.6, 0.5));
 			_noise = new NoiseCombiner(floorGenerator, surfaceGenerator);
