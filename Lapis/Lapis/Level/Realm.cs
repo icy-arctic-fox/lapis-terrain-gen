@@ -646,6 +646,20 @@ namespace Lapis.Level
 		}
 
 		/// <summary>
+		/// Generates a level seed from a string
+		/// </summary>
+		/// <param name="value">String to use as a seed</param>
+		/// <returns>A level seed</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+		public static long GenerateSeedFromString (string value)
+		{
+			if(null == value)
+				throw new ArgumentNullException("value", "The string value can't be null.");
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Gets a string that represents the realm
 		/// </summary>
 		/// <returns>A string</returns>
