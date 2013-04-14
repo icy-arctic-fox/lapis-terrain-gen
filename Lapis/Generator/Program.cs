@@ -601,7 +601,7 @@ namespace Generator
 
 			Console.WriteLine("Total time:   " + timeTaken);
 			Console.WriteLine("Total chunks: " + totalChunks);
-			Console.WriteLine("Average rate: " + rate + "chunks/sec.");
+			Console.WriteLine("Average rate: " + rate + " chunks/sec.");
 		}
 
 		private static void displayHelp ()

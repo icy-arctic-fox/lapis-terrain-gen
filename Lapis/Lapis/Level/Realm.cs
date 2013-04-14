@@ -31,9 +31,14 @@ namespace Lapis.Level
 		private const string RegionDirectory   = "region";
 
 		/// <summary>
+		/// Number of chunks to keep cached
+		/// </summary>
+		private const int ChunkCacheCount = 256;
+
+		/// <summary>
 		/// Number of chunks to wait for before flushing chunk changes to disk
 		/// </summary>
-		private const int FlushCount = 64;
+		private const int FlushCount = ChunkCacheCount;
 
 		private static readonly string _directorySeparator = P.DirectorySeparatorChar.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
@@ -342,7 +347,7 @@ namespace Lapis.Level
 		/// <remarks>Chunks will not be disposed when removed from the cache.
 		/// This is because they may be in use elsewhere still and we don't want an ObjectDisposedException to be thrown.
 		/// The garbage collector will take care of those chunks as soon as they are released.</remarks>
-		private readonly Cache<XZCoordinate, Chunk> _chunkCache = new Cache<XZCoordinate, Chunk>(false);
+		private readonly Cache<XZCoordinate, Chunk> _chunkCache = new Cache<XZCoordinate, Chunk>(ChunkCacheCount, false);
 
 		/// <summary>
 		/// Maintains a list of active chunks
