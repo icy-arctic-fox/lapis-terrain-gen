@@ -17,10 +17,10 @@ namespace TestTerrainGenerator
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
-		/// <remarks>The name of this generator is "Test Terrain Generator".</remarks>
+		/// <remarks>The name of this generator is "Test".</remarks>
 		public string Name
 		{
-			get { return "Test Terrain Generator"; }
+			get { return "Test"; }
 		}
 
 		/// <summary>

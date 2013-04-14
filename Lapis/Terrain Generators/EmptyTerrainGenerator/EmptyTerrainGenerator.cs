@@ -15,10 +15,10 @@ namespace EmptyTerrainGenerator
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
-		/// <remarks>The name of this generator is "Empty Terrain Generator".</remarks>
+		/// <remarks>The name of this generator is "Empty".</remarks>
 		public string Name
 		{
-			get { return "Empty Terrain Generator"; }
+			get { return "Empty"; }
 		}
 
 		/// <summary>
