@@ -20,6 +20,8 @@ namespace Generator
 		/// </summary>
 		private const int DefaultLength = 64;
 		#endregion
+		
+		// TODO: Add dimension option
 
 		#region Option tags
 		/// <summary>
@@ -240,7 +242,52 @@ namespace Generator
 				var parameters = getParameters(args);
 				if(null != parameters)
 				{
-					
+					var generator = parameters.UseSpecificVersion
+										? GeneratorLoader.GetGenerator(parameters.GeneratorName, parameters.GeneratorVersion)
+										: GeneratorLoader.GetGenerator(parameters.GeneratorName);
+					generator.Initialize(parameters.GeneratorOptions);
+
+					var watch = new Stopwatch();
+					watch.Start();
+
+					// TODO: Implement loading
+					var world = World.Create(parameters.WorldName); // TODO: Add destination directory
+					var realm = world.CreateRealm(generator);
+					// TODO: Implement seed
+
+					var startX = 0; // TODO: Use anchorX
+					var startZ = 0; // TODO: Use anchorZ
+					int countX, countZ;
+
+					// TODO: Implement units
+					if(parameters.UseRadius)
+					{
+						countX = parameters.Radius * 2;
+						countZ = parameters.Radius * 2;
+					}
+					else
+					{
+						countX = parameters.Length;
+						countZ = parameters.Width;
+					}
+
+					ulong totalChunks;
+					if(parameters.CircularRegion)
+						throw new NotImplementedException();
+					else
+						totalChunks = realm.GenerateRectange(startX, startZ, countX, countZ, parameters.PopulateChunks, parameters.OverwriteChunks);
+
+					// TODO: Implement speed options
+
+					// TODO: Implement population flags (no lighting, empty population, no population)
+
+					watch.Stop();
+					var timeTaken = watch.Elapsed;
+					var rate = totalChunks / timeTaken.TotalSeconds;
+
+					Console.WriteLine("Total time:   " + timeTaken);
+					Console.WriteLine("Total chunks: " + totalChunks);
+					Console.WriteLine("Average rate: " + rate + "chunks/sec.");
 				}
 			}
 			// Generator.exe World1 [options]
@@ -261,38 +308,6 @@ namespace Generator
 			//	Radius to generate -r
 			//	Length (and width) -l
 			//	Length and width   -l -w
-
-			/*
-			Console.Write("World Name: ");
-			var name = Console.ReadLine();
-			Console.Write("Generator Options: ");
-			var opts = Console.ReadLine();
-
-			var watch = new Stopwatch();
-			watch.Start();
-
-			var generatorNames = GeneratorLoader.GeneratorNames;
-			Console.WriteLine("Generators:");
-			Console.WriteLine(String.Join<string>("\n", generatorNames));
-
-			var world = World.Create(name);
-			
-			var generator = GeneratorLoader.GetGenerator(DesiredGeneratorName);
-			generator.Initialize(opts);
-			var realm = world.CreateRealm(generator);
-			var totalChunks = realm.GenerateRectange(-Radius, -Radius, Radius * 2, Radius * 2);
-			world.Save();
-			
-			watch.Stop();
-			var timeTaken = watch.Elapsed;
-			var rate = totalChunks / timeTaken.TotalSeconds;
-			Console.WriteLine(timeTaken);
-			Console.WriteLine(totalChunks + " chunks generated");
-			Console.WriteLine(rate + " chunks/sec.");
-			Console.Write("Generation completed, press any key to exit");
-			// TODO: Add disk size
-			Console.ReadKey();
-			*/
 		}
 
 		private static void initThreadPool ()
@@ -320,6 +335,7 @@ namespace Generator
 				{// Valid world name
 					parameters = new GenerationParameters {
 						WorldName       = args[0].Trim(),
+						GeneratorName   = DefaultGenerator,
 						PopulateChunks  = true,
 						LightChunks     = true,
 						MarkAsPopulated = true,
@@ -358,7 +374,10 @@ namespace Generator
 							case VersionTag:
 							case ExtendedVersionTag:
 								if(tryGetIntParameter(args, ref i, out intValue))
-									parameters.GeneratorVersion = intValue;
+								{
+									parameters.GeneratorVersion   = intValue;
+									parameters.UseSpecificVersion = true;
+								}
 								break;
 
 							case OptionStringTag:
@@ -742,7 +761,9 @@ namespace Generator
 
 			public string GeneratorOptions { get; set; }
 
-			public long Seed { get; set; }
+			public bool UseSpecificVersion { get; set; }
+
+			public long? Seed { get; set; }
 
 			public string WorkingDirectory { get; set; }
 
