@@ -230,6 +230,7 @@ namespace Generator
 
 		private static readonly string _minecraftDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
 															System.IO.Path.DirectorySeparatorChar + ".minecraft";
+		private static readonly string _minecraftSaveDirectory = _minecraftDirectory + System.IO.Path.DirectorySeparatorChar + "saves";
 
 		static void Main (string[] args)
 		{
@@ -504,7 +505,7 @@ namespace Generator
 
 					if(null == parameters.WorkingDirectory)
 						parameters.WorkingDirectory = parameters.LoadExisting
-														? _minecraftDirectory
+														? _minecraftSaveDirectory
 														: Environment.CurrentDirectory;
 					if(0 >= parameters.Width)
 						parameters.Width = parameters.Length;
@@ -557,15 +558,15 @@ namespace Generator
 			var generator = parameters.UseSpecificVersion
 								? GeneratorLoader.GetGenerator(parameters.GeneratorName, parameters.GeneratorVersion)
 								: GeneratorLoader.GetGenerator(parameters.GeneratorName);
-			generator.Initialize(parameters.GeneratorOptions);
 
 			var watch = new Stopwatch();
 			watch.Start();
 
 			// TODO: Implement loading
 			var world = World.Create(parameters.WorldName); // TODO: Add destination directory
-			var realm = world.CreateRealm(generator);
-			// TODO: Implement seed
+			var realm = parameters.Seed.HasValue
+				? world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Seed.Value, (int)Dimension.Normal)
+				: world.CreateRealm(generator, parameters.GeneratorOptions);
 
 			var startX = 0; // TODO: Use anchorX
 			var startZ = 0; // TODO: Use anchorZ

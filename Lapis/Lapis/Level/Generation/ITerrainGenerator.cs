@@ -20,8 +20,10 @@ namespace Lapis.Level.Generation
 		/// <summary>
 		/// Initializes the generator to use settings from an option string
 		/// </summary>
+		/// <param name="seed">Level seed used for generation</param>
 		/// <param name="options">Options string used to customize the generator</param>
-		void Initialize (string options);
+		/// <remarks>The realm is responsible for initializing the generator (calling this method).</remarks>
+		void Initialize (long seed, string options);
 
 		/// <summary>
 		/// Generates a chunk at the given coordinate

@@ -139,8 +139,9 @@ namespace FlatlandTerrainGenerator
 		/// <summary>
 		/// Initializes the generator to use settings from an option string
 		/// </summary>
+		/// <param name="seed">Level seed used for generation (does nothing for this generator)</param>
 		/// <param name="options">Options string used to customize the generator</param>
-		public void Initialize (string options)
+		public void Initialize (long seed, string options)
 		{
 			if(null != options)
 			{

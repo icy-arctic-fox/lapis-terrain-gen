@@ -70,14 +70,18 @@ namespace TestTerrainGenerator
 		/// <summary>
 		/// Initializes the generator to use settings from an option string
 		/// </summary>
+		/// <param name="seed">Level seed used for generation</param>
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
-		public void Initialize (string options)
+		public void Initialize (long seed, string options)
 		{
-			// ...
+			var generatorA = new PerlinNoiseGenerator(seed);
+			var generatorB = new SimplexNoiseGenerator(unchecked(seed + 1));
+			var selector   = new CellNoiseGenerator(seed);
+			_noise = new NoiseSelector(generatorA, generatorB, selector);
 			_noise.AddPostProcess(new RangePostProcessor(0, Chunk.Height));
 		}
 
-		private readonly NoiseGenerator _noise = new NoiseSelector(new PerlinNoiseGenerator(0), new SimplexNoiseGenerator(1), new CellNoiseGenerator(0));
+		private NoiseGenerator _noise;
 		private const double Scale = 1 / 256d;
 
 
