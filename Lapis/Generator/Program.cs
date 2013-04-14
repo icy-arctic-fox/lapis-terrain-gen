@@ -226,6 +226,9 @@ namespace Generator
 		#endregion
 		#endregion
 
+		private static readonly string _minecraftDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+															System.IO.Path.DirectorySeparatorChar + ".minecraft";
+
 		static void Main (string[] args)
 		{
 			if(null == args || 0 == args.Length || (args.Length == 1 && (HelpTag == args[0] || ExtendedHelpTag == args[0])))
@@ -319,7 +322,9 @@ namespace Generator
 						WorldName       = args[0].Trim(),
 						PopulateChunks  = true,
 						LightChunks     = true,
-						MarkAsPopulated = true
+						MarkAsPopulated = true,
+						Radius          = DefaultLength,
+						Length          = DefaultLength
 					};
 
 					for(var i = 1; i < args.Length; ++i)
@@ -328,6 +333,8 @@ namespace Generator
 						if(!String.IsNullOrWhiteSpace(tag))
 						{
 							tag = tag.Trim();
+							string stringValue;
+							int intValue;
 
 							switch(tag)
 							{
@@ -344,32 +351,76 @@ namespace Generator
 
 							case GeneratorTag:
 							case ExtendedGeneratorTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+									parameters.GeneratorName = stringValue;
 								break;
 
 							case VersionTag:
 							case ExtendedVersionTag:
-								throw new NotImplementedException();
+								if(tryGetIntParameter(args, ref i, out intValue))
+									parameters.GeneratorVersion = intValue;
 								break;
 
 							case OptionStringTag:
 							case ExtendedOptionStringTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+									parameters.GeneratorOptions = stringValue;
 								break;
 
 							case SeedTag:
 							case ExtendedSeedTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+								{
+									long seed;
+									if(!Int64.TryParse(stringValue, out seed))
+										seed = Realm.GenerateSeedFromString(stringValue);
+									parameters.Seed = seed;
+								}
 								break;
 
 							case DirectoryTag:
 							case ExtendedDirectoryTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+									parameters.WorkingDirectory = System.IO.Path.GetFullPath(stringValue);
 								break;
 
 							case SpeedTag:
 							case ExtendedSpeedTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+								{
+									stringValue = stringValue.ToLower();
+									GenerationSpeed speed;
+									switch(stringValue)
+									{
+									case "full":
+									case "normal":
+									case "default":
+										speed = GenerationSpeed.Full;
+										break;
+									case "fast":
+										speed = GenerationSpeed.Fast;
+										break;
+									case "medium":
+										speed = GenerationSpeed.Medium;
+										break;
+									case "slow":
+										speed = GenerationSpeed.Slow;
+										break;
+									case "veryslow":
+									case "very slow":
+									case "very-slow":
+									case "very_slow":
+									case "slower":
+									case "slowest":
+										speed = GenerationSpeed.VerySlow;
+										break;
+									default:
+										Console.Error.WriteLine(String.Join(" ", "Invalid generation speed option", args[i - 1], args[i], "- using default"));
+										speed = GenerationSpeed.Full;
+										break;
+									}
+									parameters.GenerationSpeed = speed;
+								}
 								break;
 
 							case OverwriteTag:
@@ -395,49 +446,147 @@ namespace Generator
 
 							case ShapeTag:
 							case ExtendedShapeTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+								{
+									stringValue = stringValue.ToLower();
+									parameters.CircularRegion = (stringValue == "circle" || stringValue == "circular" || stringValue == "round");
+								}
 								break;
 
 							case RadiusTag:
 							case ExtendedRadiusTag:
-								throw new NotImplementedException();
+								if(tryGetIntParameter(args, ref i, out intValue))
+								{
+									if(0 >= intValue)
+									{
+										Console.Error.WriteLine(String.Join(" ", "Invalid radius value", args[i - 1], args[i], "- must be a positive number; using default"));
+										intValue = DefaultLength;
+									}
+									parameters.Radius    = intValue;
+									parameters.UseRadius = true;
+								}
 								break;
 
 							case LengthTag:
 							case ExtendedLengthTag:
-								throw new NotImplementedException();
+								if(tryGetIntParameter(args, ref i, out intValue))
+								{
+									if(0 >= intValue)
+									{
+										Console.Error.WriteLine(String.Join(" ", "Invalid length value", args[i - 1], args[i], "- must be a positive number; using default"));
+										intValue = DefaultLength;
+									}
+									parameters.Length    = intValue;
+									parameters.UseRadius = false;
+								}
 								break;
 
 							case WidthTag:
 							case ExtendedWidthTag:
-								throw new NotImplementedException();
+								if(tryGetIntParameter(args, ref i, out intValue))
+								{
+									if(0 >= intValue)
+									{
+										Console.Error.WriteLine(String.Join(" ", "Invalid width value", args[i - 1], args[i], "- must be a positive number; using default"));
+										intValue = parameters.Length;
+									}
+									parameters.Width     = intValue;
+									parameters.UseRadius = false;
+								}
 								break;
 
 							case UnitsTag:
 							case ExtendedUnitsTag:
-								throw new NotImplementedException();
+								if(tryGetStringParameter(args, ref i, out stringValue))
+								{
+									stringValue = stringValue.ToLower();
+									UnitType units;
+									switch(stringValue)
+									{
+									case "block":
+									case "blocks":
+										units = UnitType.Blocks;
+										break;
+									case "chunk":
+									case "chunks":
+									case "default":
+										units = UnitType.Chunks;
+										break;
+									case "region":
+									case "regions":
+										units = UnitType.Regions;
+										break;
+									default:
+										Console.Error.WriteLine(String.Join(" ", "Invalid units option", args[i - 1], args[i], "- using default"));
+										units = UnitType.Chunks;
+										break;
+									}
+									parameters.UnitType = units;
+								}
 								break;
 
 							case XTag:
 							case ExtendedXTag:
-								throw new NotImplementedException();
+								if(tryGetIntParameter(args, ref i, out intValue))
+									parameters.AnchorX = intValue;
 								break;
 
 							case ZTag:
 							case ExtendedZTag:
-								throw new NotImplementedException();
+								if(tryGetIntParameter(args, ref i, out intValue))
+									parameters.AnchorZ = intValue;
 								break;
 
 							default:
-								Console.WriteLine("Unrecognized option " + tag);
+								Console.Error.WriteLine("Unrecognized option " + tag);
 								break;
 							}
 						}
 					}
+
+					if(null == parameters.WorkingDirectory)
+						parameters.WorkingDirectory = parameters.LoadExisting
+														? _minecraftDirectory
+														: Environment.CurrentDirectory;
+					if(0 >= parameters.Width)
+						parameters.Width = parameters.Length;
 				}
 			}
 
 			return parameters;
+		}
+
+		private static bool tryGetStringParameter (string[] args, ref int i, out string value)
+		{
+			if(args.Length > ++i)
+			{// Enough arguments left
+				if(!String.IsNullOrWhiteSpace(args[i]))
+				{
+					value = args[i].Trim();
+					return true;
+				}
+			}
+
+			// Not enough arguments
+			Console.Error.WriteLine("Missing value for option: " + args[i - 1]);
+			value = null;
+			return false;
+		}
+
+		private static bool tryGetIntParameter (string[] args, ref int i, out int value)
+		{
+			string stringValue;
+			if(tryGetStringParameter(args, ref i, out stringValue))
+			{// Got the string parameter ok
+				if(Int32.TryParse(stringValue, out value))
+					return true; // Parsed integer ok
+
+				Console.Error.WriteLine("Number expected for option: " + args[i - 1]);
+			}
+
+			// Invalid arguments
+			value = 0;
+			return false;
 		}
 
 		private static void interactiveMode ()
@@ -608,6 +757,8 @@ namespace Generator
 			public bool MarkAsPopulated { get; set; }
 
 			public bool CircularRegion { get; set; }
+
+			public bool UseRadius { get; set; }
 
 			public int Radius { get; set; }
 
