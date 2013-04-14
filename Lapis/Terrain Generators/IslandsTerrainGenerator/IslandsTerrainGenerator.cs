@@ -71,8 +71,9 @@ namespace IslandsTerrainGenerator
 		/// <summary>
 		/// Initializes the generator to use settings from an option string
 		/// </summary>
+		/// <param name="seed">Level seed used for generation</param>
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
-		public void Initialize (string options)
+		public void Initialize (long seed, string options)
 		{
 			var floorGenerator = new PerlinNoiseGenerator(100);
 			floorGenerator.AddPostProcess(new RangePostProcessor(-1.0, -0.7));

@@ -115,6 +115,92 @@ namespace Lapis.Level
 		}
 
 		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (ITerrainGenerator generator, long seed, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, generator, seed, realmId, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (ITerrainGenerator generator, string seed, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, generator, seed, realmId, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="options">Additional options used for generation</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (ITerrainGenerator generator, string options, long seed, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, generator, options, seed, realmId, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="options">Additional options used for generation</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (ITerrainGenerator generator, string options, string seed, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, generator, options, seed, realmId, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new realm in the world and adds it to the world
+		/// </summary>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="options">Additional options used for generation</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>Newly created realm</returns>
+		/// <remarks>Warning: Creating a realm with an ID that already exists will overwrite the existing realm.</remarks>
+		public Realm CreateRealm (ITerrainGenerator generator, string options, Dimension dimension = Dimension.Normal)
+		{
+			var realm = Realm.Create(this, generator, options, dimension);
+			lock(_realms)
+				_realms[realm.Id] = realm;
+			return realm;
+		}
+
+		/// <summary>
 		/// ID numbers of realms present in the world
 		/// </summary>
 		public IEnumerable<int> RealmIds

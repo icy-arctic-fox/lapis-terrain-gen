@@ -223,6 +223,8 @@ namespace Lapis.Level
 		#region Creation and loading
 		private static readonly Random _rng = new Random();
 
+		// TODO: Cleanup the parameter list for these Create methods
+
 		/// <summary>
 		/// Creates a new realm
 		/// </summary>
@@ -255,6 +257,7 @@ namespace Lapis.Level
 			_rng.NextBytes(temp);
 			var seed  = temp.ToLong();
 			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			generator.Initialize(seed, null);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
 			realm.Save();
@@ -278,8 +281,111 @@ namespace Lapis.Level
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
 			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			generator.Initialize(seed, null);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
+			realm.Save();
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new custom realm
+		/// </summary>
+		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>A new realm</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
+		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
+		internal static Realm Create (World world, ITerrainGenerator generator, string seed, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
+
+			var seedValue = GenerateSeedFromString(seed);
+			var level = new LevelData(world.Name, seedValue, generator.Name, generator.Version, generator.GeneratorOptions);
+			generator.Initialize(seedValue, null);
+
+			var realm = new Realm(world, realmId, dimension, level, generator);
+			realm.Save();
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new custom realm
+		/// </summary>
+		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="options">Additional options for the terrain generator</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>A new realm</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
+		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
+		internal static Realm Create (World world, ITerrainGenerator generator, string options, long seed, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
+
+			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			generator.Initialize(seed, options);
+
+			var realm = new Realm(world, realmId, dimension, level, generator);
+			realm.Save();
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new custom realm
+		/// </summary>
+		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="seed">Generator seed</param>
+		/// <param name="options">Additional options for the terrain generator</param>
+		/// <param name="realmId">ID number of the realm</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>A new realm</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
+		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
+		internal static Realm Create (World world, ITerrainGenerator generator, string seed, string options, int realmId, Dimension dimension = Dimension.Normal)
+		{
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
+
+			var seedValue = GenerateSeedFromString(seed);
+			var level = new LevelData(world.Name, seedValue, generator.Name, generator.Version, generator.GeneratorOptions);
+			generator.Initialize(seedValue, options);
+
+			var realm = new Realm(world, realmId, dimension, level, generator);
+			realm.Save();
+			return realm;
+		}
+
+		/// <summary>
+		/// Creates a new custom realm
+		/// </summary>
+		/// <param name="world">World that the realm belongs to</param>
+		/// <param name="generator">Terrain generator to use for the realm</param>
+		/// <param name="options">Additional options for the terrain generator</param>
+		/// <param name="dimension">Dimension type for the realm</param>
+		/// <returns>A new realm</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
+		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
+		internal static Realm Create (Level.World world, ITerrainGenerator generator, string options, Dimension dimension = Dimension.Normal)
+		{
+			if(null == generator)
+				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
+
+			var temp = new byte[sizeof(long)];
+			_rng.NextBytes(temp);
+			var seed  = temp.ToLong();
+			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			generator.Initialize(seed, null);
+
+			var realm = new Realm(world, (int)dimension, dimension, level, generator);
 			realm.Save();
 			return realm;
 		}
