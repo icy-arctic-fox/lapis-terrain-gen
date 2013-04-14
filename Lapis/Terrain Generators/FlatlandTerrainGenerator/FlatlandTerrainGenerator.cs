@@ -19,10 +19,10 @@ namespace FlatlandTerrainGenerator
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
-		/// <remarks>The name of this generator is "Flatland Terrain Generator".</remarks>
+		/// <remarks>The name of this generator is "Flat".</remarks>
 		public string Name
 		{
-			get { return "Flatland Terrain Generator"; }
+			get { return "Flat"; }
 		}
 
 		/// <summary>

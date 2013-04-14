@@ -18,10 +18,10 @@ namespace IslandsTerrainGenerator
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
-		/// <remarks>The name of this generator is "Islands Terrain Generator".</remarks>
+		/// <remarks>The name of this generator is "Islands".</remarks>
 		public string Name
 		{
-			get { return "Islands Terrain Generator"; }
+			get { return "Islands"; }
 		}
 
 		/// <summary>
