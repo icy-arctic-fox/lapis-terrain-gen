@@ -13,7 +13,7 @@ namespace Generator
 		/// <summary>
 		/// Default terrain generator to run
 		/// </summary>
-		private const string DefaultGenerator = "Test Terrain Generator";
+		private const string DefaultGenerator = "Test";
 
 		/// <summary>
 		/// Default length (and width) of the region to generate
