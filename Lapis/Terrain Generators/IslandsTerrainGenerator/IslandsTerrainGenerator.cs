@@ -112,8 +112,16 @@ namespace IslandsTerrainGenerator
 						var height = _noise.GenerateNoise(x, z, 0) + Raise;
 						var by = (byte)height;
 
-						for(var i = by; i < SeaLevel; ++i)
-							column[i] = BlockType.Water;
+						if(by < SeaLevel)
+						{// Ocean
+							for(var i = by; i < SeaLevel; ++i)
+								column[i] = BlockType.Water;
+							// TODO: Set biome to ocean
+						}
+						else
+						{
+							// TODO: Set biome type to beach
+						}
 
 						var sandStart = (byte)Math.Max(1, height - 5);
 						var dirtStart = (byte)Math.Max(sandStart - 1, sandStart - 7);
