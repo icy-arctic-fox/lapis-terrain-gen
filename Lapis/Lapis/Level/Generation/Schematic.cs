@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Ionic.Zlib;
+using Lapis.Blocks;
 using Lapis.IO;
 using Lapis.IO.NBT;
 
@@ -11,10 +12,34 @@ namespace Lapis.Level.Generation
 	/// </summary>
 	public class Schematic : ISerializable
 	{
-		public Schematic (int width, int height, int length)
-		{
+		private readonly BlockType[] _blocks;
+		private readonly byte[] _data;
 
+		// TODO: Implement tile entities
+
+		public Schematic (int length, int height, int width)
+		{
+			var arrSize = length * height * width;
+			_blocks = new BlockType[arrSize];
+			_data   = new byte[arrSize];
 		}
+
+		#region Properties
+		public int Length
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public int Height
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public int Width
+		{
+			get { throw new NotImplementedException(); }
+		}
+		#endregion
 
 		#region Save and load
 		private const string DefaultNodeName = "Schematic";
@@ -36,11 +61,6 @@ namespace Lapis.Level.Generation
 			using(var gzStream = new GZipStream(s, CompressionMode.Decompress))
 			using(var br = new EndianBinaryReader(gzStream, Endian.Big))
 				return new Schematic(Node.ReadFromStream(br));
-		}
-
-		private Schematic (Node node)
-		{
-			throw new NotImplementedException();
 		}
 
 		public void Save (string filename)
@@ -65,10 +85,29 @@ namespace Lapis.Level.Generation
 			node.WriteToStream(bw);
 		}
 
-		public Node ConstructNbtNode (string name)
+		#region Serialization
+		protected Schematic (Node node)
 		{
 			throw new NotImplementedException();
 		}
+
+		#region Validation
+		#endregion
+
+		#region Nbt Construction
+		public Node ConstructNbtNode (string name)
+		{
+			var node = new CompoundNode(name);
+			ConstructNode(node);
+			return node;
+		}
+
+		protected virtual void ConstructNode (CompoundNode node)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+		#endregion
 		#endregion
 	}
 }
