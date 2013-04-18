@@ -400,14 +400,16 @@ namespace Lapis.Level.Data
 		/// <param name="by">Y-position of the block</param>
 		/// <param name="bz">Z-position of the block</param>
 		/// <param name="block">Block information</param>
-		public void SetBlock (byte bx, byte by, byte bz, BlockInformation block)
+		/// <param name="skyLight">Amount of sky light</param>
+		/// <param name="blockLight">Amount of block light</param>
+		public void SetBlock (byte bx, byte by, byte bz, Block block, byte skyLight = 0, byte blockLight = 0)
 		{
 			var index = ChunkData.CalculateBlockIndex(bx, by, bz);
 			_modified = true;
 			_blockTypes[index] = block.Type;
 			_blockData[index]  = block.Data;
-			_skyLight[index]   = block.SkyLight;
-			_blockLight[index] = block.BlockLight;
+			_skyLight[index]   = skyLight;
+			_blockLight[index] = blockLight;
 		}
 		#endregion
 

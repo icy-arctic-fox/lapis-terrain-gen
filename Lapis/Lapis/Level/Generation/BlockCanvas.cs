@@ -13,7 +13,7 @@ namespace Lapis.Level.Generation
 	/// <remarks>This class is not thread-safe.</remarks>
 	public class BlockCanvas : IDisposable
 	{
-		private readonly Dictionary<XYZCoordinate, BlockInformation> _blocks = new Dictionary<XYZCoordinate, BlockInformation>();
+		private readonly Dictionary<XYZCoordinate, Block> _blocks = new Dictionary<XYZCoordinate, Block>();
 
 		private int _minX, _minY, _minZ, _maxX, _maxY, _maxZ;
 
@@ -98,45 +98,6 @@ namespace Lapis.Level.Generation
 		/// <param name="x">X-position</param>
 		/// <param name="y">Y-position</param>
 		/// <param name="z">Z-position</param>
-		/// <param name="type">Type to set the block on the canvas to</param>
-		public void SetBlock (int x, int y, int z, BlockType type)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Sets a block on the canvas
-		/// </summary>
-		/// <param name="x">X-position</param>
-		/// <param name="y">Y-position</param>
-		/// <param name="z">Z-position</param>
-		/// <param name="type">Type to set the block on the canvas to</param>
-		/// <param name="data">Data to set for the block on the canvas</param>
-		/// <param name="skyLight">Amount of sky light</param>
-		/// <param name="blockLight">Amount of block light</param>
-		public void SetBlock (int x, int y, int z, BlockType type, byte data, byte skyLight, byte blockLight)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Sets a block on the canvas
-		/// </summary>
-		/// <param name="x">X-position</param>
-		/// <param name="y">Y-position</param>
-		/// <param name="z">Z-position</param>
-		/// <param name="info">Block information to set</param>
-		public void SetBlock (int x, int y, int z, BlockInformation info)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Sets a block on the canvas
-		/// </summary>
-		/// <param name="x">X-position</param>
-		/// <param name="y">Y-position</param>
-		/// <param name="z">Z-position</param>
 		/// <param name="block">Block information to set</param>
 		public void SetBlock (int x, int y, int z, Block block)
 		{
@@ -192,9 +153,9 @@ namespace Lapis.Level.Generation
 			}
 		}
 
-		private Dictionary<Chunk, List<Tuple<XYZCoordinate, BlockInformation>>> constructChunkList (Chunk c, int xOff, int yOff, int zOff)
+		private Dictionary<Chunk, List<Tuple<XYZCoordinate, Block>>> constructChunkList (Chunk c, int xOff, int yOff, int zOff)
 		{
-			var chunks = new Dictionary<Chunk, List<Tuple<XYZCoordinate, BlockInformation>>>();
+			var chunks = new Dictionary<Chunk, List<Tuple<XYZCoordinate, Block>>>();
 			foreach(var item in _blocks)
 			{
 				var coord = item.Key;
@@ -223,13 +184,13 @@ namespace Lapis.Level.Generation
 					}
 
 					var chunk = c.GetRelativeChunk(cxOff, czOff);
-					List<Tuple<XYZCoordinate, BlockInformation>> blocks;
+					List<Tuple<XYZCoordinate, Block>> blocks;
 					if(chunks.ContainsKey(chunk))
 						blocks = chunks[chunk];
 					else
-						chunks[chunk] = blocks = new List<Tuple<XYZCoordinate, BlockInformation>>();
+						chunks[chunk] = blocks = new List<Tuple<XYZCoordinate, Block>>();
 					var chunkCoord = new XYZCoordinate(bx, by, bz);
-					var tuple = new Tuple<XYZCoordinate, BlockInformation>(chunkCoord, block);
+					var tuple = new Tuple<XYZCoordinate, Block>(chunkCoord, block);
 					blocks.Add(tuple);
 				}
 			}

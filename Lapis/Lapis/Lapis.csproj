@@ -269,7 +269,6 @@
     <Compile Include="Level\Chunk.cs" />
     <Compile Include="Level\ChunkRef.cs" />
     <Compile Include="Level\Data\BiomeData.cs" />
-    <Compile Include="Level\Data\BlockInformation.cs" />
     <Compile Include="Level\Data\ChunkData.cs" />
     <Compile Include="Level\Data\HeightData.cs" />
     <Compile Include="Level\Data\IModifiable.cs" />

@@ -319,7 +319,7 @@ namespace Lapis.Level.Data
 		/// <param name="by">Y-position of the block</param>
 		/// <param name="bz">Z-position of the block</param>
 		/// <param name="block">Block information</param>
-		public void SetBlock (byte bx, byte by, byte bz, BlockInformation block)
+		public void SetBlock (byte bx, byte by, byte bz, Block block)
 		{
 			byte sy;
 			by = CalculateSectionIndex(by, out sy);
