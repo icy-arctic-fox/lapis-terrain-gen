@@ -559,50 +559,56 @@ namespace Generator
 								? GeneratorLoader.GetGenerator(parameters.GeneratorName, parameters.GeneratorVersion)
 								: GeneratorLoader.GetGenerator(parameters.GeneratorName);
 
-			var watch = new Stopwatch();
-			watch.Start();
-
-			// TODO: Implement loading
-			var world = World.Create(parameters.WorldName); // TODO: Add destination directory
-			var realm = parameters.Seed.HasValue
-				? world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Seed.Value, (int)Dimension.Normal)
-				: world.CreateRealm(generator, parameters.GeneratorOptions);
-
-			var startX = 0; // TODO: Use anchorX
-			var startZ = 0; // TODO: Use anchorZ
-			int countX, countZ;
-
-			// TODO: Implement units
-			if(parameters.UseRadius)
+			if(null != generator)
 			{
-				countX = parameters.Radius * 2;
-				countZ = parameters.Radius * 2;
+				var watch = new Stopwatch();
+				watch.Start();
+
+				// TODO: Implement loading
+				var world = World.Create(parameters.WorldName); // TODO: Add destination directory
+				var realm = parameters.Seed.HasValue
+								? world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Seed.Value, (int)Dimension.Normal)
+								: world.CreateRealm(generator, parameters.GeneratorOptions);
+
+				var startX = 0; // TODO: Use anchorX
+				var startZ = 0; // TODO: Use anchorZ
+				int countX, countZ;
+
+				// TODO: Implement units
+				if(parameters.UseRadius)
+				{
+					countX = parameters.Radius * 2;
+					countZ = parameters.Radius * 2;
+				}
+				else
+				{
+					countX = parameters.Length;
+					countZ = parameters.Width;
+				}
+
+				var bulkGenerator = new BulkGenerator(realm, parameters.GenerationSpeed);
+
+				ulong totalChunks;
+				if(parameters.CircularRegion)
+					throw new NotImplementedException();
+				else
+					totalChunks = bulkGenerator.GenerateRectange(startX, startZ, countX, countZ, parameters.PopulateChunks, parameters.OverwriteChunks);
+
+				// TODO: Implement population flags (no lighting, empty population, no population)
+
+				world.Save();
+
+				watch.Stop();
+				var timeTaken = watch.Elapsed;
+				var rate = totalChunks / timeTaken.TotalSeconds;
+
+				Console.WriteLine("Total time:   " + timeTaken);
+				Console.WriteLine("Total chunks: " + totalChunks);
+				Console.WriteLine("Average rate: " + rate + " chunks/sec.");
 			}
+
 			else
-			{
-				countX = parameters.Length;
-				countZ = parameters.Width;
-			}
-
-			ulong totalChunks;
-			if(parameters.CircularRegion)
-				throw new NotImplementedException();
-			else
-				totalChunks = realm.GenerateRectange(startX, startZ, countX, countZ, parameters.PopulateChunks, parameters.OverwriteChunks);
-
-			// TODO: Implement speed options
-
-			// TODO: Implement population flags (no lighting, empty population, no population)
-
-			world.Save();
-
-			watch.Stop();
-			var timeTaken = watch.Elapsed;
-			var rate = totalChunks / timeTaken.TotalSeconds;
-
-			Console.WriteLine("Total time:   " + timeTaken);
-			Console.WriteLine("Total chunks: " + totalChunks);
-			Console.WriteLine("Average rate: " + rate + " chunks/sec.");
+				Console.Error.WriteLine("No terrain generator named '" + parameters.GeneratorName + "' was found.");
 		}
 
 		private static void displayHelp ()
