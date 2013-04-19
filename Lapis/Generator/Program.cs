@@ -264,6 +264,7 @@ namespace Generator
 #endif
 		}
 
+		#region Parameter input
 		private static GenerationParameters getParameters (string[] args)
 		{
 			GenerationParameters parameters = null;
@@ -547,6 +548,7 @@ namespace Generator
 			value = 0;
 			return false;
 		}
+		#endregion
 
 		private static void interactiveMode ()
 		{
@@ -592,7 +594,11 @@ namespace Generator
 				if(parameters.CircularRegion)
 					throw new NotImplementedException();
 				else
-					totalChunks = bulkGenerator.GenerateRectange(startX, startZ, countX, countZ, parameters.PopulateChunks, parameters.OverwriteChunks);
+				{
+					totalChunks = bulkGenerator.GenerateRectange(startX, startZ, countX, countZ, parameters.OverwriteChunks);
+					if(parameters.PopulateChunks)
+						bulkGenerator.PopulateRectangle(startX, startZ, countX, countZ);
+				}
 
 				// TODO: Implement population flags (no lighting, empty population, no population)
 

@@ -75,6 +75,7 @@ namespace Lapis.Level.Generation
 			set { _speed = value; }
 		}
 
+		#region Terrain generation
 		/// <summary>
 		/// Generates a rectangular region of chunks
 		/// </summary>
@@ -82,16 +83,15 @@ namespace Lapis.Level.Generation
 		/// <param name="startZ">Z-position of the chunk to start generating at</param>
 		/// <param name="countX">Number of chunks to generate along the x-axis</param>
 		/// <param name="countZ">Number of chunks to generate along the z-axis</param>
-		/// <param name="populate">Whether or not to populate the chunks</param>
 		/// <param name="overwrite">Whether or not to overwrite existing chunks</param>
 		/// <returns>The number of chunks generated</returns>
 		/// <remarks>This method will block until all of the chunks have been generated.</remarks>
-		public ulong GenerateRectange (int startX, int startZ, int countX, int countZ, bool populate = true, bool overwrite = false)
+		public ulong GenerateRectange (int startX, int startZ, int countX, int countZ, bool overwrite = false)
 		{
 			if(countX <= 0 || countZ <= 0)
 				return 0;
 
-			var genList  = new WaitList();
+			var waitList = new WaitList();
 			var unitSize = _generationCount[(int)_speed];
 
 			var lastX = startX + countX;
@@ -103,39 +103,13 @@ namespace Lapis.Level.Generation
 				{
 					var xSize  = Math.Min(unitSize, lastX - cx);
 					var zSize  = Math.Min(unitSize, lastZ - cz);
-					var handle = genList.NextHandle();
+					var handle = waitList.NextHandle();
 					var work   = new GenerationUnit(cx, cz, xSize, zSize, overwrite, handle);
 					PriorityThreadPool.QueueUserWorkItem(doGenerationWork, work);
 				}
 
-			genList.WaitAll();
+			waitList.WaitAll();
 			_realm.FlushChunks();
-
-			if(populate)
-			{
-				var populators = _realm.TerrainGenerator.Populators;
-				if(null != populators)
-				{
-					foreach(var populator in populators)
-					{
-						var popList = new WaitList();
-
-						for(var cx = startX; cx < lastX; cx += unitSize)
-							for(var cz = startZ; cz < lastZ; cz += unitSize)
-							{
-								var xSize  = Math.Min(unitSize, lastX - cx);
-								var zSize  = Math.Min(unitSize, lastZ - cz);
-								var handle = popList.NextHandle();
-								var work   = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
-								PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
-							}
-
-						popList.WaitAll();
-					}
-
-					// TODO: Mark chunks as populated
-				}
-			}
 
 			_realm.Initialized = true; // TODO: Move this to a better place
 			_realm.Save();
@@ -159,6 +133,52 @@ namespace Lapis.Level.Generation
 				work.Done();
 			}
 		}
+		#endregion
+
+		#region Terrain population
+		/// <summary>
+		/// Populates a rectangular region within the realm
+		/// </summary>
+		/// <param name="startX">X-position of the chunk to start generating at</param>
+		/// <param name="startZ">Z-position of the chunk to start generating at</param>
+		/// <param name="countX">Number of chunks to generate along the x-axis</param>
+		/// <param name="countZ">Number of chunks to generate along the z-axis</param>
+		/// <remarks>This method will block until all of the chunks have been generated.</remarks>
+		public void PopulateRectangle (int startX, int startZ, int countX, int countZ)
+		{
+			if(countX <= 0 || countZ <= 0)
+				return;
+
+			var unitSize = _generationCount[(int)_speed];
+
+			var lastX = startX + countX;
+			var lastZ = startZ + countZ;
+
+			var populators = _realm.TerrainGenerator.Populators;
+			if(null != populators)
+			{
+				foreach(var populator in populators)
+				{
+					var waitList = new WaitList();
+
+					for(var cx = startX; cx < lastX; cx += unitSize)
+						for(var cz = startZ; cz < lastZ; cz += unitSize)
+						{
+							var xSize  = Math.Min(unitSize, lastX - cx);
+							var zSize  = Math.Min(unitSize, lastZ - cz);
+							var handle = waitList.NextHandle();
+							var work   = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
+							PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
+						}
+
+					waitList.WaitAll();
+				}
+
+				// TODO: Mark chunks as populated
+			}
+
+			_realm.Save();
+		}
 
 		private void doPopulationWork (object state)
 		{
@@ -181,7 +201,9 @@ namespace Lapis.Level.Generation
 				work.Done();
 			}
 		}
+		#endregion
 
+		#region Units of work
 		/// <summary>
 		/// A unit of work
 		/// </summary>
@@ -235,6 +257,7 @@ namespace Lapis.Level.Generation
 				Populator = populator;
 			}
 		}
+		#endregion
 	}
 
 	/// <summary>
