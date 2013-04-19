@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using Lapis.Level;
 using Lapis.Level.Generation.Population;
+using Lapis.Threading;
 
-namespace Lapis.Threading
+namespace Lapis.Level.Generation
 {
 	/// <summary>
 	/// Manages generating chunks in bulk
