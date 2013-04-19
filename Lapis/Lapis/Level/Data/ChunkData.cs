@@ -490,11 +490,7 @@ namespace Lapis.Level.Data
 		private Node constructSectionsNode ()
 		{
 			var chunkSections = new ListNode(SectionsNodeName, NodeType.Compound); // This is bad to assume the node type
-			var sectionCount  = _heightMap.Maximum / Chunk.SectionHeight;
-			if(0 < _heightMap.Maximum % Chunk.SectionHeight)
-				++sectionCount;
-			if(sectionCount > Chunk.SectionCount)
-				sectionCount = Chunk.SectionCount;
+			var sectionCount  = CalculateSectionCount(_heightMap.Maximum);
 			for(var y = 0; y < sectionCount; ++y)
 				chunkSections.Add(_sections[y].ConstructNbtNode(ChunkSectionData.DefaultNodeName));
 			return chunkSections;
@@ -649,6 +645,24 @@ namespace Lapis.Level.Data
 		{
 			by = CalculateSectionIndex(by, out sy);
 			return CalculateBlockIndex(bx, by, bz);
+		}
+
+		/// <summary>
+		/// Calculates the number of sections there are needed to satisfy a height
+		/// </summary>
+		/// <param name="height">Height needed</param>
+		/// <returns>Number of sections</returns>
+		/// <remarks>The height value should be between 0 and 256 (a height-map value).</remarks>
+		public static int CalculateSectionCount (int height)
+		{
+			var sectionCount = height / Chunk.SectionHeight;
+			if(0 < height % Chunk.SectionHeight)
+				++sectionCount;
+			if(sectionCount > Chunk.SectionCount)
+				sectionCount = Chunk.SectionCount;
+			else if(0 > sectionCount)
+				sectionCount = 0;
+			return sectionCount;
 		}
 
 		/// <summary>

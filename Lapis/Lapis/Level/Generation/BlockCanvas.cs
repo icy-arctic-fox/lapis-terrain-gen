@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lapis.Blocks;
-using Lapis.Level.Data;
 using Lapis.Spatial;
 
 namespace Lapis.Level.Generation
