@@ -131,7 +131,7 @@ namespace FlatlandTerrainGenerator
 		/// <summary>
 		/// List of chunk populators used to fill chunks after generation
 		/// </summary>
-		public IEnumerable<IChunkPopulator> Populators
+		public ICollection<IChunkPopulator> Populators
 		{
 			get { return null; }
 		}

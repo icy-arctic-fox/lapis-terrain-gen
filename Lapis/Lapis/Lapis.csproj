@@ -279,6 +279,8 @@
     <Compile Include="Level\Generation\BlockCanvas.cs" />
     <Compile Include="Level\Generation\ChunkBuilder.cs" />
     <Compile Include="Level\Data\ChunkSectionData.cs" />
+    <Compile Include="Level\Generation\PopulationProgressEventArgs.cs" />
+    <Compile Include="Level\Generation\GenerationProgressEventArgs.cs" />
     <Compile Include="Level\Generation\IBlockApplicator.cs" />
     <Compile Include="Level\Generation\Noise\CellNoiseGenerator.cs" />
     <Compile Include="Level\Generation\Noise\ConstantValueNoiseGenerator.cs" />
@@ -316,6 +318,7 @@
     <Compile Include="Threading\PriorityThreadPool.cs" />
     <Compile Include="Utility\ByteArrayUtility.cs" />
     <Compile Include="Utility\Cache.cs" />
+    <Compile Include="Utility\DelegateUtility.cs" />
     <Compile Include="Utility\EndianUtility.cs" />
     <Compile Include="Utility\NibbleArray.cs" />
     <Compile Include="Utility\StringManipulation.cs" />

@@ -2,6 +2,7 @@
 using System.Threading;
 using Lapis.Level.Generation.Population;
 using Lapis.Threading;
+using Lapis.Utility;
 
 namespace Lapis.Level.Generation
 {
@@ -36,6 +37,9 @@ namespace Lapis.Level.Generation
 
 		private readonly Realm _realm;
 		private volatile GenerationSpeed _speed;
+		private ulong _completed, _total;
+		private int _populatorsDone, _populatorCount;
+		private readonly object _locker = new object();
 
 		/// <summary>
 		/// Creates a new bulk generator
@@ -75,6 +79,18 @@ namespace Lapis.Level.Generation
 			set { _speed = value; }
 		}
 
+		#region Progress events
+		/// <summary>
+		/// Triggered when progress is made generating chunks
+		/// </summary>
+		public event EventHandler<GenerationProgressEventArgs> GenerationProgress;
+
+		/// <summary>
+		/// Triggered when progress is made populating chunks
+		/// </summary>
+		public event EventHandler<PopulationProgressEventArgs> PopulationProgress;
+		#endregion
+
 		#region Terrain generation
 		/// <summary>
 		/// Generates a rectangular region of chunks
@@ -98,21 +114,30 @@ namespace Lapis.Level.Generation
 			var lastZ = startZ + countZ;
 			var totalChunks = (ulong)countX * (ulong)countZ;
 
-			for(var cx = startX; cx < lastX; cx += unitSize)
-				for(var cz = startZ; cz < lastZ; cz += unitSize)
+			lock(_realm)
+			{// Lock to prevent other threads from interfering
+				lock(_locker)
 				{
-					var xSize  = Math.Min(unitSize, lastX - cx);
-					var zSize  = Math.Min(unitSize, lastZ - cz);
-					var handle = waitList.NextHandle();
-					var work   = new GenerationUnit(cx, cz, xSize, zSize, overwrite, handle);
-					PriorityThreadPool.QueueUserWorkItem(doGenerationWork, work);
+					_completed = 0;
+					_total = totalChunks;
 				}
 
-			waitList.WaitAll();
-			_realm.FlushChunks();
+				for(var cx = startX; cx < lastX; cx += unitSize)
+					for(var cz = startZ; cz < lastZ; cz += unitSize)
+					{
+						var xSize  = Math.Min(unitSize, lastX - cx);
+						var zSize  = Math.Min(unitSize, lastZ - cz);
+						var handle = waitList.NextHandle();
+						var work   = new GenerationUnit(cx, cz, xSize, zSize, overwrite, handle);
+						PriorityThreadPool.QueueUserWorkItem(doGenerationWork, work);
+					}
 
-			_realm.Initialized = true; // TODO: Move this to a better place
-			_realm.Save();
+				waitList.WaitAll();
+				_realm.FlushChunks();
+
+				_realm.Initialized = true; // TODO: Move this to a better place
+				_realm.Save();
+			}
 			return totalChunks;
 		}
 
@@ -130,8 +155,26 @@ namespace Lapis.Level.Generation
 					for(var z = work.StartZ; z < lastZ; ++z)
 						_realm.GenerateChunk(x, z, work.Overwrite);
 				Thread.Sleep(_generationDelay[(int)_speed]);
+
+				ulong completed, total;
+				lock(_locker)
+				{
+					completed = _completed = _completed + ((ulong)work.CountX * (ulong)work.CountZ);
+					total     = _total;
+				}
+				var args = new GenerationProgressEventArgs(_realm, work.StartX, work.StartZ, work.CountX, work.CountZ, completed, total);
+				OnGenerationProgress(args);
 				work.Done();
 			}
+		}
+
+		/// <summary>
+		/// Triggers the GenerationProgress event
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		protected virtual void OnGenerationProgress (GenerationProgressEventArgs args)
+		{
+			GenerationProgress.TriggerEvent(this, args);
 		}
 		#endregion
 
@@ -143,7 +186,7 @@ namespace Lapis.Level.Generation
 		/// <param name="startZ">Z-position of the chunk to start generating at</param>
 		/// <param name="countX">Number of chunks to generate along the x-axis</param>
 		/// <param name="countZ">Number of chunks to generate along the z-axis</param>
-		/// <remarks>This method will block until all of the chunks have been generated.</remarks>
+		/// <remarks>This method will block until all of the chunks have been populated.</remarks>
 		public void PopulateRectangle (int startX, int startZ, int countX, int countZ)
 		{
 			if(countX <= 0 || countZ <= 0)
@@ -153,31 +196,44 @@ namespace Lapis.Level.Generation
 
 			var lastX = startX + countX;
 			var lastZ = startZ + countZ;
+			var totalChunks = (ulong)countX * (ulong)countZ;
 
-			var populators = _realm.TerrainGenerator.Populators;
-			if(null != populators)
-			{
-				foreach(var populator in populators)
+			lock(_realm)
+			{// Lock to prevent other threads from interfering
+				lock(_locker)
 				{
-					var waitList = new WaitList();
-
-					for(var cx = startX; cx < lastX; cx += unitSize)
-						for(var cz = startZ; cz < lastZ; cz += unitSize)
-						{
-							var xSize  = Math.Min(unitSize, lastX - cx);
-							var zSize  = Math.Min(unitSize, lastZ - cz);
-							var handle = waitList.NextHandle();
-							var work   = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
-							PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
-						}
-
-					waitList.WaitAll();
+					_completed = 0;
+					_total     = totalChunks;
 				}
 
-				// TODO: Mark chunks as populated
-			}
+				var populators = _realm.TerrainGenerator.Populators;
+				if(null != populators)
+				{
+					_populatorCount = populators.Count;
+					_populatorsDone = 0;
+					foreach(var populator in populators)
+					{
+						var waitList = new WaitList();
 
-			_realm.Save();
+						for(var cx = startX; cx < lastX; cx += unitSize)
+							for(var cz = startZ; cz < lastZ; cz += unitSize)
+							{
+								var xSize  = Math.Min(unitSize, lastX - cx);
+								var zSize  = Math.Min(unitSize, lastZ - cz);
+								var handle = waitList.NextHandle();
+								var work   = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
+								PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
+							}
+
+						waitList.WaitAll();
+						++_populatorsDone;
+					}
+
+					// TODO: Mark chunks as populated
+				}
+
+				_realm.Save();
+			}
 		}
 
 		private void doPopulationWork (object state)
@@ -198,8 +254,26 @@ namespace Lapis.Level.Generation
 						populator.PopulateChunk(chunk);
 					}
 				Thread.Sleep(_generationDelay[(int)_speed]);
+
+				ulong completed, total;
+				lock(_locker)
+				{
+					completed = _completed = _completed + ((ulong)work.CountX * (ulong)work.CountZ);
+					total     = _total;
+				}
+				var args = new PopulationProgressEventArgs(_realm, work.StartX, work.StartZ, work.CountX, work.CountZ, completed, total, populator.Name, _populatorsDone, _populatorCount);
+				OnPopulationProgress(args);
 				work.Done();
 			}
+		}
+
+		/// <summary>
+		/// Triggers the PopulationProgress event
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		protected virtual void OnPopulationProgress (PopulationProgressEventArgs args)
+		{
+			PopulationProgress.TriggerEvent(this, args);
 		}
 		#endregion
 

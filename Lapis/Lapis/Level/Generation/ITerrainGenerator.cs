@@ -37,6 +37,6 @@ namespace Lapis.Level.Generation
 		/// List of chunk populators used to fill chunks after generation
 		/// </summary>
 		/// <remarks>This property can return null if there aren't any populators.</remarks>
-		IEnumerable<IChunkPopulator> Populators { get; }
+		ICollection<IChunkPopulator> Populators { get; }
 	}
 }
