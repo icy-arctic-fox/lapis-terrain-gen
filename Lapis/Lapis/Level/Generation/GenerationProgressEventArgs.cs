@@ -28,9 +28,9 @@ namespace Lapis.Level.Generation
 		{
 			if(ReferenceEquals(null, realm))
 				throw new ArgumentNullException("realm", "The realm can't be null.");
-			if(0 < countX)
+			if(0 >= countX)
 				throw new ArgumentOutOfRangeException("countX", "The number of chunks processed can't be less than 1.");
-			if(0 < countZ)
+			if(0 >= countZ)
 				throw new ArgumentOutOfRangeException("countZ", "The number of chunks processed can't be less than 1.");
 			if(0 >= total)
 				throw new ArgumentOutOfRangeException("total", "The total number of chunks can't be less than 1.");
