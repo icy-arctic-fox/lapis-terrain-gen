@@ -8,7 +8,7 @@ namespace Lapis.Threading
 	/// <summary>
 	/// Manages generating chunks in bulk
 	/// </summary>
-	public static class BulkGenerator
+	public class BulkGenerator
 	{
 		#region Generation Speed Values
 		/// <summary>
@@ -34,12 +34,42 @@ namespace Lapis.Threading
 		};
 		#endregion
 
-		private static volatile GenerationSpeed _speed;
+		private readonly Realm _realm;
+		private volatile GenerationSpeed _speed;
+
+		/// <summary>
+		/// Creates a new bulk generator
+		/// </summary>
+		/// <param name="realm">Realm to generate chunks for</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="realm"/> is null</exception>
+		public BulkGenerator (Realm realm)
+		{
+			if(null == realm)
+				throw new ArgumentNullException("realm", "The realm to generate chunks for can't be null.");
+
+			_realm = realm;
+			_speed = GenerationSpeed.Full;
+		}
+
+		/// <summary>
+		/// Creates a new bulk generator
+		/// </summary>
+		/// <param name="realm">Realm to generate chunks for</param>
+		/// <param name="speed">Speed to use when generating chunks</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="realm"/> is null</exception>
+		public BulkGenerator (Realm realm, GenerationSpeed speed)
+		{
+			if(null == realm)
+				throw new ArgumentNullException("realm", "The realm to generate chunks for can't be null.");
+
+			_realm = realm;
+			_speed = speed;
+		}
 
 		/// <summary>
 		/// Speed at which to generate chunks
 		/// </summary>
-		public static GenerationSpeed Speed
+		public GenerationSpeed Speed
 		{
 			get { return _speed; }
 			set { _speed = value; }
@@ -48,7 +78,6 @@ namespace Lapis.Threading
 		/// <summary>
 		/// Generates a rectangular region of chunks
 		/// </summary>
-		/// <param name="realm">Realm to generate chunks in</param>
 		/// <param name="startX">X-position of the chunk to start generating at</param>
 		/// <param name="startZ">Z-position of the chunk to start generating at</param>
 		/// <param name="countX">Number of chunks to generate along the x-axis</param>
@@ -57,12 +86,8 @@ namespace Lapis.Threading
 		/// <param name="overwrite">Whether or not to overwrite existing chunks</param>
 		/// <returns>The number of chunks generated</returns>
 		/// <remarks>This method will block until all of the chunks have been generated.</remarks>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="realm"/> is null</exception>
-		public static ulong GenerateRectange (this Realm realm, int startX, int startZ, int countX, int countZ, bool populate = true, bool overwrite = false)
+		public ulong GenerateRectange (int startX, int startZ, int countX, int countZ, bool populate = true, bool overwrite = false)
 		{
-			if(null == realm)
-				throw new ArgumentNullException("realm", "The realm to generate chunks for can't be null.");
-
 			if(countX <= 0 || countZ <= 0)
 				return 0;
 
@@ -79,16 +104,16 @@ namespace Lapis.Threading
 					var xSize  = Math.Min(unitSize, lastX - cx);
 					var zSize  = Math.Min(unitSize, lastZ - cz);
 					var handle = genList.NextHandle();
-					var work   = new GenerationUnit(realm, cx, cz, xSize, zSize, overwrite, handle);
+					var work   = new GenerationUnit(cx, cz, xSize, zSize, overwrite, handle);
 					PriorityThreadPool.QueueUserWorkItem(doGenerationWork, work);
 				}
 
 			genList.WaitAll();
-			realm.FlushChunks();
+			_realm.FlushChunks();
 
 			if(populate)
 			{
-				var populators = realm.TerrainGenerator.Populators;
+				var populators = _realm.TerrainGenerator.Populators;
 				if(null != populators)
 				{
 					foreach(var populator in populators)
@@ -101,7 +126,7 @@ namespace Lapis.Threading
 								var xSize  = Math.Min(unitSize, lastX - cx);
 								var zSize  = Math.Min(unitSize, lastZ - cz);
 								var handle = popList.NextHandle();
-								var work   = new PopulationUnit(realm, cx, cz, xSize, zSize, populator, handle);
+								var work   = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
 								PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
 							}
 
@@ -112,12 +137,12 @@ namespace Lapis.Threading
 				}
 			}
 
-			realm.Initialized = true; // TODO: Move this to a better place
-			realm.Save();
+			_realm.Initialized = true; // TODO: Move this to a better place
+			_realm.Save();
 			return totalChunks;
 		}
 
-		private static void doGenerationWork (object state)
+		private void doGenerationWork (object state)
 		{
 			var work = state as GenerationUnit;
 			if(null != work)
@@ -125,23 +150,21 @@ namespace Lapis.Threading
 #if TRACE
 				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] Generation: " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
 #endif
-				var realm = work.Realm;
 				var lastX = work.StartX + work.CountX;
 				var lastZ = work.StartZ + work.CountZ;
 				for(var x = work.StartX; x < lastX; ++x)
 					for(var z = work.StartZ; z < lastZ; ++z)
-						realm.GenerateChunk(x, z, work.Overwrite);
+						_realm.GenerateChunk(x, z, work.Overwrite);
 				Thread.Sleep(_generationDelay[(int)_speed]);
 				work.Done();
 			}
 		}
 
-		private static void doPopulationWork (object state)
+		private void doPopulationWork (object state)
 		{
 			var work = state as PopulationUnit;
 			if(null != work)
 			{
-				var realm     = work.Realm;
 				var populator = work.Populator;
 				var lastX     = work.StartX + work.CountX;
 				var lastZ     = work.StartZ + work.CountZ;
@@ -151,7 +174,7 @@ namespace Lapis.Threading
 				for(var x = work.StartX; x < lastX; ++x)
 					for(var z = work.StartZ; z < lastZ; ++z)
 					{
-						var chunk = realm[x, z];
+						var chunk = _realm[x, z];
 						populator.PopulateChunk(chunk);
 					}
 				Thread.Sleep(_generationDelay[(int)_speed]);
@@ -164,13 +187,11 @@ namespace Lapis.Threading
 		/// </summary>
 		private abstract class WorkUnit
 		{
-			public readonly Realm Realm;
 			public readonly int StartX, StartZ, CountX, CountZ;
 			private readonly ManualResetEvent _handle;
 
-			protected WorkUnit (Realm realm, int startX, int startZ, int countX, int countZ, ManualResetEvent handle)
+			protected WorkUnit (int startX, int startZ, int countX, int countZ, ManualResetEvent handle)
 			{
-				Realm   = realm;
 				StartX  = startX;
 				StartZ  = startZ;
 				CountX  = countX;
@@ -194,8 +215,8 @@ namespace Lapis.Threading
 		{
 			public readonly bool Overwrite;
 
-			public GenerationUnit (Realm realm, int startX, int startZ, int countX, int countZ, bool overwrite, ManualResetEvent handle)
-				: base(realm, startX, startZ, countX, countZ, handle)
+			public GenerationUnit (int startX, int startZ, int countX, int countZ, bool overwrite, ManualResetEvent handle)
+				: base(startX, startZ, countX, countZ, handle)
 			{
 				Overwrite = overwrite;
 			}
@@ -208,8 +229,8 @@ namespace Lapis.Threading
 		{
 			public readonly IChunkPopulator Populator;
 
-			public PopulationUnit (Realm realm, int startX, int startZ, int countX, int countZ, IChunkPopulator populator, ManualResetEvent handle)
-				: base(realm, startX, startZ, countX, countZ, handle)
+			public PopulationUnit (int startX, int startZ, int countX, int countZ, IChunkPopulator populator, ManualResetEvent handle)
+				: base(startX, startZ, countX, countZ, handle)
 			{
 				Populator = populator;
 			}
