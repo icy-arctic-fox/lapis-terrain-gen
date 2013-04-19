@@ -307,7 +307,6 @@
     <Compile Include="Spatial\XYZCoordinate.cs" />
     <Compile Include="Spatial\XZYSection.cs" />
     <Compile Include="Level\Generation\BulkGenerator.cs" />
-    <Compile Include="Threading\GenerationSpeed.cs" />
     <Compile Include="Level\Generation\GeneratorLoader.cs" />
     <Compile Include="Level\Generation\ITerrainGenerator.cs" />
     <Compile Include="Level\Realm.cs" />
