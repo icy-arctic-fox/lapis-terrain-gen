@@ -257,6 +257,43 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
+		/// Retrieves the amount of sky light at a given coordinate
+		/// </summary>
+		/// <param name="bx">X-position of the block relative to the chunk</param>
+		/// <param name="by">Y-position of the block relative to the chunk</param>
+		/// <param name="bz">Z-position of the block relative to the chunk</param>
+		/// <returns>The amount of sky light (0 - 15)</returns>
+		public byte GetSkyLight (byte bx, byte by, byte bz)
+		{
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			return _sections[sy].GetSkyLight(bx, by, bz);
+		}
+
+		/// <summary>
+		/// Updates the amount of sky light at a given coordinate
+		/// </summary>
+		/// <param name="bx">X-position of the block relative to the chunk</param>
+		/// <param name="by">Y-position of the block relative to the chunk</param>
+		/// <param name="bz">Z-position of the block relative to the chunk</param>
+		/// <param name="amount">New sky light amount (0 - 15)</param>
+		public void SetSkyLight (byte bx, byte by, byte bz, byte amount)
+		{
+			byte sy;
+			by = CalculateSectionIndex(by, out sy);
+			_sections[sy].SetSkyLight(bx, by, bz, amount);
+		}
+
+		/// <summary>
+		/// Clears all sky light so that it's completely dark (prepares for lighting)
+		/// </summary>
+		public void ClearSkyLight ()
+		{
+			for(var i = 0; i < _sections.Length; ++i)
+				_sections[i].SkyLight.Fill(Chunk.NoBrightness);
+		}
+
+		/// <summary>
 		/// Retrieves the amount block light at a given coordinate
 		/// </summary>
 		/// <param name="bx">X-position of the block relative to the chunk</param>
@@ -285,31 +322,12 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Retrieves the amount of sky light at a given coordinate
+		/// Clears all block light so that it's completely dark (prepares for lighting)
 		/// </summary>
-		/// <param name="bx">X-position of the block relative to the chunk</param>
-		/// <param name="by">Y-position of the block relative to the chunk</param>
-		/// <param name="bz">Z-position of the block relative to the chunk</param>
-		/// <returns>The amount of sky light (0 - 15)</returns>
-		public byte GetSkyLight (byte bx, byte by, byte bz)
+		public void ClearBlockLight ()
 		{
-			byte sy;
-			by = CalculateSectionIndex(by, out sy);
-			return _sections[sy].GetSkyLight(bx, by, bz);
-		}
-
-		/// <summary>
-		/// Updates the amount of sky light at a given coordinate
-		/// </summary>
-		/// <param name="bx">X-position of the block relative to the chunk</param>
-		/// <param name="by">Y-position of the block relative to the chunk</param>
-		/// <param name="bz">Z-position of the block relative to the chunk</param>
-		/// <param name="amount">New sky light amount (0 - 15)</param>
-		public void SetSkyLight (byte bx, byte by, byte bz, byte amount)
-		{
-			byte sy;
-			by = CalculateSectionIndex(by, out sy);
-			_sections[sy].SetSkyLight(bx, by, bz, amount);
+			for(var i = 0; i < _sections.Length; ++i)
+				_sections[i].BlockLight.Fill(Chunk.NoBrightness);
 		}
 
 		/// <summary>
