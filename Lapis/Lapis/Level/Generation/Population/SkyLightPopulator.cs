@@ -63,7 +63,7 @@ namespace Lapis.Level.Generation.Population
 		{
 			lock(c)
 			{
-				// TODO: Blank out all sky light
+				c.ClearSkyLight();
 
 				for(var bx = (byte)0; bx < Chunk.Size; ++bx)
 					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
@@ -79,9 +79,9 @@ namespace Lapis.Level.Generation.Population
 						var light = Chunk.FullBrightness;
 						for(var by = blockHeight; by >= 0 && light > 0; --by)
 						{
+							c.AddSkyLight(bx, (byte)by, bz, light);
 							var block = c.GetBlock(bx, (byte)by, bz);
 							light = (byte)Math.Max(0, light - block.Opacity);
-							c.AddSkyLight(bx, (byte)by, bz, light);
 						}
 					}
 
