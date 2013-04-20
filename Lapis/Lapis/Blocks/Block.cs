@@ -40,6 +40,11 @@ namespace Lapis.Blocks
 		public abstract byte Opacity { get; }
 
 		/// <summary>
+		/// Whether or not the block diffuses light
+		/// </summary>
+		public abstract bool Diffuse { get; }
+
+		/// <summary>
 		/// Amount of block light that the block gives off (0 for none and 15 for full brightness)
 		/// </summary>
 		public abstract byte Luminance { get; }

@@ -84,6 +84,7 @@ sub createClassFile	{
 	my $physics    = ($values->{Physics}   =~ /^yes$/i) ? 'true' : 'false';
 	my $flammable  = ($values->{Flammable} =~ /^yes$/i) ? 'true' : 'false';
 	my $opacity    = int($values->{Opacity});
+	my $diffuse    = ($values->{Diffuse}   =~ /^yes$/i) ? 'true' : 'false';
 	my $luminance  = int($values->{Luminance});
 	my $resistance = $values->{'Blast Resistance'} . 'f';
 	my $meta       = ($values->{'Meta-data'} =~ /^yes$/i) ? "\n\n\t\t// TODO: Implement meta-data values" : '';
@@ -135,6 +136,14 @@ namespace Lapis.Blocks
 		public override byte Opacity
 		{
 			get { return $opacity; }
+		}
+
+		/// <summary>
+		/// Whether or not the block diffuses light
+		/// </summary>
+		public override bool Diffuse
+		{
+			get { return $diffuse; }
 		}
 
 		/// <summary>

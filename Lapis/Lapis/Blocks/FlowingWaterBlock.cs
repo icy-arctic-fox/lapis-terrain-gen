@@ -45,6 +45,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Whether or not the block diffuses light
+		/// </summary>
+		public override bool Diffuse
+		{
+			get { return true; }
+		}
+
+		/// <summary>
 		/// Amount of block light that the block gives off
 		/// </summary>
 		public override byte Luminance

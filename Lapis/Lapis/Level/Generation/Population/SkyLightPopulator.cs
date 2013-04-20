@@ -5,6 +5,19 @@ namespace Lapis.Level.Generation.Population
 	/// <summary>
 	/// Populates a chunk with sky light
 	/// </summary>
+	/// <remarks>Air blocks above the column height are filled with full brightness (15).
+	/// Blocks below under-hangs effectively become the minimum horizontal distance to the sky subtracted from the maximum brightness.
+	/// The algorithm for lighting goes as follows:
+	/// <list type="ordered">
+	/// <item>From the top of the chunk to the highest non-air block, set the sky light to 15.
+	/// Chunks that are completely empty can be skipped since they won't be saved anyways.</item>
+	/// <item>For non-air blocks, subtract the block's opacity from the current light level (15 for the top-most air block) and apply it to the current block.</item>
+	/// <item>When the bottom of the chunk or the light level is 0, stop.</item>
+	/// <item>While traversing down the column, check the surrounding columns.
+	/// Calculate the light level as: Current column's light level - 1 - neighboring block's opacity.</item>
+	/// <item>If the neighboring block has a lower light level, set it to the calculated value - do NOT add it.</item>
+	/// <item>Repeat the horizontal movement along columns until the light level is 0 or a column with a higher light level is found.</item>
+	/// </list></remarks>
 	public class SkyLightPopulator : IChunkPopulator
 	{
 		#region Meta-data
@@ -86,6 +99,8 @@ namespace Lapis.Level.Generation.Population
 							c.AddSkyLight(bx, (byte)by, bz, light);
 						}
 					}
+
+				// TODO: Account for diffuse blocks
 
 				// TODO: Add fading (for things like overhangs)
 				// Fading should go horizontal only for sky light, block light goes in all directions (verify this)
