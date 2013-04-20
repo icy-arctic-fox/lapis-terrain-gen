@@ -128,13 +128,13 @@ namespace Lapis.Level.Data
 		}
 
 		/// <summary>
-		/// Unix timestamp (in milliseconds) of the last played time
+		/// Last date and time that the world was played
 		/// </summary>
-		/// <remarks>Technically, this is the last time the level was saved.
-		/// This value is automatically updated when an NBT structure is generated (about to save).</remarks>
-		public long LastPlayed
+		/// <remarks>Technically, this is the last time the level was saved.</remarks>
+		public DateTime LastPlayed
 		{
-			get { return _lastPlayed; }
+			get { return _lastPlayed.ToDateTime(); }
+			set { _lastPlayed = value.ToLongTimestamp(); }
 		}
 
 		/// <summary>
