@@ -15,8 +15,6 @@ namespace Lapis.Level.Data
 	/// Locking for thread safety is not performed in this class. It is assumed that a higher level encases this class safely (for speed reasons).</remarks>
 	public sealed class HeightData : ISerializable, IModifiable
 	{
-		private const string DefaultNodeName = "HeightMap";
-
 		private readonly int[] _data;
 		private bool _modified;
 
@@ -133,6 +131,8 @@ namespace Lapis.Level.Data
 		}
 
 		#region Serialization
+		private const string DefaultNodeName = "HeightMap";
+
 		/// <summary>
 		/// Writes the height map to a stream
 		/// </summary>
