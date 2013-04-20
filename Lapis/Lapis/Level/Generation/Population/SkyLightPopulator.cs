@@ -1,5 +1,4 @@
 ﻿using System;
-using Lapis.Level.Data;
 
 namespace Lapis.Level.Generation.Population
 {
@@ -68,20 +67,23 @@ namespace Lapis.Level.Generation.Population
 				for(var bx = (byte)0; bx < Chunk.Size; ++bx)
 					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 					{
-						// Quickly fill air blocks
-						var blockHeight  = c.GetHighestBlockAt(bx, bz); // Index of the highest non-air block
-						var sectionCount = ChunkData.CalculateSectionCount(blockHeight + 1);
-						var maxHeight    = sectionCount * Chunk.SectionHeight; // Height (+1) of the highest air block to fill
-						for(var by = maxHeight - 1; by > blockHeight; --by)
-							c.SetSkyLight(bx, (byte)by, bz, Chunk.FullBrightness); // TODO: Add a method like SetSpan(startIndex, endIndex) to NibbleArray
+						var blockHeight = c.GetHighestBlockAt(bx, bz); // Index of the highest non-air block
+
+						if(blockHeight >= 0 || blockHeight < Chunk.Height - 1) // TODO: Should we be filling and empty column? If so, remove the first condition.
+						{// Quickly fill air blocks
+							var sectionCount = blockHeight / Chunk.SectionHeight + 1; // Number of chunk sections that contain blocks
+							var maxHeight    = sectionCount * Chunk.SectionHeight; // Height (+1) of the highest air block to fill
+							for(var by = maxHeight; by > blockHeight; --by)
+								c.SetSkyLight(bx, (byte)by, bz, Chunk.FullBrightness); // TODO: Add a method like SetSpan(startIndex, endIndex) to NibbleArray
+						}
 
 						// Reduce amount of sky light through semi-transparent blocks
 						var light = Chunk.FullBrightness;
 						for(var by = blockHeight; by >= 0 && light > 0; --by)
 						{
-							c.AddSkyLight(bx, (byte)by, bz, light);
 							var block = c.GetBlock(bx, (byte)by, bz);
 							light = (byte)Math.Max(0, light - block.Opacity);
+							c.AddSkyLight(bx, (byte)by, bz, light);
 						}
 					}
 
