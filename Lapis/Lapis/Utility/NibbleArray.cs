@@ -95,6 +95,17 @@ namespace Lapis.Utility
 		}
 
 		/// <summary>
+		/// Fills the entire nibble array with a single value
+		/// </summary>
+		/// <param name="value">Value to set each nibble to</param>
+		public void Fill (byte value)
+		{
+			value &= 0x0f;
+			var val = (byte)(value | (value << 4));
+			_data.Fill(val);
+		}
+
+		/// <summary>
 		/// Gets the contents of the array as an array of bytes
 		/// </summary>
 		/// <returns>A byte array</returns>
