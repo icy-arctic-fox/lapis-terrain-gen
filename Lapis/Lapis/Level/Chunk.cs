@@ -230,6 +230,15 @@ namespace Lapis.Level
 				_data.SetSkyLight(bx, by, bz, light);
 			}
 		}
+
+		/// <summary>
+		/// Clears all of the sky light in the chunk so that it's completely dark (prepares for lighting)
+		/// </summary>
+		public void ClearSkyLight ()
+		{
+			lock(this)
+				_data.ClearSkyLight();
+		}
 		#endregion
 
 		#region Block light
@@ -276,6 +285,15 @@ namespace Lapis.Level
 				light = (byte)Math.Min(light + amount, FullBrightness);
 				_data.SetBlockLight(bx, by, bz, light);
 			}
+		}
+
+		/// <summary>
+		/// Clears all of the block light in the chunk so that it's completely dark (prepares for lighting)
+		/// </summary>
+		public void ClearBlockLight ()
+		{
+			lock(this)
+				_data.ClearBlockLight();
 		}
 		#endregion
 
