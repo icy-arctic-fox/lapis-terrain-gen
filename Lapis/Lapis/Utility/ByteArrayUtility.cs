@@ -373,6 +373,57 @@ namespace Lapis.Utility
 		}
 
 		/// <summary>
+		/// Quickly fills an entire array of bytes with a value
+		/// </summary>
+		/// <param name="bytes">Array to fill</param>
+		/// <param name="value">Value to fill the array with</param>
+		public static void Fill (this byte[] bytes, byte value)
+		{
+			var count = bytes.Length;
+#if !DEBUG
+			unsafe
+			{
+				fixed(byte* ptr = bytes)
+				{
+					var p = ptr;
+					var intValue = value |
+								   (value << 8) |
+								   (value << 16) |
+								   (value << 24);
+#if X64
+					var stop = count / sizeof(long);
+					var longValue = intValue | (((long)intValue) << 32);
+#else
+					var stop = count / sizeof(int);
+#endif
+					for(var i = 0; i < stop; ++i)
+					{
+#if X64
+						*((long*)p) = longValue;
+						p += sizeof(long);
+					}
+					stop = count % sizeof(long);
+#else
+						*((int*)p) = intValue;
+						p += sizeof(int);
+					}
+					stop = count % sizeof(int);
+#endif
+					for(var i = 0; i < stop; ++i)
+					{
+						*p = value;
+						++p;
+					}
+				}
+			}
+#else
+			for(var i = 0; i < bytes.Length; ++i)
+				bytes[i] = value;
+#endif
+		}
+
+		#region Hashing
+		/// <summary>
 		/// Generates a hash from an array of bytes
 		/// </summary>
 		/// <param name="data">Array of bytes to hash</param>
@@ -492,6 +543,7 @@ namespace Lapis.Utility
 		{
 			return BitConverter.ToInt16(data, pos);
 		}
+		#endregion
 
 		#region Nibble
 				/// <summary>
