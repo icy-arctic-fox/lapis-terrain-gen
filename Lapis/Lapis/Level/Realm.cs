@@ -428,6 +428,7 @@ namespace Lapis.Level
 
 		private static void saveLevelData (string path, LevelData data)
 		{
+			data.LastPlayed = DateTime.UtcNow;
 			using(var fs = new FileStream(path, FileMode.Create))
 			using(var compressor = new GZipStream(fs, CompressionMode.Compress))
 			using(var bw = new EndianBinaryWriter(compressor, Endian.Big))

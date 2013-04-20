@@ -73,10 +73,17 @@ namespace Lapis.Utility
 		/// <summary>
 		/// A timestamp for the current time
 		/// </summary>
-		/// <returns>A timestamp</returns>
 		public static int Now
 		{
-			get { return ToTimestamp(DateTime.Now); }
+			get { return ToTimestamp(DateTime.UtcNow); }
+		}
+
+		/// <summary>
+		/// A long timestamp for the current time
+		/// </summary>
+		public static long LongNow
+		{
+			get { return ToLongTimestamp(DateTime.UtcNow); }
 		}
 	}
 }
