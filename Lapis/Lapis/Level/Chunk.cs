@@ -79,9 +79,9 @@ namespace Lapis.Level
 		/// <param name="by">Y-position of the block</param>
 		/// <param name="bz">Z-position of the block</param>
 		/// <returns>Block information</returns>
-		public Block this[byte bx, byte by, byte bz]
+		public BlockRef this[byte bx, byte by, byte bz]
 		{
-			get { return GetBlock(bx, by, bz); }
+			get { return GetBlockReference(bx, by, bz); }
 			set { SetBlock(bx, by, bz, value); }
 		}
 
