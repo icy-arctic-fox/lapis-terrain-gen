@@ -125,12 +125,16 @@ namespace Lapis.Level.Generation
 			if(0 >= types.Length)
 				throw new ArgumentOutOfRangeException("types", "The array of block types must have at least 1 element.");
 
-			var column = new BlockType[Chunk.Height];
+			BlockType[] column;
 			if(repeat)
+			{
+				column = new BlockType[Chunk.Height];
 				for(var i = yOff; i < column.Length; ++i)
 					column[i] = types[i % types.Length];
+			}
 			else
 			{
+				column = new BlockType[Math.Min(Chunk.Height, types.Length + yOff)];
 				var y = 0;
 				for(var i = yOff; i < column.Length && y < types.Length; ++i, ++y)
 					column[i] = types[y]; // TODO: This could be optimized
