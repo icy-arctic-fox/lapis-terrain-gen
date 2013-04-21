@@ -226,6 +226,7 @@
     <Compile Include="Blocks\TechnicalBlock.cs" />
     <Compile Include="Blocks\TNTBlock.cs" />
     <Compile Include="Blocks\TorchBlock.cs" />
+    <Compile Include="Blocks\TorchOrientation.cs" />
     <Compile Include="Blocks\TrapChestBlock.cs" />
     <Compile Include="Blocks\TrapdoorBlock.cs" />
     <Compile Include="Blocks\TreeType.cs" />
