@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Type of stone slab
+		/// </summary>
+		public SlabTexture SlabType
+		{
+			get { return (SlabTexture)(Data & 0x7); }
+		}
+
+		/// <summary>
+		/// Whether or not the slab is on the top-half of the block
+		/// </summary>
+		public bool UpsideDown
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
 		/// Creates a new stone slab block
 		/// </summary>
 		public StoneSlabBlock ()
@@ -86,6 +102,27 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public StoneSlabBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new stone slab block
+		/// </summary>
+		/// <param name="type">Type of stone slab</param>
+		public StoneSlabBlock (SlabTexture type)
+			: base((byte)type)
+		{
+			// ..
+		}
+
+		/// <summary>
+		/// Creates a new stone slab block
+		/// </summary>
+		/// <param name="type">Type of stone slab</param>
+		/// <param name="upper">Whether or not the slab is on the top-half of the block (upside-down)</param>
+		public StoneSlabBlock (SlabTexture type, bool upper)
+			: base((byte)((byte)type | (upper ? 0x8 : 0x0)))
 		{
 			// ...
 		}
