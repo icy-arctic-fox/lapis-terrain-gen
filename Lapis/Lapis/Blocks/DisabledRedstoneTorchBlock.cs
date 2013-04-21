@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Positioning of the torch
+		/// </summary>
+		public TorchOrientation Orientation
+		{
+			get { return (TorchOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new disabled redstone torch block
 		/// </summary>
 		public DisabledRedstoneTorchBlock ()
@@ -86,6 +94,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public DisabledRedstoneTorchBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new disabled redstone torch block
+		/// </summary>
+		/// <param name="orientation">Position of the torch</param>
+		public DisabledRedstoneTorchBlock (TorchOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}

@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Positioning of the torch
+		/// </summary>
+		public TorchOrientation Orientation
+		{
+			get { return (TorchOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new torch block
 		/// </summary>
 		public TorchBlock ()
@@ -86,6 +94,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public TorchBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new torch block
+		/// </summary>
+		/// <param name="orientation">Position of the torch</param>
+		public TorchBlock (TorchOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}
