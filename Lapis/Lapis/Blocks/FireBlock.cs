@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Age of the fire
+		/// </summary>
+		public byte Age
+		{
+			get { return Data; }
+		}
+
+		/// <summary>
+		/// Whether or not the fire burns forever
+		/// </summary>
+		public bool Eternal
+		{
+			get { return 0xf == Data; }
+		}
+
+		/// <summary>
 		/// Creates a new fire block
 		/// </summary>
 		public FireBlock ()
@@ -86,6 +102,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public FireBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new fire block
+		/// </summary>
+		/// <param name="eternal">Whether or not the fire burns forever</param>
+		public FireBlock (bool eternal)
+			: base((byte)(eternal ? 0xf : 0x0))
 		{
 			// ...
 		}
