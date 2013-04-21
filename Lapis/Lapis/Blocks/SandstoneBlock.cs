@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Texture that appears on the sandstone block
+		/// </summary>
+		public SandstoneTexture Texture
+		{
+			get { return (SandstoneTexture)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new sandstone block
 		/// </summary>
 		public SandstoneBlock ()
@@ -88,6 +96,26 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new sandstone block
+		/// </summary>
+		/// <param name="texture">Texture that appears on the sandstone block</param>
+		public SandstoneBlock (SandstoneTexture texture)
+			: base((byte)texture)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Different types of sandstone textures
+		/// </summary>
+		public enum SandstoneTexture : byte
+		{
+			Normal = 0x0,
+			Chiseled = 0x1,
+			Smooth = 0x2
 		}
 	}
 }
