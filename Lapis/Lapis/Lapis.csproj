@@ -228,6 +228,7 @@
     <Compile Include="Blocks\TorchBlock.cs" />
     <Compile Include="Blocks\TrapChestBlock.cs" />
     <Compile Include="Blocks\TrapdoorBlock.cs" />
+    <Compile Include="Blocks\TreeType.cs" />
     <Compile Include="Blocks\TripwireBlock.cs" />
     <Compile Include="Blocks\TripwireHookBlock.cs" />
     <Compile Include="Blocks\VinesBlock.cs" />

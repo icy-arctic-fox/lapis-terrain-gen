@@ -72,6 +72,33 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Type of tree that the leaves belong to
+		/// </summary>
+		public TreeType TreeType
+		{
+			get { return (TreeType)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// Whether or not the leaves were placed by a player
+		/// </summary>
+		/// <remarks>If the leaves were placed by a player, they won't decay.</remarks>
+		public bool PlayerPlaced
+		{
+			get { return 0x4 == (Data & 0x4); }
+		}
+
+		/// <summary>
+		/// Whether or not the leaves are about to decay
+		/// </summary>
+		/// <remarks>When true, the leaves should be checked if they need to decay.
+		/// The flag is cleared once they have been checked and don't need to decay.</remarks>
+		public bool PendingDecay
+		{
+			get { return 0x8 == (Data & 0x8); }
+		}
+
+		/// <summary>
 		/// Creates a new leaves block
 		/// </summary>
 		public LeavesBlock ()
@@ -86,6 +113,39 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public LeavesBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new leaves block
+		/// </summary>
+		/// <param name="type">Type of tree that the leaves belong to</param>
+		public LeavesBlock (TreeType type)
+			: base((byte)type)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new leaves block
+		/// </summary>
+		/// <param name="type">Type of tree that the leaves belong to</param>
+		/// <param name="playerPlaced">Whether or not the leaves were placed by a player - if true, the leaves won't decay</param>
+		public LeavesBlock (TreeType type, bool playerPlaced)
+			: base((byte)((byte)type | (playerPlaced ? 0x4 : 0x0)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new leaves block
+		/// </summary>
+		/// <param name="type">Type of tree that the leaves belong to</param>
+		/// <param name="playerPlaced">Whether or not the leaves were placed by a player - if true, the leaves won't decay</param>
+		/// <param name="pending">Whether or not the leaves need to be checked for decay</param>
+		public LeavesBlock (TreeType type, bool playerPlaced, bool pending)
+			: base((byte)((byte)type | (playerPlaced ? 0x4 : 0x0) | (pending ? 0x8 : 0x0)))
 		{
 			// ...
 		}

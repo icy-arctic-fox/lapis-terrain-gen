@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Type of tree that the wood belongs to
+		/// </summary>
+		public TreeType TreeType
+		{
+			get { return (TreeType)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// Direction that the wood is facing
+		/// </summary>
+		public WoodOrientation Orientation
+		{
+			get { return (WoodOrientation)(Data & 0xc); }
+		}
+
+		/// <summary>
 		/// Creates a new wood block
 		/// </summary>
 		public WoodBlock ()
@@ -88,6 +104,53 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood block
+		/// </summary>
+		/// <param name="type">Type of tree that the wood belongs to</param>
+		public WoodBlock (TreeType type)
+			: base((byte)type)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood block
+		/// </summary>
+		/// <param name="type">Type of tree that the wood belongs to</param>
+		/// <param name="orientation">Orientation of the wood</param>
+		public WoodBlock (TreeType type, WoodOrientation orientation)
+			: base((byte)((byte)type | (byte)orientation))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Direction that the wood is oriented
+		/// </summary>
+		public enum WoodOrientation : byte
+		{
+			/// <summary>
+			/// Standard orientation, pointing up and down
+			/// </summary>
+			Vertical = 0x0,
+
+			/// <summary>
+			/// Wood is on its side, pointing east and west
+			/// </summary>
+			EastWest = 0x4,
+
+			/// <summary>
+			/// Wood is on its side, pointing north and south
+			/// </summary>
+			NorthSouth = 0x8,
+
+			/// <summary>
+			/// No orientation - bark is all 6 sides of the block
+			/// </summary>
+			Directionless = EastWest | NorthSouth
 		}
 	}
 }
