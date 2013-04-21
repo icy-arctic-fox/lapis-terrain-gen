@@ -356,6 +356,7 @@ namespace Lapis.Level.Data
 		/// <param name="column">Column of blocks</param>
 		/// <returns>The y-value of the highest non-air block</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="column"/> is null</exception>
+		/// <remarks>If there are no non-air blocks in the column, this method will return -1.</remarks>
 		public static int FindHighestBlock (this BlockType[] column)
 		{
 			if(null == column)
@@ -364,7 +365,7 @@ namespace Lapis.Level.Data
 			for(var i = column.Length - 1; i > 0; --i)
 				if(BlockType.Air != column[i])
 					return i; // TODO: This could be optimized
-			return 0;
+			return -1;
 		}
 
 		/// <summary>

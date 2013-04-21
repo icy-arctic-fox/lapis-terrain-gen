@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Lapis.Level;
 using Lapis.Level.Generation;
-using Lapis.Threading;
 
 namespace Generator
 {
