@@ -12,7 +12,7 @@ namespace IslandsTerrainGenerator
 	/// <summary>
 	/// Generates a vast ocean with lots of islands
 	/// </summary>
-	public class IslandsTerrainGenerator : ITerrainGenerator
+	public class IslandsTerrainGenerator01 : ITerrainGenerator
 	{
 		#region Meta-data
 		/// <summary>
@@ -27,10 +27,10 @@ namespace IslandsTerrainGenerator
 		/// <summary>
 		/// Version of the generator
 		/// </summary>
-		/// <remarks>The version of this generator is 2.</remarks>
+		/// <remarks>The version of this generator is 1.</remarks>
 		public int Version
 		{
-			get { return 2; }
+			get { return 1; }
 		}
 
 		/// <summary>
@@ -85,10 +85,9 @@ namespace IslandsTerrainGenerator
 		}
 
 		private NoiseGenerator _noise;
-		private const double Scale = 1 / 128.0; // TODO: Make customizable
-		private const byte SeaLevel = 64; // TODO: Make customizable
-		private const byte Raise = 2; // TODO: Make customizable
-		// TODO: Add additional properties
+		private const double Scale = 1 / 128.0;
+		private const byte SeaLevel = 64;
+		private const byte Raise = 2;
 
 		/// <summary>
 		/// Generates a chunk at the given coordinate
@@ -113,15 +112,8 @@ namespace IslandsTerrainGenerator
 						var by = (byte)height;
 
 						if(by < SeaLevel)
-						{// Ocean
 							for(var i = by; i < SeaLevel; ++i)
 								column[i] = BlockType.Water;
-							// TODO: Set biome to ocean
-						}
-						else
-						{
-							// TODO: Set biome type to beach
-						}
 
 						var sandStart = (byte)Math.Max(1, height - 5);
 						var dirtStart = (byte)Math.Max(sandStart - 1, sandStart - 7);

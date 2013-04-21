@@ -23,6 +23,8 @@ namespace Generator
 		
 		// TODO: Add dimension option
 
+		// TODO: Add game mode option
+
 		#region Option tags
 		/// <summary>
 		/// Displays the usage/help information and exits
