@@ -7,7 +7,8 @@ namespace Lapis.Blocks
 	/// </summary>
 	/// <remarks>Instances of this class are not tied to any active chunk data.
 	/// Updating the values in this block object will not update them in the chunk.
-	/// This class should be used to retrieve block information from a chunk and construct block information before storing it in a chunk.</remarks>
+	/// This class should be used to retrieve block information from a chunk and construct block information before storing it in a chunk.
+	/// All sub-classes of this base class must be immutable.</remarks>
 	public abstract partial class Block
 	{
 		private readonly byte _data;
