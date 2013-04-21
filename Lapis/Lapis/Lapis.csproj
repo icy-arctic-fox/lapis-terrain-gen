@@ -154,6 +154,7 @@
     <Compile Include="Blocks\IceBlock.cs" />
     <Compile Include="Blocks\InactiveComparatorBlock.cs" />
     <Compile Include="Blocks\InactiveLampBlock.cs" />
+    <Compile Include="Blocks\SlabTexture.cs" />
     <Compile Include="Blocks\TileEntity.cs" />
     <Compile Include="Blocks\IronBarsBlock.cs" />
     <Compile Include="Blocks\IronBlock.cs" />

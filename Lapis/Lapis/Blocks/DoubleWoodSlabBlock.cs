@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Type of wooden slab
+		/// </summary>
+		public TreeType SlabType
+		{
+			get { return (TreeType)(Data & 0x7); }
+		}
+
+		/// <summary>
 		/// Creates a new double wood slab block
 		/// </summary>
 		public DoubleWoodSlabBlock ()
@@ -88,6 +96,16 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new double wood slab block
+		/// </summary>
+		/// <param name="type">Type of wooden slab</param>
+		public DoubleWoodSlabBlock (TreeType type)
+			: base((byte)type)
+		{
+			// ..
 		}
 	}
 }

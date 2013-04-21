@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Type of wooden slab
+		/// </summary>
+		public TreeType SlabType
+		{
+			get { return (TreeType)(Data & 0x7); }
+		}
+
+		/// <summary>
+		/// Whether or not the slab is on the top-half of the block
+		/// </summary>
+		public bool UpsideDown
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
 		/// Creates a new wood slab block
 		/// </summary>
 		public WoodSlabBlock ()
@@ -86,6 +102,27 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public WoodSlabBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood slab block
+		/// </summary>
+		/// <param name="type">Type of wooden slab</param>
+		public WoodSlabBlock (TreeType type)
+			: base((byte)type)
+		{
+			// ..
+		}
+
+		/// <summary>
+		/// Creates a new wood slab block
+		/// </summary>
+		/// <param name="type">Type of wooden slab</param>
+		/// <param name="upper">Whether or not the slab is on the top-half of the block (upside-down)</param>
+		public WoodSlabBlock (TreeType type, bool upper)
+			: base((byte)((byte)type | (upper ? 0x8 : 0x0)))
 		{
 			// ...
 		}
