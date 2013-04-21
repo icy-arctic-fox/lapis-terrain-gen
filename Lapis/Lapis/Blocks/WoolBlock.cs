@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Color of the wool
+		/// </summary>
+		public WoolColor Color
+		{
+			get { return (WoolColor)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new wool block
 		/// </summary>
 		public WoolBlock ()
@@ -88,6 +96,39 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wool block
+		/// </summary>
+		/// <param name="color">Wool color</param>
+		public WoolBlock (WoolColor color)
+			: base((byte)color)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Colors of wool available
+		/// </summary>
+		public enum WoolColor : byte
+		{
+			White     = 0x0,
+			Orange    = 0x1,
+			Magenta   = 0x2,
+			LightBlue = 0x3,
+			Yellow    = 0x4,
+			Lime      = 0x5,
+			Pink      = 0x6,
+			Gray      = 0x7,
+			LightGray = 0x8,
+			Cyan      = 0x9,
+			Purple    = 0xa,
+			Blue      = 0xb,
+			Brown     = 0xc,
+			Green     = 0xd,
+			Red       = 0xe,
+			Black     = 0xf
 		}
 	}
 }
