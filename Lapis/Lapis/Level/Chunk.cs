@@ -157,12 +157,15 @@ namespace Lapis.Level
 		{
 			BlockType type;
 			byte data;
+			IO.NBT.Node tileData;
+
 			lock(this)
 			{// TODO: This could be faster
-				type = _data.GetBlockType(bx, by, bz);
-				data = _data.GetBlockData(bx, by, bz);
+				type     = _data.GetBlockType(bx, by, bz);
+				data     = _data.GetBlockData(bx, by, bz);
+				tileData = _data.GetTileEntityData(bx, by, bz);
 			}
-			return Block.Create(type, data);
+			return Block.Create(type, data, tileData);
 		}
 
 		/// <summary>
