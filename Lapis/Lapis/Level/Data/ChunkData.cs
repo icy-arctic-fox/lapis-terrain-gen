@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lapis.Blocks;
 using Lapis.IO;
 using Lapis.IO.NBT;
+using Lapis.Spatial;
 using Lapis.Utility;
 
 namespace Lapis.Level.Data
@@ -25,8 +27,9 @@ namespace Lapis.Level.Data
 		private readonly HeightData _heightMap;
 		private bool _modified;
 
+		private readonly Dictionary<XYZCoordinate, Node> _tileEntities;
+
 		// TODO: Add TileTicks support
-		// TODO: Add TileEntities support
 
 		/// <summary>
 		/// Creates new chunk data
@@ -45,6 +48,8 @@ namespace Lapis.Level.Data
 
 			for(var i = (byte)0; i < _sections.Length; ++i)
 				_sections[i] = new ChunkSectionData(i);
+
+			 _tileEntities = new Dictionary<XYZCoordinate, Node>();
 		}
 
 		#region Properties
@@ -221,11 +226,13 @@ namespace Lapis.Level.Data
 		/// <param name="by">Y-position of the block relative to the chunk</param>
 		/// <param name="bz">Z-position of the block relative to the chunk</param>
 		/// <param name="type">New block type</param>
+		/// <remarks>Setting the block type will clear any existing tile entity data.</remarks>
 		public void SetBlockType (byte bx, byte by, byte bz, BlockType type)
 		{
 			byte sy;
 			by = CalculateSectionIndex(by, out sy);
 			_sections[sy].SetBlockType(bx, by, bz, type);
+			_tileEntities.Remove(new XYZCoordinate(bx, by, bz)); // Remove any existing data
 		}
 
 		/// <summary>
@@ -342,6 +349,27 @@ namespace Lapis.Level.Data
 			byte sy;
 			by = CalculateSectionIndex(by, out sy);
 			_sections[sy].SetBlock(bx, by, bz, block);
+
+			// Tile entities
+			var coord = new XYZCoordinate(bx, by, bz);
+			var tileBlock = block as TileEntity;
+			if(null == tileBlock)
+				_tileEntities.Remove(coord); // Remove any existing data
+			else
+				_tileEntities[coord] = tileBlock.GetNbtData(bx, by, bz);
+		}
+
+		/// <summary>
+		/// Gets the NBT node data associated with 
+		/// </summary>
+		/// <param name="bx">X-position of the block</param>
+		/// <param name="by">Y-position of the block</param>
+		/// <param name="bz">Z-position of the block</param>
+		/// <returns>An NBT node containing the extra tile entity data or null if no tile entity data exists</returns>
+		public Node GetTileEntityData (byte bx, byte by, byte bz)
+		{
+			var coord = new XYZCoordinate(bx, by, bz);
+			return _tileEntities.ContainsKey(coord) ? _tileEntities[coord] : null;
 		}
 		#endregion
 
@@ -441,6 +469,7 @@ namespace Lapis.Level.Data
 			_biomes           = validateBiomesNode(rootNode);
 			_heightMap        = validateHeightMapNode(rootNode);
 			_sections         = validateSectionsNode(rootNode);
+			_tileEntities     = validateTileEntitiesNode(rootNode);
 		}
 
 		#region NBT construction
@@ -501,8 +530,7 @@ namespace Lapis.Level.Data
 
 		private Node constructTileEntitiesNode ()
 		{
-			// TODO: Implement tile entities
-			return new ListNode(TileEntitiesNodeName, NodeType.Compound);
+			return new ListNode(TileEntitiesNodeName, NodeType.Compound, _tileEntities.Values);
 		}
 
 		private Node constructSectionsNode ()
@@ -634,6 +662,26 @@ namespace Lapis.Level.Data
 			}
 			sy = 0;
 			return null;
+		}
+
+		private static Dictionary<XYZCoordinate, Node> validateTileEntitiesNode (CompoundNode rootNode)
+		{
+			var tileEntities = new Dictionary<XYZCoordinate, Node>();
+			if(rootNode.Contains(TileEntitiesNodeName))
+			{
+				var tempNode = rootNode[TileEntitiesNodeName];
+				if(tempNode.Type == NodeType.List)
+				{
+					var listNode = (ListNode)tempNode;
+					foreach(CompoundNode node in listNode)
+					{
+						XYZCoordinate coord;
+						if(TileEntity.ValidateTileEntity(node, out coord))
+							tileEntities[coord] = node;
+					}
+				}
+			}
+			return tileEntities;
 		}
 		#endregion
 		#endregion

@@ -1,4 +1,5 @@
 ﻿using Lapis.IO.NBT;
+using Lapis.Spatial;
 
 namespace Lapis.Blocks
 {
@@ -56,6 +57,36 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="node">Node to put data in</param>
 		protected abstract void ConstructNode (Node node);
+
+		/// <summary>
+		/// Validates and NBT node for a tile entity
+		/// </summary>
+		/// <param name="node">Node to check</param>
+		/// <param name="coord">The coordinate of the tile entity</param>
+		/// <returns>True if the node is valid</returns>
+		public static bool ValidateTileEntity (Node node, out XYZCoordinate coord)
+		{
+			var tileEntityNode = node as CompoundNode;
+			if(null != tileEntityNode)
+			{
+				if(tileEntityNode.Contains(XNodeName) && tileEntityNode.Contains(YNodeName) && tileEntityNode.Contains(ZNodeName))
+				{
+					var xNode = tileEntityNode[XNodeName];
+					var yNode = tileEntityNode[YNodeName];
+					var zNode = tileEntityNode[ZNodeName];
+					if(xNode.Type == NodeType.Int && yNode.Type == NodeType.Int && zNode.Type == NodeType.Int)
+					{
+						var x = ((IntNode)xNode).Value;
+						var y = ((IntNode)yNode).Value;
+						var z = ((IntNode)zNode).Value;
+						coord = new XYZCoordinate(x, y, z);
+						return true;
+					}
+				}
+			}
+			coord = new XYZCoordinate();
+			return false;
+		}
 		#endregion
 	}
 }
