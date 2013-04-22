@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IslandsTerrainGenerator", "
 		{E4C6137F-E69C-437A-BCFA-04E407519F80} = {E4C6137F-E69C-437A-BCFA-04E407519F80}
 	EndProjectSection
 EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "Documentation\Documentation.shfbproj", "{0D1782F8-20D5-4166-A837-78EA665322B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,14 @@ Global
 		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|x64.ActiveCfg = Release|x64
 		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|x64.Build.0 = Release|x64
 		{804147A7-294A-4E43-8A0E-5781B59A1DDB}.Release|x86.ActiveCfg = Release|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D1782F8-20D5-4166-A837-78EA665322B2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
