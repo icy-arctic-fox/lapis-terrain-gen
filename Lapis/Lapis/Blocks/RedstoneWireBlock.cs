@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Strength of the current in the redstone wire
+		/// </summary>
+		public byte Strength
+		{
+			get { return Data; }
+		}
+
+		/// <summary>
 		/// Creates a new redstone wire block
 		/// </summary>
 		public RedstoneWireBlock ()
@@ -83,9 +91,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new redstone wire block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public RedstoneWireBlock (byte data)
-			: base(data)
+		/// <param name="strength">Strength of the current in the redstone wire</param>
+		public RedstoneWireBlock (byte strength)
+			: base(strength)
 		{
 			// ...
 		}
