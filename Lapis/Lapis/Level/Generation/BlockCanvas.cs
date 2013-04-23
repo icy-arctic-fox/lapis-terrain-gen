@@ -68,7 +68,7 @@ namespace Lapis.Level.Generation
 		/// <summary>
 		/// Length of the canvas along the x-axis
 		/// </summary>
-		public int Width
+		public int Length
 		{
 			get { return (0 < _blocks.Count) ? _maxX - _minX + 1 : 0; }
 		}
@@ -84,7 +84,7 @@ namespace Lapis.Level.Generation
 		/// <summary>
 		/// Length of the canvas along the z-axis
 		/// </summary>
-		public int Depth
+		public int Width
 		{
 			get { return (0 < _blocks.Count) ? _maxZ - _minZ + 1 : 0; }
 		}
