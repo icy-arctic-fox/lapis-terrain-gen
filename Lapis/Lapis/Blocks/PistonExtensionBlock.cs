@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the piston extension is facing
+		/// </summary>
+		public PistonOrientation Orientation
+		{
+			get { return (PistonOrientation)(Data & 0x7); }
+		}
+
+		/// <summary>
+		/// Whether or not the piston extension is sticky (belongs to a sticky piston)
+		/// </summary>
+		public bool Sticky
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
 		/// Creates a new piston extension block
 		/// </summary>
 		public PistonExtensionBlock ()
@@ -86,6 +102,27 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public PistonExtensionBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new piston extension block
+		/// </summary>
+		/// <param name="orientation">Direction that the piston is facing</param>
+		public PistonExtensionBlock (PistonOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new piston extension block
+		/// </summary>
+		/// <param name="orientation">Direction that the piston is facing</param>
+		/// <param name="sticky">Whether or not the piston extension is sticky (belongs to a sticky piston)</param>
+		public PistonExtensionBlock (PistonOrientation orientation, bool sticky)
+			: base((byte)((byte)orientation | (sticky ? 0x8 : 0x0)))
 		{
 			// ...
 		}

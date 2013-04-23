@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the piston is facing
+		/// </summary>
+		public PistonOrientation Orientation
+		{
+			get { return (PistonOrientation)(Data & 0x7); }
+		}
+
+		/// <summary>
+		/// Whether or not the piston is extended
+		/// </summary>
+		public bool Extended
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
 		/// Creates a new piston block
 		/// </summary>
 		public PistonBlock ()
@@ -86,6 +102,27 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public PistonBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new piston block
+		/// </summary>
+		/// <param name="orientation">Direction that the piston is facing</param>
+		public PistonBlock (PistonOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new piston block
+		/// </summary>
+		/// <param name="orientation">Direction that the piston is facing</param>
+		/// <param name="extended">Whether or not the piston is extended</param>
+		public PistonBlock (PistonOrientation orientation, bool extended)
+			: base((byte)((byte)orientation | (extended ? 0x8 : 0x0)))
 		{
 			// ...
 		}
