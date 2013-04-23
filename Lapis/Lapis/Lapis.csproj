@@ -122,6 +122,7 @@
     <Compile Include="Blocks\DisabledDiodeBlock.cs" />
     <Compile Include="Blocks\DisabledRedstoneTorchBlock.cs" />
     <Compile Include="Blocks\DispenserBlock.cs" />
+    <Compile Include="Blocks\DoorBlock.cs" />
     <Compile Include="Blocks\DoubleStoneSlabBlock.cs" />
     <Compile Include="Blocks\DoubleWoodSlabBlock.cs" />
     <Compile Include="Blocks\DragonEggBlock.cs" />

@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class IronDoorBlock : Block
+	public class IronDoorBlock : DoorBlock
 	{
 		#region Properties
 		/// <summary>
@@ -13,51 +13,11 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Whether or not the block is solid (non-solid blocks can be passed through)
-		/// </summary>
-		public override bool IsSolid
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
-		}
-
-		/// <summary>
 		/// Whether or not the block can catch fire
 		/// </summary>
 		public override bool Flammable
 		{
 			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
-		/// </summary>
-		public override byte Opacity
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Whether or not the block diffuses light
-		/// </summary>
-		public override bool Diffuse
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of block light that the block gives off
-		/// </summary>
-		public override byte Luminance
-		{
-			get { return 0; }
 		}
 
 		/// <summary>
@@ -67,12 +27,10 @@ namespace Lapis.Blocks
 		{
 			get { return 25f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
-		/// Creates a new irondoor block
+		/// Creates a new iron door block
 		/// </summary>
 		public IronDoorBlock ()
 			: base(0)
@@ -81,11 +39,32 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Creates a new irondoor block
+		/// Creates a new iron door block
 		/// </summary>
 		/// <param name="data">Additional meta-data for the block</param>
 		public IronDoorBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates an new iron door block for the top half of the door
+		/// </summary>
+		/// <param name="leftHinge">True if the hinge is on the left side of door when looking at the front</param>
+		protected IronDoorBlock (bool leftHinge)
+			: base(leftHinge)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new iron door block for the bottom half of the door
+		/// </summary>
+		/// <param name="orientation">Direction that the door is facing</param>
+		/// <param name="open">True if the door is open</param>
+		protected IronDoorBlock (DoorOrientation orientation, bool open)
+			: base(orientation, open)
 		{
 			// ...
 		}
