@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lapis.Utility
 {
@@ -205,8 +206,11 @@ namespace Lapis.Utility
 				TValue value;
 				if(TryGetValue(key, out value))
 					return value; // Already exists in cache
+
 				// Doesn't exist
+				Monitor.Exit(_cacheEntries); // Release lock while we're getting the missed entry
 				var item = missFunc(key);
+				Monitor.Enter(_cacheEntries);
 				return this[key] = item;
 			}
 		}
