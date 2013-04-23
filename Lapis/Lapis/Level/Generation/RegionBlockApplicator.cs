@@ -21,6 +21,30 @@ namespace Lapis.Level.Generation
 		private readonly Dictionary<int, Node> _tileEntities = new Dictionary<int, Node>();
 
 		/// <summary>
+		/// Size of the region along the x-axis
+		/// </summary>
+		public int Length
+		{
+			get { return _length; }
+		}
+
+		/// <summary>
+		/// Size of the region along the y-axis
+		/// </summary>
+		public int Height
+		{
+			get { return _height; }
+		}
+
+		/// <summary>
+		/// Size of the region along the z-axis
+		/// </summary>
+		public int Width
+		{
+			get { return _width; }
+		}
+
+		/// <summary>
 		/// Generates a collection of chunks that are affected by the region
 		/// </summary>
 		/// <param name="origin">Origin chunk</param>
