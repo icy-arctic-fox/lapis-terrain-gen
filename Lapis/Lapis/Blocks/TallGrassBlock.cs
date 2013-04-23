@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Type of shrub that is displayed
+		/// </summary>
+		public ShrubType Shrub
+		{
+			get { return (ShrubType)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new tall grass block
 		/// </summary>
 		public TallGrassBlock ()
@@ -88,6 +96,32 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new tall grass block
+		/// </summary>
+		/// <param name="type">Type of shrub to display</param>
+		public TallGrassBlock (ShrubType type = ShrubType.Grass)
+			: base((byte)type)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Types of tall shrubs displayed for tall grass
+		/// </summary>
+		public enum ShrubType : byte
+		{
+			/// <summary>
+			/// Identical to the Dead Bush block, but behaves like a fern
+			/// </summary>
+			/// <seealso cref="DeadBushBlock"/>
+			DeadShrub = 0x0,
+
+			Grass = 0x1,
+
+			Fern = 0x2
 		}
 	}
 }
