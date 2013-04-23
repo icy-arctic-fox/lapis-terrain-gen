@@ -110,6 +110,7 @@
     <Compile Include="Blocks\CommandBlock.cs" />
     <Compile Include="Blocks\ComparatorBlock.cs" />
     <Compile Include="Blocks\CraftingTableBlock.cs" />
+    <Compile Include="Blocks\CropBlock.cs" />
     <Compile Include="Blocks\DandelionBlock.cs" />
     <Compile Include="Blocks\DaylightSensorBlock.cs" />
     <Compile Include="Blocks\DeadBushBlock.cs" />
