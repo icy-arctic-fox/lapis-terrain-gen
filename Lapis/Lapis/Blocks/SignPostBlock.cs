@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the sign is facing
+		/// </summary>
+		public SignOrientation Orientation
+		{
+			get { return (SignOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new sign post block
 		/// </summary>
 		public SignPostBlock ()
@@ -90,6 +98,54 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new sign post block
+		/// </summary>
+		/// <param name="orientation">Additional meta-data for the block</param>
+		public SignPostBlock (SignOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Directions that the sign post can face
+		/// </summary>
+		public enum SignOrientation : byte
+		{
+			South = 0x0,
+
+			SouthSouthWest = 0x1,
+
+			SouthWest = 0x2,
+
+			WestSouthWest = 0x3,
+
+			West = 0x4,
+
+			WestNorthWest = 0x5,
+
+			NorthWest = 0x6,
+
+			NorthNorthWest = 0x7,
+
+			North = 0x8,
+
+			NorthNorthEast = 0x9,
+
+			NorthEast = 0xa,
+
+			EastNorthEast = 0xb,
+
+			East = 0xc,
+
+			EastSouthEast = 0xd,
+
+			SouthEast = 0xe,
+
+			SouthSouthEast = 0xf
 		}
 	}
 }
