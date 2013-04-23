@@ -72,6 +72,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Amount of moisture in the block
+		/// </summary>
+		public byte Moisture
+		{
+			get { return Data; }
+		}
+
+		/// <summary>
+		/// Whether or not the block is dry
+		/// </summary>
+		public bool Dry
+		{
+			get { return 0 == Data; }
+		}
+
+		/// <summary>
 		/// Creates a new farmland block
 		/// </summary>
 		public FarmlandBlock ()
@@ -83,9 +99,11 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new farmland block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public FarmlandBlock (byte data)
-			: base(data)
+		/// <param name="moisture">Amount of moisture in the farmland</param>
+		/// <remarks>When <paramref name="moisture"/> is 0, that means it is completely dry.
+		/// Values from 1 to 8 can be given based on how far away from water the block is.</remarks>
+		public FarmlandBlock (byte moisture)
+			: base(moisture)
 		{
 			// ...
 		}
