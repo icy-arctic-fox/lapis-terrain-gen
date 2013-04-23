@@ -72,6 +72,30 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the bed is facing
+		/// </summary>
+		public BedOrientation Orientation
+		{
+			get { return (BedOrientation)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// Whether or not the bed is occupied
+		/// </summary>
+		public bool Occupied
+		{
+			get { return (0x4 == (Data & 0x4)); }
+		}
+
+		/// <summary>
+		/// True if the bed is the head block, false if it's the foot block
+		/// </summary>
+		public bool Head
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
 		/// Creates a new bed block
 		/// </summary>
 		public BedBlock ()
@@ -88,6 +112,55 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new bed block
+		/// </summary>
+		/// <param name="orientation">Direction that the bed is facing</param>
+		/// <param name="head">True if the block is the head of the bed, false if it's the foot</param>
+		public BedBlock (BedOrientation orientation, bool head = true)
+			: base((byte)((byte)orientation | (head ? 0x0 : 0x8)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new bed block
+		/// </summary>
+		/// <param name="orientation">Direction that the bed is facing</param>
+		/// <param name="head">True if the block is the head of the bed, false if it's the foot</param>
+		/// <param name="occupied">Whether or not the bed is marked as occupied</param>
+		public BedBlock (BedOrientation orientation, bool head, bool occupied = false)
+			: base((byte)((byte)orientation | (head ? 0x0 : 0x8) | (occupied ? 0x4 : 0x0)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Direction that the bed can face
+		/// </summary>
+		public enum BedOrientation : byte
+		{
+			/// <summary>
+			/// Head of the bed is pointing south
+			/// </summary>
+			South = 0x0,
+
+			/// <summary>
+			/// Head of the bed is pointing west
+			/// </summary>
+			West = 0x1,
+
+			/// <summary>
+			/// Head of the bed is pointing north
+			/// </summary>
+			North = 0x2,
+
+			/// <summary>
+			/// Head of the bed is pointing east
+			/// </summary>
+			East = 0x3
 		}
 	}
 }
