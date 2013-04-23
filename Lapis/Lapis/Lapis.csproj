@@ -157,6 +157,8 @@
     <Compile Include="Blocks\InactiveLampBlock.cs" />
     <Compile Include="Blocks\PistonOrientation.cs" />
     <Compile Include="Blocks\SlabTexture.cs" />
+    <Compile Include="Blocks\StairsBlock.cs" />
+    <Compile Include="Blocks\StairsOrientation.cs" />
     <Compile Include="Blocks\TileEntity.cs" />
     <Compile Include="Blocks\IronBarsBlock.cs" />
     <Compile Include="Blocks\IronBlock.cs" />
