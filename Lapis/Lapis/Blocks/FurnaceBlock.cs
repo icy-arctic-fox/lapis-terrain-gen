@@ -68,8 +68,6 @@ namespace Lapis.Blocks
 			get { return 17.5f; }
 		}
 
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'Furnace'
 		#endregion
 
