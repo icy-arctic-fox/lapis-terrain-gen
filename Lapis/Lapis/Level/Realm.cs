@@ -166,6 +166,24 @@ namespace Lapis.Level
 					return _disposed;
 			}
 		}
+
+		/// <summary>
+		/// Game mode to put players into by default when they enter the realm
+		/// </summary>
+		public GameMode Mode
+		{
+			get
+			{
+				lock(_locker)
+					return _levelData.Mode;
+			}
+			set
+			{
+				lock(_locker)
+					_levelData.Mode = value;
+			}
+		}
+
 		#endregion
 
 		private static bool isOverworld (int realmId)

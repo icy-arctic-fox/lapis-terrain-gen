@@ -20,9 +20,14 @@ namespace Generator
 		private const int DefaultLength = 64;
 
 		/// <summary>
-		/// Default dimension for the realm
+		/// Default dimension for generated realms
 		/// </summary>
 		private const Dimension DefaultDimension = Dimension.Normal;
+
+		/// <summary>
+		/// Default game mode for generated realms
+		/// </summary>
+		private const GameMode DefaultGameMode = GameMode.Survival;
 
 		/// <summary>
 		/// Default speed to generate chunks at
@@ -79,6 +84,11 @@ namespace Generator
 		private const string DimensionTag = "-d";
 
 		/// <summary>
+		/// Default game mode for the realm
+		/// </summary>
+		private const string GameModeTag = "-m";
+
+		/// <summary>
 		/// Directory to store the world output in
 		/// </summary>
 		private const string DirectoryTag = "-c";
@@ -101,7 +111,7 @@ namespace Generator
 		/// <summary>
 		/// Don't populate chunks, but mark them as populated (lighting will be performed unless NoLightingTag -y is provided)
 		/// </summary>
-		private const string EmptyPopulationTag = "-m";
+		private const string EmptyPopulationTag = "-q";
 
 		/// <summary>
 		/// Don't light chunks after generation
@@ -181,9 +191,14 @@ namespace Generator
 		private const string ExtendedSeedTag = "--seed";
 
 		/// <summary>
-		/// Dimension to set the realm to
+		/// Dimension to set the generated realm to
 		/// </summary>
-		private const string ExtendedDimensionTag = "--dimension";
+		private const string ExtendedDimensionTag = "-dimension";
+
+		/// <summary>
+		/// Default game mode for the realm
+		/// </summary>
+		private const string ExtendedGameModeTag = "-mode";
 
 		/// <summary>
 		/// Directory to store the world output in
@@ -302,6 +317,7 @@ namespace Generator
 						WorldName       = args[0].Trim(),
 						GeneratorName   = DefaultGenerator,
 						Dimension       = DefaultDimension,
+						Mode            = DefaultGameMode,
 						PopulateChunks  = true,
 						LightChunks     = true,
 						MarkAsPopulated = true,
@@ -394,6 +410,35 @@ namespace Generator
 										break;
 									}
 									parameters.Dimension = dim;
+								}
+								break;
+
+							case GameModeTag:
+							case ExtendedGameModeTag:
+								if(tryGetStringParameter(args, ref i, out stringValue))
+								{
+									stringValue = stringValue.ToLower();
+									GameMode mode;
+									switch(stringValue)
+									{
+									case "survival":
+									case "survive":
+									case "default":
+										mode = GameMode.Survival;
+										break;
+									case "creative":
+									case "build":
+										mode = GameMode.Creative;
+										break;
+									case "adventure":
+										mode = GameMode.Adventure;
+										break;
+									default:
+										Console.Error.WriteLine(String.Join(" ", "Invalid game mode option", args[i - 1], args[i], "- using default"));
+										mode = DefaultGameMode;
+										break;
+									}
+									parameters.Mode = mode;
 								}
 								break;
 
@@ -630,6 +675,7 @@ namespace Generator
 				var realm = parameters.Seed.HasValue
 								? world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Seed.Value, (int)parameters.Dimension, parameters.Dimension)
 								: world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Dimension);
+				realm.Mode = parameters.Mode;
 
 				var startX = 0; // TODO: Use anchorX
 				var startZ = 0; // TODO: Use anchorZ
@@ -731,6 +777,13 @@ namespace Generator
 			Console.WriteLine("  By default, normal is used.");
 			Console.WriteLine("  Dimension options are: normal, nether, and end");
 			Console.WriteLine(baseSyntax + DimensionTag + " <Dimension>");
+			Console.WriteLine();
+
+			Console.WriteLine(String.Join(", ", GameModeTag, ExtendedGameModeTag));
+			Console.WriteLine("  Game mode to put the realm in.");
+			Console.WriteLine("  By default, survival is used.");
+			Console.WriteLine("  Game mode options are: survival, creative, and adventure");
+			Console.WriteLine(baseSyntax + GameModeTag + " <Mode>");
 			Console.WriteLine();
 
 			Console.WriteLine(String.Join(", ", DirectoryTag, ExtendedDirectoryTag));
@@ -838,6 +891,8 @@ namespace Generator
 			public long? Seed { get; set; }
 
 			public Dimension Dimension { get; set; }
+
+			public GameMode Mode { get; set; }
 
 			public string WorkingDirectory { get; set; }
 
