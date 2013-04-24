@@ -18,9 +18,22 @@ namespace Generator
 		/// Default length (and width) of the region to generate
 		/// </summary>
 		private const int DefaultLength = 64;
+
+		/// <summary>
+		/// Default dimension for the realm
+		/// </summary>
+		private const Dimension DefaultDimension = Dimension.Normal;
+
+		/// <summary>
+		/// Default speed to generate chunks at
+		/// </summary>
+		private const GenerationSpeed DefaultSpeed = GenerationSpeed.Full;
+
+		/// <summary>
+		/// Default units for the lengths
+		/// </summary>
+		private const UnitType DefaultUnits = UnitType.Chunks;
 		#endregion
-		
-		// TODO: Add dimension option
 
 		// TODO: Add game mode option
 
@@ -288,11 +301,14 @@ namespace Generator
 					parameters = new GenerationParameters {
 						WorldName       = args[0].Trim(),
 						GeneratorName   = DefaultGenerator,
+						Dimension       = DefaultDimension,
 						PopulateChunks  = true,
 						LightChunks     = true,
 						MarkAsPopulated = true,
 						Radius          = DefaultLength,
-						Length          = DefaultLength
+						Length          = DefaultLength,
+						GenerationSpeed = DefaultSpeed,
+						UnitType        = DefaultUnits
 					};
 
 					for(var i = 1; i < args.Length; ++i)
@@ -374,7 +390,7 @@ namespace Generator
 										break;
 									default:
 										Console.Error.WriteLine(String.Join(" ", "Invalid dimension option", args[i - 1], args[i], "- using default"));
-										dim = Dimension.Normal;
+										dim = DefaultDimension;
 										break;
 									}
 									parameters.Dimension = dim;
@@ -419,7 +435,7 @@ namespace Generator
 										break;
 									default:
 										Console.Error.WriteLine(String.Join(" ", "Invalid generation speed option", args[i - 1], args[i], "- using default"));
-										speed = GenerationSpeed.Full;
+										speed = DefaultSpeed;
 										break;
 									}
 									parameters.GenerationSpeed = speed;
@@ -521,7 +537,7 @@ namespace Generator
 										break;
 									default:
 										Console.Error.WriteLine(String.Join(" ", "Invalid units option", args[i - 1], args[i], "- using default"));
-										units = UnitType.Chunks;
+										units = DefaultUnits;
 										break;
 									}
 									parameters.UnitType = units;
