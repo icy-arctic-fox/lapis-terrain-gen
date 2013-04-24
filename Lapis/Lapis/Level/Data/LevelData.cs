@@ -18,7 +18,7 @@ namespace Lapis.Level.Data
 		private int _rainTime, _stormTime;
 		private long _lastPlayed = Timestamp.Now * 1000,  _size;
 		private long _gameTicks, _time;
-		private GameMode _mode = GameMode.Creative;
+		private GameMode _mode = GameMode.Survival;
 		private Dimension? _dimension;
 		private bool _modified;
 
