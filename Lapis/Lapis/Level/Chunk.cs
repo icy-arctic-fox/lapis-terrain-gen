@@ -100,6 +100,18 @@ namespace Lapis.Level
 		{
 			get { return _data.ChunkZ; }
 		}
+
+		/// <summary>
+		/// Whether or not the terrain in the chunk has been populated
+		/// </summary>
+		public bool TerrainPopulated
+		{
+			get
+			{
+				lock(this)
+					return _data.TerrainPopulated;
+			}
+		}
 		#endregion
 
 		/// <summary>
@@ -121,6 +133,15 @@ namespace Lapis.Level
 		{
 			lock(this)
 				_data.ClearModificationFlag();
+		}
+
+		/// <summary>
+		/// Marks the chunk as having its terrain populated
+		/// </summary>
+		public void MarkAsPopulated ()
+		{
+			lock(this)
+				_data.TerrainPopulated = true;
 		}
 
 		/// <summary>
