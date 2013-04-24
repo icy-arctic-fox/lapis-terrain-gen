@@ -40,8 +40,6 @@ namespace Generator
 		private const UnitType DefaultUnits = UnitType.Chunks;
 		#endregion
 
-		// TODO: Add game mode option
-
 		#region Option tags
 		/// <summary>
 		/// Displays the usage/help information and exits
