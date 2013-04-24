@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the dispenser is pointed
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new dispenser block
 		/// </summary>
 		public DispenserBlock ()
@@ -88,6 +96,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public DispenserBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new dispenser block
+		/// </summary>
+		/// <param name="orientation">Direction that the dispenser is pointing</param>
+		public DispenserBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}

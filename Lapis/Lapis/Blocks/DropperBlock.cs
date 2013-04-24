@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the dropper is pointed
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new dropper block
 		/// </summary>
 		public DropperBlock ()
@@ -88,6 +96,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public DropperBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new dropper block
+		/// </summary>
+		/// <param name="orientation">Direction that the dropper is pointing</param>
+		public DropperBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}

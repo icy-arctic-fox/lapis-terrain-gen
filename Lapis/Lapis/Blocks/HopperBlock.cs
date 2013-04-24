@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the hopper is pointed
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new hopper block
 		/// </summary>
 		public HopperBlock ()
@@ -88,6 +96,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public HopperBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new hopper block
+		/// </summary>
+		/// <param name="orientation">Direction that the hopper is pointing</param>
+		public HopperBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}
