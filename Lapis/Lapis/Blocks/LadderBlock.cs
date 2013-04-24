@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 2f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
