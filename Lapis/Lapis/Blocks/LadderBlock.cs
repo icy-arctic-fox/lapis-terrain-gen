@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Side of the wall that the ladder is attached to
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new ladder block
 		/// </summary>
 		public LadderBlock ()
@@ -86,6 +94,17 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public LadderBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new ladder block
+		/// </summary>
+		/// <param name="orientation">Side of the wall that the ladder is attached to</param>
+		/// <remarks>The orientation of the ladder can't be Up or Down.</remarks>
+		public LadderBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}

@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Side of the wall that the sign is attached to
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new wall sign block
 		/// </summary>
 		public WallSignBlock ()
@@ -88,6 +96,17 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public WallSignBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wall sign block
+		/// </summary>
+		/// <param name="orientation">Side of the wall that the sign is attached to</param>
+		/// <remarks>The orientation of the sign can't be Up or Down.</remarks>
+		public WallSignBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}

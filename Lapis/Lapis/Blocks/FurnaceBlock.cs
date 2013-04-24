@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the furnace is facing
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new furnace block
 		/// </summary>
 		public FurnaceBlock ()
@@ -88,6 +96,17 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public FurnaceBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new furnace block
+		/// </summary>
+		/// <param name="orientation">Direction that the furnace is facing</param>
+		/// <remarks>The orientation of the furnace can't be Up or Down.</remarks>
+		public FurnaceBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}

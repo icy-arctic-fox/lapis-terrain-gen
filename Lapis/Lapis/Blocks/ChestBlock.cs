@@ -74,7 +74,15 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
-		/// Creates a new chest block
+		/// Direction that the chest is facing
+		/// </summary>
+		public BlockOrientation Orientation
+		{
+			get { return (BlockOrientation)Data; }
+		}
+
+		/// <summary>
+		/// Creates a new (empty) chest block
 		/// </summary>
 		public ChestBlock ()
 			: base(0)
@@ -83,11 +91,22 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Creates a new chest block
+		/// Creates a new (empty) chest block
 		/// </summary>
 		/// <param name="data">Additional meta-data for the block</param>
 		public ChestBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new (empty) chest block
+		/// </summary>
+		/// <param name="orientation">Direction that the chest is facing</param>
+		/// <remarks>The orientation of the chest can't be Up or Down.</remarks>
+		public ChestBlock (BlockOrientation orientation)
+			: base((byte)orientation)
 		{
 			// ...
 		}
