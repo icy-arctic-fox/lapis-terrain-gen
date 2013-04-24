@@ -19,7 +19,7 @@ namespace Lapis.Level.Data
 	/// If you want to automatically fix invalid chunk data, use SafeChunkData instead.</remarks>
 	public class ChunkData : ISerializable
 	{
-		private bool _terrainPopulated = true; // TODO: Don't mark chunks as populated here
+		private bool _terrainPopulated;
 		private readonly int _cx, _cz;
 		private long _lastUpdate;
 		private readonly ChunkSectionData[] _sections;

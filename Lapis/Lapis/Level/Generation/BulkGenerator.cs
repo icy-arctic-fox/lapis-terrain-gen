@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Lapis.Level.Generation.Population;
 using Lapis.Threading;
@@ -186,8 +188,9 @@ namespace Lapis.Level.Generation
 		/// <param name="startZ">Z-position of the chunk to start generating at</param>
 		/// <param name="countX">Number of chunks to generate along the x-axis</param>
 		/// <param name="countZ">Number of chunks to generate along the z-axis</param>
+		/// <param name="lightChunks">Whether or not to light the chunks</param>
 		/// <remarks>This method will block until all of the chunks have been populated.</remarks>
-		public void PopulateRectangle (int startX, int startZ, int countX, int countZ)
+		public void PopulateRectangle (int startX, int startZ, int countX, int countZ, bool lightChunks = true)
 		{
 			if(countX <= 0 || countZ <= 0)
 				return;
@@ -206,30 +209,43 @@ namespace Lapis.Level.Generation
 					_total     = totalChunks;
 				}
 
-				var populators = _realm.TerrainGenerator.Populators;
-				if(null != populators)
+				var populatorList = _realm.TerrainGenerator.Populators;
+				if(null != populatorList)
 				{
-					_populatorCount = populators.Count;
+					var populators = new IChunkPopulator[populatorList.Count];
+					if(!lightChunks)
+					{// Skip sky light and block light populators
+						for(var i = 0; i < populators.Length; ++i)
+						{
+							var populator = populators[i];
+							if(populator is SkyLightPopulator ||
+							   populator is BlockLightPopulator)
+								populators[i] = null;
+						}
+					}
+
+					_populatorCount = populators.Count(t => t != null);
 					_populatorsDone = 0;
 					foreach(var populator in populators)
 					{
-						var waitList = new WaitList();
+						if(populator != null)
+						{
+							var waitList = new WaitList();
 
-						for(var cx = startX; cx < lastX; cx += unitSize)
-							for(var cz = startZ; cz < lastZ; cz += unitSize)
-							{
-								var xSize  = Math.Min(unitSize, lastX - cx);
-								var zSize  = Math.Min(unitSize, lastZ - cz);
-								var handle = waitList.NextHandle();
-								var work   = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
-								PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
-							}
+							for(var cx = startX; cx < lastX; cx += unitSize)
+								for(var cz = startZ; cz < lastZ; cz += unitSize)
+								{
+									var xSize = Math.Min(unitSize, lastX - cx);
+									var zSize = Math.Min(unitSize, lastZ - cz);
+									var handle = waitList.NextHandle();
+									var work = new PopulationUnit(cx, cz, xSize, zSize, populator, handle);
+									PriorityThreadPool.QueueUserWorkItem(doPopulationWork, work);
+								}
 
-						waitList.WaitAll();
-						++_populatorsDone;
+							waitList.WaitAll();
+							++_populatorsDone;
+						}
 					}
-
-					// TODO: Mark chunks as populated
 				}
 
 				_realm.Save();
@@ -244,6 +260,7 @@ namespace Lapis.Level.Generation
 				var populator = work.Populator;
 				var lastX     = work.StartX + work.CountX;
 				var lastZ     = work.StartZ + work.CountZ;
+				var populated = _populatorsDone + 1 >= _populatorCount; // True if this is the last populator and we need to mark the chunks as populated
 #if TRACE
 				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] " + populator.Name + ": " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
 #endif
@@ -252,7 +269,10 @@ namespace Lapis.Level.Generation
 					{
 						var chunk = _realm[x, z];
 						populator.PopulateChunk(chunk);
+						if(populated)
+							chunk.MarkAsPopulated(); // TODO: Fix this so that even if no populators run, the chunks still get marked as populated
 					}
+
 				Thread.Sleep(_generationDelay[(int)_speed]);
 
 				ulong completed, total;
@@ -261,6 +281,7 @@ namespace Lapis.Level.Generation
 					completed = _completed = _completed + ((ulong)work.CountX * (ulong)work.CountZ);
 					total     = _total;
 				}
+
 				var args = new PopulationProgressEventArgs(_realm, work.StartX, work.StartZ, work.CountX, work.CountZ, completed, total, populator.Name, _populatorsDone, _populatorCount);
 				OnPopulationProgress(args);
 				work.Done();

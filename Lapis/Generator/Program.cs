@@ -700,7 +700,7 @@ namespace Generator
 				{
 					totalChunks = bulkGenerator.GenerateRectange(startX, startZ, countX, countZ, parameters.OverwriteChunks);
 					if(parameters.PopulateChunks)
-						bulkGenerator.PopulateRectangle(startX, startZ, countX, countZ);
+						bulkGenerator.PopulateRectangle(startX, startZ, countX, countZ, parameters.LightChunks);
 				}
 
 				// TODO: Implement population flags (no lighting, empty population, no population)
