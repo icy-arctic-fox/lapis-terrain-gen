@@ -196,14 +196,14 @@ namespace Lapis.Blocks
 		/// Registers a block type
 		/// </summary>
 		/// <param name="type">Block type</param>
-		/// <param name="creator">Method that statically creates the block</param>
-		public static void Register (BlockType type, BlockCreation creator)
+		/// <param name="constructor">Method that statically creates the block</param>
+		public static void Register (BlockType type, BlockCreation constructor)
 		{
-			if(null == creator)
-				throw new ArgumentNullException("creator", "The block creation method can't be null.");
+			if(null == constructor)
+				throw new ArgumentNullException("constructor", "The block constructor method can't be null.");
 
 			lock(_knownBlockTypes)
-				_knownBlockTypes[(byte)type] = creator;
+				_knownBlockTypes[(byte)type] = constructor;
 		}
 		#endregion
 
@@ -216,8 +216,8 @@ namespace Lapis.Blocks
 		/// <returns>A block</returns>
 		public static Block Create (BlockType type, byte data = 0)
 		{
-			var creator = _knownBlockTypes[(byte)type]; // This isn't locked because it would reduce concurrency down to none
-			return (null == creator) ? null : creator(data, null);
+			var constructor = _knownBlockTypes[(byte)type]; // This isn't locked because it would reduce concurrency down to none
+			return (null == constructor) ? null : constructor(data, null);
 		}
 
 		/// <summary>
@@ -227,10 +227,10 @@ namespace Lapis.Blocks
 		/// <param name="data">Meta-data associated with the block</param>
 		/// <param name="tileData">Extra NBT data used by the tile block</param>
 		/// <returns>A tile block or null if the block type is unknown</returns>
-		public static Block Create (BlockType type, byte data, Node tileData)
-		{// TODO: Change this method to return a TileBlock
-			var creator = _knownBlockTypes[(byte)type]; // This isn't locked because it would reduce concurrency down to none
-			return (null == creator) ? null : creator(data, tileData);
+		public static TileEntity Create (BlockType type, byte data, Node tileData)
+		{
+			var constructor = _knownBlockTypes[(byte)type]; // This isn't locked because it would reduce concurrency down to none
+			return (null == constructor) ? null : constructor(data, tileData) as TileEntity;
 		}
 		#endregion
 	}
