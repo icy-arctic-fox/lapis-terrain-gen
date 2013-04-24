@@ -158,6 +158,8 @@
     <Compile Include="Blocks\InactiveComparatorBlock.cs" />
     <Compile Include="Blocks\InactiveLampBlock.cs" />
     <Compile Include="Blocks\PistonOrientation.cs" />
+    <Compile Include="Blocks\RailBaseBlock.cs" />
+    <Compile Include="Blocks\RailOrientation.cs" />
     <Compile Include="Blocks\SlabTexture.cs" />
     <Compile Include="Blocks\StairsBlock.cs" />
     <Compile Include="Blocks\StairsOrientation.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Blocks\TreeType.cs" />
     <Compile Include="Blocks\TripwireBlock.cs" />
     <Compile Include="Blocks\TripwireHookBlock.cs" />
+    <Compile Include="Blocks\UncurvedRailBlock.cs" />
     <Compile Include="Blocks\VinesBlock.cs" />
     <Compile Include="Blocks\WallSignBlock.cs" />
     <Compile Include="Blocks\WaterBlock.cs" />
