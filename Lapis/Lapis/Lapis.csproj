@@ -290,6 +290,7 @@
     <Compile Include="Level\Dimension.cs" />
     <Compile Include="Level\GameMode.cs" />
     <Compile Include="Level\Generation\BlockCanvas.cs" />
+    <Compile Include="Level\Generation\Population\BlockLightPopulator.cs" />
     <Compile Include="Level\Generation\RegionBlockApplicator.cs" />
     <Compile Include="Level\Generation\ChunkBuilder.cs" />
     <Compile Include="Level\Data\ChunkSectionData.cs" />
