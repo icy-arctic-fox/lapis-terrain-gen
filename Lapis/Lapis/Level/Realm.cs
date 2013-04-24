@@ -14,8 +14,6 @@ using P = System.IO.Path;
 
 namespace Lapis.Level
 {
-	// TODO: Re-implement features in this class
-
 	/// <summary>
 	/// A realm within the world.
 	/// Contains and manages chunks.
