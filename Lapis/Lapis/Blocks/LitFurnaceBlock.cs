@@ -19,8 +19,6 @@ namespace Lapis.Blocks
 		{
 			get { return 13; }
 		}
-
-		// TODO: Implement NBT data for 'Furnace'
 		#endregion
 
 		/// <summary>

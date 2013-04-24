@@ -61,9 +61,14 @@ namespace Generator
 		private const string SeedTag = "-s";
 
 		/// <summary>
+		/// Dimension to set the generated realm to
+		/// </summary>
+		private const string DimensionTag = "-d";
+
+		/// <summary>
 		/// Directory to store the world output in
 		/// </summary>
-		private const string DirectoryTag = "-d";
+		private const string DirectoryTag = "-c";
 
 		/// <summary>
 		/// Speed at which to generate chunks
@@ -161,6 +166,11 @@ namespace Generator
 		/// Seed to use for generation
 		/// </summary>
 		private const string ExtendedSeedTag = "--seed";
+
+		/// <summary>
+		/// Dimension to set the realm to
+		/// </summary>
+		private const string ExtendedDimensionTag = "--dimension";
 
 		/// <summary>
 		/// Directory to store the world output in
@@ -336,6 +346,38 @@ namespace Generator
 									if(!Int64.TryParse(stringValue, out seed))
 										seed = Realm.GenerateSeedFromString(stringValue);
 									parameters.Seed = seed;
+								}
+								break;
+
+							case DimensionTag:
+							case ExtendedDimensionTag:
+								if(tryGetStringParameter(args, ref i, out stringValue))
+								{
+									stringValue = stringValue.ToLower();
+									Dimension dim;
+									switch(stringValue)
+									{
+									case "normal":
+									case "overworld":
+									case "default":
+										dim = Dimension.Normal;
+										break;
+									case "nether":
+									case "heck":
+									case "hell":
+										dim = Dimension.Nether;
+										break;
+									case "end":
+									case "ender":
+									case "theend":
+										dim = Dimension.End;
+										break;
+									default:
+										Console.Error.WriteLine(String.Join(" ", "Invalid dimension option", args[i - 1], args[i], "- using default"));
+										dim = Dimension.Normal;
+										break;
+									}
+									parameters.Dimension = dim;
 								}
 								break;
 
@@ -570,8 +612,8 @@ namespace Generator
 				// TODO: Implement loading
 				var world = World.Create(parameters.WorldName); // TODO: Add destination directory
 				var realm = parameters.Seed.HasValue
-								? world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Seed.Value, (int)Dimension.Normal)
-								: world.CreateRealm(generator, parameters.GeneratorOptions);
+								? world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Seed.Value, (int)parameters.Dimension, parameters.Dimension)
+								: world.CreateRealm(generator, parameters.GeneratorOptions, parameters.Dimension);
 
 				var startX = 0; // TODO: Use anchorX
 				var startZ = 0; // TODO: Use anchorZ
@@ -664,6 +706,15 @@ namespace Generator
 			Console.WriteLine("  If omitted, a random seed is used.");
 			Console.WriteLine("  The seed can be a number or an arbitrary string.");
 			Console.WriteLine(baseSyntax + SeedTag + " <Seed>");
+			Console.WriteLine();
+
+			Console.WriteLine(String.Join(", ", DimensionTag, ExtendedDimensionTag));
+			Console.WriteLine("  Dimension of the generated realm.");
+			Console.WriteLine("  Not all generators will create chunks for nether and end dimensions.");
+			Console.WriteLine("  A custom generator may need to be specified (with " + GeneratorTag + ")");
+			Console.WriteLine("  By default, normal is used.");
+			Console.WriteLine("  Dimension options are: normal, nether, and end");
+			Console.WriteLine(baseSyntax + DimensionTag + " <Dimension>");
 			Console.WriteLine();
 
 			Console.WriteLine(String.Join(", ", DirectoryTag, ExtendedDirectoryTag));
@@ -769,6 +820,8 @@ namespace Generator
 			public bool UseSpecificVersion { get; set; }
 
 			public long? Seed { get; set; }
+
+			public Dimension Dimension { get; set; }
 
 			public string WorkingDirectory { get; set; }
 

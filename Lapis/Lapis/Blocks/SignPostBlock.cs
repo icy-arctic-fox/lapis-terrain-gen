@@ -68,8 +68,6 @@ namespace Lapis.Blocks
 			get { return 5f; }
 		}
 
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'Sign'
 		#endregion
 
