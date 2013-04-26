@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class LightPlateBlock : Block
+	public class LightPlateBlock : PlateBlock
 	{
 		#region Properties
 		/// <summary>
@@ -13,51 +13,11 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Whether or not the block is solid (non-solid blocks can be passed through)
-		/// </summary>
-		public override bool IsSolid
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
-		}
-
-		/// <summary>
 		/// Whether or not the block can catch fire
 		/// </summary>
 		public override bool Flammable
 		{
 			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
-		/// </summary>
-		public override byte Opacity
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Whether or not the block diffuses light
-		/// </summary>
-		public override bool Diffuse
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of block light that the block gives off
-		/// </summary>
-		public override byte Luminance
-		{
-			get { return 0; }
 		}
 
 		/// <summary>
@@ -67,15 +27,12 @@ namespace Lapis.Blocks
 		{
 			get { return 2.5f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
 		/// Creates a new light plate block
 		/// </summary>
 		public LightPlateBlock ()
-			: base(0)
 		{
 			// ...
 		}
@@ -86,6 +43,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public LightPlateBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new light plate block
+		/// </summary>
+		/// <param name="powered">Whether or not the plate is pressed and giving off power</param>
+		public LightPlateBlock (bool powered)
+			: base(powered)
 		{
 			// ...
 		}
