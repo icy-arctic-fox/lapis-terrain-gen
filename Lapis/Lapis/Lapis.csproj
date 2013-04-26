@@ -88,6 +88,7 @@
     <Compile Include="Blocks\BedrockBlock.cs" />
     <Compile Include="Blocks\BirchWoodStairsBlock.cs" />
     <Compile Include="Blocks\Block.cs" />
+    <Compile Include="Blocks\BlockOrientation.cs" />
     <Compile Include="Blocks\Block.Registry.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BookshelfBlock.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="Blocks\IceBlock.cs" />
     <Compile Include="Blocks\InactiveComparatorBlock.cs" />
     <Compile Include="Blocks\InactiveLampBlock.cs" />
-    <Compile Include="Blocks\BlockOrientation.cs" />
+    <Compile Include="Blocks\IRedstoneSourceBlock.cs" />
     <Compile Include="Blocks\PistonOrientation.cs" />
     <Compile Include="Blocks\RailBaseBlock.cs" />
     <Compile Include="Blocks\RailOrientation.cs" />
