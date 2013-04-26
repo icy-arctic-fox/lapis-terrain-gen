@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class LeverBlock : Block
+	public class LeverBlock : Block, IRedstoneSourceBlock
 	{
 		#region Properties
 		/// <summary>
@@ -72,6 +72,30 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Direction that the lever is facing
+		/// </summary>
+		public LeverOrientation Orientation
+		{
+			get { return (LeverOrientation)(Data & 0x7); }
+		}
+
+		/// <summary>
+		/// Whether or not the lever is providing power
+		/// </summary>
+		public bool Powered
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
+		/// Strength of the redstone current that the block provides
+		/// </summary>
+		public byte CurrentStrength
+		{
+			get { return 15; }
+		}
+
+		/// <summary>
 		/// Creates a new lever block
 		/// </summary>
 		public LeverBlock ()
@@ -88,6 +112,74 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new lever block
+		/// </summary>
+		/// <param name="orientation">Direction that the lever is facing</param>
+		public LeverBlock (LeverOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new lever block
+		/// </summary>
+		/// <param name="orientation">Direction that the lever is facing</param>
+		/// <param name="powered">Whether or not the lever is switched on and providing power</param>
+		public LeverBlock (LeverOrientation orientation, bool powered)
+			: base((byte)((byte)orientation | (powered ? 0x8 : 0x0)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Directions that a lever can be facing
+		/// </summary>
+		/// <remarks>These directions are the direction that the handle points when turned off.</remarks>
+		public enum LeverOrientation : byte
+		{
+			/// <summary>
+			/// Upside-down and pointing east
+			/// </summary>
+			CelingEast = 0x0,
+
+			/// <summary>
+			/// Horizontally on a wall and pointing east
+			/// </summary>
+			WallEast = 0x1,
+
+			/// <summary>
+			/// Horizontally on a wall and pointing west
+			/// </summary>
+			WallWest = 0x2,
+
+			/// <summary>
+			/// Vertically on a wall and pointing down
+			/// </summary>
+			WallDown = 0x3,
+
+			/// <summary>
+			/// Vertically on a wall and pointing up
+			/// </summary>
+			WallNorth = 0x4,
+
+			/// <summary>
+			/// On the ground and pointing south
+			/// </summary>
+			GroundSouth = 0x5,
+
+			/// <summary>
+			/// On the ground and pointing east
+			/// </summary>
+			GroundEast = 0x6,
+
+			/// <summary>
+			/// Upside-down and pointing south
+			/// </summary>
+			CeilingSouth = 0x7
 		}
 	}
 }
