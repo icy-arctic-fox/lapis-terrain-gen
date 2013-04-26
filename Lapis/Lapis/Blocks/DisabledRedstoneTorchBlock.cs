@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class DisabledRedstoneTorchBlock : Block
+	public class DisabledRedstoneTorchBlock : Block, IRedstoneSourceBlock
 	{
 		#region Properties
 		/// <summary>
@@ -70,6 +70,22 @@ namespace Lapis.Blocks
 
 		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Whether or not the torch is powered and giving off a redstone current
+		/// </summary>
+		public bool Powered
+		{
+			get { return false; }
+		}
+
+		/// <summary>
+		/// Strength of the redstone current that the torch is giving off
+		/// </summary>
+		public byte CurrentStrength
+		{
+			get { return 0; }
+		}
 
 		/// <summary>
 		/// Positioning of the torch
