@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class RedstoneBlock : Block
+	public class RedstoneBlock : Block, IRedstoneSourceBlock
 	{
 		#region Properties
 		/// <summary>
@@ -68,6 +68,22 @@ namespace Lapis.Blocks
 			get { return 30f; }
 		}
 		#endregion
+
+		/// <summary>
+		/// Whether or not the block is powered and giving off a redstone current
+		/// </summary>
+		public bool Powered
+		{
+			get { return true; }
+		}
+
+		/// <summary>
+		/// Strength of the redstone current that the block is giving off
+		/// </summary>
+		public byte CurrentStrength
+		{
+			get { return 15; }
+		}
 
 		/// <summary>
 		/// Creates a new redstone block

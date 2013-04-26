@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Lapis.Blocks
+﻿namespace Lapis.Blocks
 {
+	/// <summary>
+	/// A block that redstone current originates from
+	/// </summary>
 	public interface IRedstoneSourceBlock
 	{
 		/// <summary>
