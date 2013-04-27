@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Texture that appears on the silverfish block
+		/// </summary>
+		public SilverfishBlockTexture Texture
+		{
+			get { return (SilverfishBlockTexture)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new silverfish block
 		/// </summary>
 		public SilverfishBlock ()
@@ -88,6 +96,37 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new silverfish block
+		/// </summary>
+		/// <param name="texture">Texture that appears on the silverfish block</param>
+		public SilverfishBlock (SilverfishBlockTexture texture)
+			: base((byte)texture)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Textures that a silverfish block can have
+		/// </summary>
+		public enum SilverfishBlockTexture : byte
+		{
+			/// <summary>
+			/// Smooth stone appearance
+			/// </summary>
+			Stone = 0x0,
+
+			/// <summary>
+			/// Cobblestone appearance
+			/// </summary>
+			Cobblestone = 0x1,
+
+			/// <summary>
+			/// Smooth stone brick appearance
+			/// </summary>
+			StoneBrick = 0x2
 		}
 	}
 }
