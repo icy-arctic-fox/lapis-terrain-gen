@@ -1,3 +1,5 @@
+using System;
+
 namespace Lapis.Blocks
 {
 	public class TripwireBlock : Block
@@ -67,9 +69,15 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// State that the tripwire is in
+		/// </summary>
+		public TripwireState State
+		{
+			get { return (TripwireState)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new tripwire block
@@ -88,6 +96,38 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new tripwire block
+		/// </summary>
+		/// <param name="state">State that the tripwire is in</param>
+		public TripwireBlock (TripwireState state)
+			: base((byte)(state & (TripwireState.Activated | TripwireState.Tripped)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// States that a tripwire can be in
+		/// </summary>
+		[Flags]
+		public enum TripwireState : byte
+		{
+			/// <summary>
+			/// The wire is tight and ready to be tripped
+			/// </summary>
+			Inactive = 0x0,
+
+			/// <summary>
+			/// The entire wire (not just this block) has been tripped
+			/// </summary>
+			Activated = 0x4,
+
+			/// <summary>
+			/// This particular block contains an object that tripped the wire
+			/// </summary>
+			Tripped = 0x1
 		}
 	}
 }
