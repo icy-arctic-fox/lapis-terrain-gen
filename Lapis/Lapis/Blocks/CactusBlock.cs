@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class CactusBlock : Block
+	public class CactusBlock : PlantBlock
 	{
 		#region Properties
 		/// <summary>
@@ -18,14 +18,6 @@ namespace Lapis.Blocks
 		public override bool IsSolid
 		{
 			get { return true; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
 		}
 
 		/// <summary>
@@ -67,8 +59,6 @@ namespace Lapis.Blocks
 		{
 			get { return 2f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -83,9 +73,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new cactus block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CactusBlock (byte data)
-			: base(data)
+		/// <param name="age">Age of the cactus block (0-15)</param>
+		public CactusBlock (byte age)
+			: base(age)
 		{
 			// ...
 		}

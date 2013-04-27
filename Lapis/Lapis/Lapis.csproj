@@ -161,6 +161,7 @@
     <Compile Include="Blocks\InactiveLampBlock.cs" />
     <Compile Include="Blocks\IRedstoneSourceBlock.cs" />
     <Compile Include="Blocks\PistonOrientation.cs" />
+    <Compile Include="Blocks\PlantBlock.cs" />
     <Compile Include="Blocks\PlateBlock.cs" />
     <Compile Include="Blocks\RailBaseBlock.cs" />
     <Compile Include="Blocks\RailOrientation.cs" />

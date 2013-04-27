@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class SugarCaneBlock : Block
+	public class SugarCaneBlock : PlantBlock
 	{
 		#region Properties
 		/// <summary>
@@ -16,14 +16,6 @@ namespace Lapis.Blocks
 		/// Whether or not the block is solid (non-solid blocks can be passed through)
 		/// </summary>
 		public override bool IsSolid
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
 		{
 			get { return false; }
 		}
@@ -67,8 +59,6 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -83,9 +73,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sugar cane block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public SugarCaneBlock (byte data)
-			: base(data)
+		/// <param name="age">Age of the sugar cane block (0-15)</param>
+		public SugarCaneBlock (byte age)
+			: base(age)
 		{
 			// ...
 		}
