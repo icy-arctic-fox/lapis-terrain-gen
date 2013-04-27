@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 1f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Texture used on the block
+		/// </summary>
+		public MushroomTexture Texture
+		{
+			get { return (MushroomTexture)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new huge brown mushroom block
@@ -86,6 +92,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public HugeBrownMushroomBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new huge brown mushroom block
+		/// </summary>
+		/// <param name="texture">Texture that appears on the block</param>
+		public HugeBrownMushroomBlock (MushroomTexture texture)
+			: base((byte) texture)
 		{
 			// ...
 		}
