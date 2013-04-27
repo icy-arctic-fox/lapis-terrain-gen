@@ -27,8 +27,6 @@ namespace Lapis.Blocks
 		{
 			get { return 30f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -53,8 +51,8 @@ namespace Lapis.Blocks
 		/// Creates a new cobblestone stairs block
 		/// </summary>
 		/// <param name="orientation">Direction that the stairs are facing</param>
-		protected CobblestoneStairsBlock (StairsOrientation orientation)
-			: base((byte)orientation)
+		public CobblestoneStairsBlock (StairsOrientation orientation)
+			: base(orientation)
 		{
 			// ...
 		}
@@ -64,8 +62,8 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="orientation">Direction that the stairs are facing</param>
 		/// <param name="upsideDown">Whether or not the stairs are upside-down</param>
-		protected CobblestoneStairsBlock (StairsOrientation orientation, bool upsideDown)
-			: base((byte)((byte)orientation | (upsideDown ? 0x8 : 0x0)))
+		public CobblestoneStairsBlock (StairsOrientation orientation, bool upsideDown)
+			: base(orientation, upsideDown)
 		{
 			// ...
 		}

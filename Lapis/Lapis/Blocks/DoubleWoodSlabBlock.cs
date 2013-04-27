@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 15f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TreeType SlabType
 		{
-			get { return (TreeType)(Data & 0x7); }
+			get { return (TreeType)(_data & 0x7); }
 		}
 
 		/// <summary>

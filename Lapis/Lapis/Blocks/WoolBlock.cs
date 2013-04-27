@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 4f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public WoolColor Color
 		{
-			get { return (WoolColor)Data; }
+			get { return (WoolColor)_data; }
 		}
 
 		/// <summary>

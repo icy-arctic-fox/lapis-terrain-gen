@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public QuartzTexture Texture
 		{
-			get { return (QuartzTexture)Data; }
+			get { return (QuartzTexture)_data; }
 		}
 
 		/// <summary>

@@ -72,8 +72,6 @@ namespace Lapis.Blocks
 		{
 			get { return 2.5f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -81,7 +79,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public byte PiecesEaten
 		{
-			get { return Data; }
+			get { return _data; }
 		}
 
 		/// <summary>

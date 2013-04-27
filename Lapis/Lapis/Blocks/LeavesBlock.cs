@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 1f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TreeType TreeType
 		{
-			get { return (TreeType)(Data & 0x3); }
+			get { return (TreeType)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -85,7 +83,7 @@ namespace Lapis.Blocks
 		/// <remarks>If the leaves were placed by a player, they won't decay.</remarks>
 		public bool PlayerPlaced
 		{
-			get { return 0x4 == (Data & 0x4); }
+			get { return 0x4 == (_data & 0x4); }
 		}
 
 		/// <summary>
@@ -95,7 +93,7 @@ namespace Lapis.Blocks
 		/// The flag is cleared once they have been checked and don't need to decay.</remarks>
 		public bool PendingDecay
 		{
-			get { return 0x8 == (Data & 0x8); }
+			get { return 0x8 == (_data & 0x8); }
 		}
 
 		/// <summary>

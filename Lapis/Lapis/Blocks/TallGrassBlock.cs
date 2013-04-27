@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public ShrubType Shrub
 		{
-			get { return (ShrubType)Data; }
+			get { return (ShrubType)_data; }
 		}
 
 		/// <summary>

@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public MobHeadPosition Position
 		{
-			get { return (MobHeadPosition)Data; }
+			get { return (MobHeadPosition)_data; }
 		}
 
 		/// <summary>

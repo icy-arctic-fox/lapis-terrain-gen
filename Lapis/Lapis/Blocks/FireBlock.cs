@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public byte Age
 		{
-			get { return Data; }
+			get { return _data; }
 		}
 
 		/// <summary>
@@ -84,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Eternal
 		{
-			get { return 0xf == Data; }
+			get { return 0xf == _data; }
 		}
 
 		/// <summary>
@@ -99,9 +97,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new fire block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public FireBlock (byte data)
-			: base(data)
+		/// <param name="age">Age of the fire (0-14)</param>
+		public FireBlock (byte age)
+			: base(age)
 		{
 			// ...
 		}

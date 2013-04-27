@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public BlockOrientation Orientation
 		{
-			get { return (BlockOrientation)Data; }
+			get { return (BlockOrientation)_data; }
 		}
 
 		/// <summary>

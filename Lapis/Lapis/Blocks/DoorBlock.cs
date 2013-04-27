@@ -57,7 +57,7 @@ namespace Lapis.Blocks
 		/// <remarks>True means it is the top half of the door, false means it is the bottom half of the door.</remarks>
 		public bool TopHalf
 		{
-			get { return (0x8 == (Data & 0x8)); }
+			get { return (0x8 == (_data & 0x8)); }
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Lapis.Blocks
 			{
 				if(!TopHalf)
 					throw new InvalidOperationException("The LeftHinge property is only available to the block for the top half of the door.");
-				return (0x1 == (Data & 0x1));
+				return (0x1 == (_data & 0x1));
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace Lapis.Blocks
 			{
 				if(TopHalf)
 					throw new InvalidOperationException("The Open property is only available to the block for the bottom half of the door.");
-				return (0x4 == (Data & 0x4));
+				return (0x4 == (_data & 0x4));
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace Lapis.Blocks
 			{
 				if(TopHalf)
 					throw new InvalidOperationException("The Open property is only available to the block for the bottom half of the door.");
-				return ((DoorOrientation)(Data & 0x3));
+				return ((DoorOrientation)(_data & 0x3));
 			}
 		}
 

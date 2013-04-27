@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public FlowerPotContents Contents
 		{
-			get { return (FlowerPotContents)Data;}
+			get { return (FlowerPotContents)_data;}
 		}
 
 		/// <summary>

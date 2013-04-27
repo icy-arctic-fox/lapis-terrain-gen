@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public DiodeOrientation Orientation
 		{
-			get { return (DiodeOrientation)(Data & 0x3); }
+			get { return (DiodeOrientation)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public byte Delay
 		{
-			get { return (byte)(((Data >> 2) & 0x3) + 1); }
+			get { return (byte)(((_data >> 2) & 0x3) + 1); }
 		}
 
 		/// <summary>

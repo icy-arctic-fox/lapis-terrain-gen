@@ -21,7 +21,7 @@
 		/// <remarks>0 is a newly placed block, 15 is a fully grown block meaning it should have a piece added above it (if the maximum height isn't reached).</remarks>
 		public byte Age
 		{
-			get { return Data; }
+			get { return _data; }
 		}
 
 		/// <summary>

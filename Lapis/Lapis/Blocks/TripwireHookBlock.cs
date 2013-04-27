@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TripwireHookOrientation Orientation
 		{
-			get { return (TripwireHookOrientation)(Data & 0x3); }
+			get { return (TripwireHookOrientation)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TripwireHookState State
 		{
-			get { return (TripwireHookState)(Data & 0xc); }
+			get { return (TripwireHookState)(_data & 0xc); }
 		}
 
 		/// <summary>

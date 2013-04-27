@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public WallTexture Texture
 		{
-			get { return (WallTexture)Data; }
+			get { return (WallTexture)_data; }
 		}
 
 		/// <summary>

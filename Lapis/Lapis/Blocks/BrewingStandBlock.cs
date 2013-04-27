@@ -77,7 +77,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public PotionPlacement SlotsFilled
 		{
-			get { return (PotionPlacement)Data; }
+			get { return (PotionPlacement)_data; }
 		}
 
 		/// <summary>

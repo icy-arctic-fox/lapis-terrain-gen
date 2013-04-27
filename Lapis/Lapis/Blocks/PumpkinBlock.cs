@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public PumpkinOrientation Orientation
 		{
-			get { return (PumpkinOrientation)Data; }
+			get { return (PumpkinOrientation)_data; }
 		}
 
 		/// <summary>

@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public BedOrientation Orientation
 		{
-			get { return (BedOrientation)(Data & 0x3); }
+			get { return (BedOrientation)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Occupied
 		{
-			get { return (0x4 == (Data & 0x4)); }
+			get { return (0x4 == (_data & 0x4)); }
 		}
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Head
 		{
-			get { return (0x8 == (Data & 0x8)); }
+			get { return (0x8 == (_data & 0x8)); }
 		}
 
 		/// <summary>

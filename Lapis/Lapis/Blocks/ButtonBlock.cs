@@ -52,7 +52,7 @@
 		/// </summary>
 		public ButtonOrientation Orientation
 		{
-			get { return (ButtonOrientation)(Data & 0x7); }
+			get { return (ButtonOrientation)(_data & 0x7); }
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@
 		/// </summary>
 		public bool Powered
 		{
-			get { return (0x8 == (Data & 0x8)); }
+			get { return (0x8 == (_data & 0x8)); }
 		}
 
 		/// <summary>

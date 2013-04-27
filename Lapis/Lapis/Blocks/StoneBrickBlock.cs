@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 30f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public StoneBrickTexture Texture
 		{
-			get { return (StoneBrickTexture)Data; }
+			get { return (StoneBrickTexture)_data; }
 		}
 
 		/// <summary>

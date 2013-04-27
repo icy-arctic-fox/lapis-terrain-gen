@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 15f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -77,7 +75,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool TopHalf
 		{
-			get { return (0x8 == (Data & 0x8)); }
+			get { return (0x8 == (_data & 0x8)); }
 		}
 
 		/// <summary>
@@ -85,7 +83,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Open
 		{
-			get { return (0x4 == (Data & 0x4)); }
+			get { return (0x4 == (_data & 0x4)); }
 		}
 
 		/// <summary>
@@ -93,7 +91,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TrapdoorOrientation Orientation
 		{
-			get { return (TrapdoorOrientation)(Data & 0x3); }
+			get { return (TrapdoorOrientation)(_data & 0x3); }
 		}
 
 		/// <summary>

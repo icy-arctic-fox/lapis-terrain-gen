@@ -68,8 +68,6 @@ namespace Lapis.Blocks
 			get { return 17.5f; }
 		}
 
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'Trap'
 		#endregion
 
@@ -78,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public BlockOrientation Orientation
 		{
-			get { return (BlockOrientation)Data; }
+			get { return (BlockOrientation)_data; }
 		}
 
 		/// <summary>

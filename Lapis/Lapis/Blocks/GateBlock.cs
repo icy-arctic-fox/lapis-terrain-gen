@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public GateOrientation Orientation
 		{
-			get { return (GateOrientation)Data; }
+			get { return (GateOrientation)_data; }
 		}
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Open
 		{
-			get { return (0x4 == (Data & 0x4)); }
+			get { return (0x4 == (_data & 0x4)); }
 		}
 
 		/// <summary>

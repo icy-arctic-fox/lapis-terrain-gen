@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -92,7 +90,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TorchOrientation Orientation
 		{
-			get { return (TorchOrientation)Data; }
+			get { return (TorchOrientation)_data; }
 		}
 
 		/// <summary>

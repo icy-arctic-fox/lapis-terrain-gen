@@ -68,7 +68,7 @@
 		/// </summary>
 		public byte Stage
 		{
-			get { return (byte)(Data & 0x7); }
+			get { return (byte)(_data & 0x7); }
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@
 		/// </summary>
 		public bool FullyGrown
 		{
-			get { return Data >= 0x7; }
+			get { return _data >= 0x7; }
 		}
 
 		/// <summary>

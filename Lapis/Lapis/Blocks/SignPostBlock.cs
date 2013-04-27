@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public SignOrientation Orientation
 		{
-			get { return (SignOrientation)Data; }
+			get { return (SignOrientation)_data; }
 		}
 
 		/// <summary>
