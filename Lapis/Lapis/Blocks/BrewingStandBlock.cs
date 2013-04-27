@@ -1,3 +1,5 @@
+using System;
+
 namespace Lapis.Blocks
 {
 	public class BrewingStandBlock : Block
@@ -67,11 +69,16 @@ namespace Lapis.Blocks
 		{
 			get { return 2.5f; }
 		}
-
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'Cauldron'
 		#endregion
+
+		/// <summary>
+		/// Slots that have potions in them
+		/// </summary>
+		public PotionPlacement SlotsFilled
+		{
+			get { return (PotionPlacement)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new brewing stand block
@@ -90,6 +97,43 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new brewing stand block
+		/// </summary>
+		/// <param name="slots">Slots that contain potions</param>
+		public BrewingStandBlock (PotionPlacement slots)
+			: base((byte)slots)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Slots that potions are in
+		/// </summary>
+		[Flags]
+		public enum PotionPlacement : byte
+		{
+			/// <summary>
+			/// No potions are in the brewing stand
+			/// </summary>
+			Empty = 0x0,
+
+			/// <summary>
+			/// A potion is in the slot pointing east
+			/// </summary>
+			Middle = 0x1,
+
+			/// <summary>
+			/// A potion is in the slot pointing south-west
+			/// </summary>
+			Left = 0x2,
+
+			/// <summary>
+			/// A potion is in the slot pointing north-west
+			/// </summary>
+			Right = 0x4
 		}
 	}
 }
