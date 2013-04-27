@@ -1,3 +1,5 @@
+using System;
+
 namespace Lapis.Blocks
 {
 	public class VinesBlock : Block
@@ -67,9 +69,15 @@ namespace Lapis.Blocks
 		{
 			get { return 1f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Sides within the block that the vines appear
+		/// </summary>
+		public VinesLocation Sides
+		{
+			get { return (VinesLocation)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new vines block
@@ -88,6 +96,30 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new vines block
+		/// </summary>
+		/// <param name="sides">Sides of the block that vines appear on</param>
+		public VinesBlock (VinesLocation sides)
+			: base((byte)sides)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Sides of the block that vines appear on
+		/// </summary>
+		/// <remarks>It is implied that there are vines on the top of the block by default, or if there is a solid block above.</remarks>
+		[Flags]
+		public enum VinesLocation : byte
+		{
+			Top   = 0x0,
+			South = 0x1,
+			West  = 0x2,
+			North = 0x4,
+			East  = 0x8
 		}
 	}
 }

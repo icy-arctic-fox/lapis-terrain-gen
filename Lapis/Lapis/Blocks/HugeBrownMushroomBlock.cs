@@ -101,7 +101,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="texture">Texture that appears on the block</param>
 		public HugeBrownMushroomBlock (MushroomTexture texture)
-			: base((byte) texture)
+			: base((byte)texture)
 		{
 			// ...
 		}
