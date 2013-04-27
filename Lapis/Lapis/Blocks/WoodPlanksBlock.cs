@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 15f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Type of wood the planks are from
+		/// </summary>
+		public TreeType TreeType
+		{
+			get { return (TreeType)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new wood planks block
@@ -86,6 +92,16 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public WoodPlanksBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood planks block
+		/// </summary>
+		/// <param name="type">Type of wood that the planks are from</param>
+		public WoodPlanksBlock (TreeType type)
+			: base((byte)type)
 		{
 			// ...
 		}
