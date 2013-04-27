@@ -1,6 +1,8 @@
+using System;
+
 namespace Lapis.Blocks
 {
-	public class TripwireHookBlock : Block
+	public class TripwireHookBlock : Block, IRedstoneSourceBlock
 	{
 		#region Properties
 		/// <summary>
@@ -67,9 +69,39 @@ namespace Lapis.Blocks
 		{
 			get { return 2.5f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the hook is facing
+		/// </summary>
+		public TripwireHookOrientation Orientation
+		{
+			get { return (TripwireHookOrientation)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// State that the hook is in
+		/// </summary>
+		public TripwireHookState State
+		{
+			get { return (TripwireHookState)(Data & 0xc); }
+		}
+
+		/// <summary>
+		/// Whether or not the hook is providing redstone current
+		/// </summary>
+		public bool Powered
+		{
+			get { return State.HasFlag(TripwireHookState.Tripped); }
+		}
+
+		/// <summary>
+		/// Strength of the redstone current given off by the hook
+		/// </summary>
+		public byte CurrentStrength
+		{
+			get { return Powered ? (byte)15 : (byte)0; }
+		}
 
 		/// <summary>
 		/// Creates a new tripwire hook block
@@ -88,6 +120,61 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new tripwire hook block
+		/// </summary>
+		/// <param name="orientation">Direction that the hook is facing</param>
+		public TripwireHookBlock (TripwireHookOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new tripwire hook block
+		/// </summary>
+		/// <param name="orientation">Direction that the hook is facing</param>
+		/// <param name="state">State that the hook is in</param>
+		public TripwireHookBlock (TripwireHookOrientation orientation, TripwireHookState state)
+			: base((byte)((byte)orientation | (byte)state))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Directions that the tripwire hook can face
+		/// </summary>
+		public enum TripwireHookOrientation : byte
+		{
+			South = 0x0,
+			West  = 0x1,
+			North = 0x2,
+			East  = 0x3
+		}
+
+		/// <summary>
+		/// States that the tripwire hook can be in
+		/// </summary>
+		/// <remarks>Normally when a tripwire is triggered, Connected and Tripped are used.</remarks>
+		[Flags]
+		public enum TripwireHookState : byte
+		{
+			/// <summary>
+			/// No string is attached to the hook (in the up position)
+			/// </summary>
+			Inactive = 0x0,
+
+			/// <summary>
+			/// The hook has string attached ready to be triggered (in the middle position)
+			/// </summary>
+			Connected = 0x4,
+
+			/// <summary>
+			/// The hook has been triggered/activated (in the down position)
+			/// </summary>
+			Tripped = 0x8
 		}
 	}
 }
