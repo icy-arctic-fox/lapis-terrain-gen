@@ -2,6 +2,11 @@ namespace Lapis.Blocks
 {
 	public class CakeBlock : Block
 	{
+		/// <summary>
+		/// Total number of pieces of cake
+		/// </summary>
+		public const byte TotalPieces = 6;
+
 		#region Properties
 		/// <summary>
 		/// Type that describes the block
@@ -72,6 +77,22 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Number of cake pieces eaten (0-5)
+		/// </summary>
+		public byte PiecesEaten
+		{
+			get { return Data; }
+		}
+
+		/// <summary>
+		/// Number of cake pieces left
+		/// </summary>
+		public byte PiecesLeft
+		{
+			get { return (byte)(TotalPieces - PiecesEaten); }
+		}
+
+		/// <summary>
 		/// Creates a new cake block
 		/// </summary>
 		public CakeBlock ()
@@ -83,9 +104,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new cake block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CakeBlock (byte data)
-			: base(data)
+		/// <param name="piecesEaten">Number of cake pieces eaten (0-5)</param>
+		public CakeBlock (byte piecesEaten)
+			: base(piecesEaten)
 		{
 			// ...
 		}
