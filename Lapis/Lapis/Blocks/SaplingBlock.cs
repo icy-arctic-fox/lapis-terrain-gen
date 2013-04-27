@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Type of tree that the sapling will grow into
+		/// </summary>
+		public TreeType TreeType
+		{
+			get { return (TreeType)(Data & 0x3); }
+		}
 
 		/// <summary>
 		/// Creates a new sapling block
@@ -89,5 +95,17 @@ namespace Lapis.Blocks
 		{
 			// ...
 		}
+
+		/// <summary>
+		/// Creates a new sapling block
+		/// </summary>
+		/// <param name="type">Type of tree that the sapling will grow into</param>
+		public SaplingBlock (TreeType type)
+			: base((byte)type)
+		{
+			// ...
+		}
+
+		// TODO: Figure out and add "count" meta-data values
 	}
 }
