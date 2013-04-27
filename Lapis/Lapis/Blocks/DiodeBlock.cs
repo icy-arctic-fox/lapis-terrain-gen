@@ -67,9 +67,23 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the diode is pointing
+		/// </summary>
+		public DiodeOrientation Orientation
+		{
+			get { return (DiodeOrientation)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// Delay that the diode is set to (1-4)
+		/// </summary>
+		public byte Delay
+		{
+			get { return (byte)(((Data >> 2) & 0x3) + 1); }
+		}
 
 		/// <summary>
 		/// Creates a new diode block
@@ -88,6 +102,28 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new diode block
+		/// </summary>
+		/// <param name="orientation">Direction that the diode block is pointing</param>
+		/// <param name="delay">Delay that the diode is set to (1-4)</param>
+		public DiodeBlock (DiodeOrientation orientation, byte delay)
+			: base((byte)((byte)orientation | (delay - 1) << 2))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Different directions that the diode can face
+		/// </summary>
+		public enum DiodeOrientation : byte
+		{
+			North = 0x0,
+			East  = 0x1,
+			South = 0x2,
+			West  = 0x3
 		}
 	}
 }
