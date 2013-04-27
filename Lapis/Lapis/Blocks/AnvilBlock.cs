@@ -67,9 +67,26 @@ namespace Lapis.Blocks
 		{
 			get { return 6000f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the anvil is facing
+		/// </summary>
+		public AnvilOrientation Orientation
+		{
+			get { return (AnvilOrientation)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// Amount of damage the anvil has (0-2)
+		/// </summary>
+		/// <remarks>0 is pristine (new) anvil,
+		/// 1 is a slightly damaged anvil,
+		/// and 2 is a very damaged anvil (about to break).</remarks>
+		public byte Damage
+		{
+			get { return (byte)((Data >> 2) & 0x3); }
+		}
 
 		/// <summary>
 		/// Creates a new anvil block
@@ -88,6 +105,36 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new anvil block
+		/// </summary>
+		/// <param name="orientation">Direction that the anvil is facing</param>
+		public AnvilBlock (AnvilOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new anvil block
+		/// </summary>
+		/// <param name="orientation">Direction that the anvil is facing</param>
+		/// <param name="damage">Amount of damage the anvil has (0-2)</param>
+		public AnvilBlock (AnvilOrientation orientation, byte damage)
+			: base((byte)((byte)orientation | ((damage & 0x3) << 2)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Directions that an anvil can face
+		/// </summary>
+		public enum AnvilOrientation : byte
+		{
+			NorthSouth = 0x0,
+			EastWest   = 0x1
 		}
 	}
 }
