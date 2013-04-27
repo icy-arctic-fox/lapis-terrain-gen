@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public byte WaterLevel
 		{
-			get { return Data; }
+			get { return _data; }
 		}
 
 		/// <summary>

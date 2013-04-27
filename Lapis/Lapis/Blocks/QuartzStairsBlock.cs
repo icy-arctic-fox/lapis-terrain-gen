@@ -27,8 +27,6 @@ namespace Lapis.Blocks
 		{
 			get { return 30f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -53,8 +51,8 @@ namespace Lapis.Blocks
 		/// Creates a new quartz stairs block
 		/// </summary>
 		/// <param name="orientation">Direction that the stairs are facing</param>
-		protected QuartzStairsBlock (StairsOrientation orientation)
-			: base((byte)orientation)
+		public QuartzStairsBlock (StairsOrientation orientation)
+			: base(orientation)
 		{
 			// ...
 		}
@@ -64,8 +62,8 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="orientation">Direction that the stairs are facing</param>
 		/// <param name="upsideDown">Whether or not the stairs are upside-down</param>
-		protected QuartzStairsBlock (StairsOrientation orientation, bool upsideDown)
-			: base((byte)((byte)orientation | (upsideDown ? 0x8 : 0x0)))
+		public QuartzStairsBlock (StairsOrientation orientation, bool upsideDown)
+			: base(orientation, upsideDown)
 		{
 			// ...
 		}

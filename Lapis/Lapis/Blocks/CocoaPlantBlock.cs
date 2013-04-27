@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public CocoaPlantOrientation Orientation
 		{
-			get { return (CocoaPlantOrientation)(Data & 0x3); }
+			get { return (CocoaPlantOrientation)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace Lapis.Blocks
 		/// <remarks>0 is small, 1 is medium, and 2 is large (fully grown).</remarks>
 		public byte Size
 		{
-			get { return (byte)(Data >> 2); }
+			get { return (byte)(_data >> 2); }
 		}
 
 		/// <summary>

@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TripwireState State
 		{
-			get { return (TripwireState)Data; }
+			get { return (TripwireState)_data; }
 		}
 
 		/// <summary>

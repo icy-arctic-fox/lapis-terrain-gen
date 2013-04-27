@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public VinesLocation Sides
 		{
-			get { return (VinesLocation)Data; }
+			get { return (VinesLocation)_data; }
 		}
 
 		/// <summary>

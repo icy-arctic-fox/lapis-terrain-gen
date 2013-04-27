@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public JukeboxRecord Contents
 		{
-			get { return (JukeboxRecord)Data; }
+			get { return (JukeboxRecord)_data; }
 		}
 
 		/// <summary>

@@ -67,9 +67,23 @@ namespace Lapis.Blocks
 		{
 			get { return 18000000f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the portal frame block is facing
+		/// </summary>
+		public PortalFrameOrientation Orientation
+		{
+			get { return (PortalFrameOrientation)(_data & 0x3); }
+		}
+
+		/// <summary>
+		/// Whether or not the block contains an eye of ender
+		/// </summary>
+		public bool ContainsEye
+		{
+			get { return (0x4 == (_data & 0x4)); }
+		}
 
 		/// <summary>
 		/// Creates a new end portal frame block
@@ -88,6 +102,29 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new end portal block
+		/// </summary>
+		/// <param name="orientation">Direction that the portal block is facing</param>
+		/// <param name="eye">True if there is an eye of ender in the block</param>
+		public EndPortalFrameBlock (PortalFrameOrientation orientation, bool eye)
+			: base((byte)((byte)orientation | (eye ? 0x4 : 0x0)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Directions that a portal frame block can be facing
+		/// </summary>
+		/// <remarks>All portal frame blocks in the frame must point to the center for the portal to work.</remarks>
+		public enum PortalFrameOrientation : byte
+		{
+			South = 0x0,
+			West  = 0x1,
+			North = 0x2,
+			East  = 0x3
 		}
 	}
 }

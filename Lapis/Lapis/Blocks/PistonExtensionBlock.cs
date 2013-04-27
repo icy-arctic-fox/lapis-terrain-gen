@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 2.5f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public PistonOrientation Orientation
 		{
-			get { return (PistonOrientation)(Data & 0x7); }
+			get { return (PistonOrientation)(_data & 0x7); }
 		}
 
 		/// <summary>
@@ -84,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Sticky
 		{
-			get { return (0x8 == (Data & 0x8)); }
+			get { return (0x8 == (_data & 0x8)); }
 		}
 
 		/// <summary>

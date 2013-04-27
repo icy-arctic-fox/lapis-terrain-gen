@@ -11,7 +11,7 @@
 		/// </summary>
 		public RailOrientation Orientation
 		{
-			get { return (RailOrientation)Data; }
+			get { return (RailOrientation)_data; }
 		}
 
 		/// <summary>

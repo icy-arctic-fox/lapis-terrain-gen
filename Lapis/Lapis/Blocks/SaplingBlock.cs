@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TreeType TreeType
 		{
-			get { return (TreeType)(Data & 0x3); }
+			get { return (TreeType)(_data & 0x3); }
 		}
 
 		/// <summary>

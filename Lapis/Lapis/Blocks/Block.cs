@@ -11,7 +11,7 @@ namespace Lapis.Blocks
 	/// All sub-classes of this base class must be immutable.</remarks>
 	public abstract partial class Block
 	{
-		private readonly byte _data;
+		protected readonly byte _data;
 
 		#region Properties
 		/// <summary>

@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public MushroomTexture Texture
 		{
-			get { return (MushroomTexture)Data; }
+			get { return (MushroomTexture)_data; }
 		}
 
 		/// <summary>

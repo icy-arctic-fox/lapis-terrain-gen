@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public AnvilOrientation Orientation
 		{
-			get { return (AnvilOrientation)(Data & 0x3); }
+			get { return (AnvilOrientation)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace Lapis.Blocks
 		/// and 2 is a very damaged anvil (about to break).</remarks>
 		public byte Damage
 		{
-			get { return (byte)((Data >> 2) & 0x3); }
+			get { return (byte)((_data >> 2) & 0x3); }
 		}
 
 		/// <summary>

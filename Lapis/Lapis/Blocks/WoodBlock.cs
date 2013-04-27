@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 10f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public TreeType TreeType
 		{
-			get { return (TreeType)(Data & 0x3); }
+			get { return (TreeType)(_data & 0x3); }
 		}
 
 		/// <summary>
@@ -84,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public WoodOrientation Orientation
 		{
-			get { return (WoodOrientation)(Data & 0xc); }
+			get { return (WoodOrientation)(_data & 0xc); }
 		}
 
 		/// <summary>

@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public byte Moisture
 		{
-			get { return Data; }
+			get { return _data; }
 		}
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool Dry
 		{
-			get { return 0 == Data; }
+			get { return 0 == _data; }
 		}
 
 		/// <summary>

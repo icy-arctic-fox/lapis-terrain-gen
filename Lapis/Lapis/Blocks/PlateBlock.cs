@@ -52,7 +52,7 @@
 		/// </summary>
 		public bool Powered
 		{
-			get { return 0x0 != Data; }
+			get { return 0x0 != _data; }
 		}
 
 		/// <summary>

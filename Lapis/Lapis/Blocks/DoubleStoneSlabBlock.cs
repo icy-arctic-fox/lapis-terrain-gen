@@ -67,8 +67,6 @@ namespace Lapis.Blocks
 		{
 			get { return 30f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
@@ -76,7 +74,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public SlabTexture SlabType
 		{
-			get { return (SlabTexture)(Data & 0x7); }
+			get { return (SlabTexture)(_data & 0x7); }
 		}
 
 		/// <summary>
@@ -84,7 +82,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public bool AlternateTexture
 		{
-			get { return (0x8 == (Data & 0x8)); }
+			get { return (0x8 == (_data & 0x8)); }
 		}
 
 		/// <summary>

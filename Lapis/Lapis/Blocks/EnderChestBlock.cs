@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class EnderChestBlock : Block
+	public class EnderChestBlock : ChestBlock
 	{
 		#region Properties
 		/// <summary>
@@ -13,41 +13,9 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Whether or not the block is solid (non-solid blocks can be passed through)
-		/// </summary>
-		public override bool IsSolid
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
-		}
-
-		/// <summary>
 		/// Whether or not the block can catch fire
 		/// </summary>
 		public override bool Flammable
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
-		/// </summary>
-		public override byte Opacity
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Whether or not the block diffuses light
-		/// </summary>
-		public override bool Diffuse
 		{
 			get { return false; }
 		}
@@ -68,26 +36,34 @@ namespace Lapis.Blocks
 			get { return 3000f; }
 		}
 
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'EnderChest'
 		#endregion
 
 		/// <summary>
-		/// Creates a new ender chest block
+		/// Creates a new (empty) ender chest block
 		/// </summary>
 		public EnderChestBlock ()
-			: base(0)
 		{
 			// ...
 		}
 
 		/// <summary>
-		/// Creates a new ender chest block
+		/// Creates a new (empty) ender chest block
 		/// </summary>
 		/// <param name="data">Additional meta-data for the block</param>
 		public EnderChestBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new (empty) ender chest block
+		/// </summary>
+		/// <param name="orientation">Direction that the chest is facing</param>
+		/// <remarks>The orientation of the chest can't be Up or Down.</remarks>
+		public EnderChestBlock (BlockOrientation orientation)
+			: base(orientation)
 		{
 			// ...
 		}

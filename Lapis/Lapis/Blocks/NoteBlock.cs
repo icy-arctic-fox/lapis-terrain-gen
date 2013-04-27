@@ -68,7 +68,7 @@ namespace Lapis.Blocks
 			get { return 4f; }
 		}
 
-		// TODO: Implement meta-data values
+		// TODO: Implement tile entity data for 'Music'
 		#endregion
 
 		/// <summary>

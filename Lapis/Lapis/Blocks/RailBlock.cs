@@ -18,7 +18,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		public CurvedRailOrientation Orientation
 		{
-			get { return (CurvedRailOrientation)Data; }
+			get { return (CurvedRailOrientation)_data; }
 		}
 
 		/// <summary>
