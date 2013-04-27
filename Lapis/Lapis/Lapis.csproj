@@ -96,6 +96,7 @@
     <Compile Include="Blocks\BrickBlock.cs" />
     <Compile Include="Blocks\BrickStairsBlock.cs" />
     <Compile Include="Blocks\BrownMushroomBlock.cs" />
+    <Compile Include="Blocks\ButtonBlock.cs" />
     <Compile Include="Blocks\CactusBlock.cs" />
     <Compile Include="Blocks\CakeBlock.cs" />
     <Compile Include="Blocks\CarrotBlock.cs" />
