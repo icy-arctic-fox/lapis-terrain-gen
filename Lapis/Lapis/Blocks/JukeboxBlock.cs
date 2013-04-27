@@ -74,6 +74,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Contents of the jukebox
+		/// </summary>
+		public JukeboxRecord Contents
+		{
+			get { return (JukeboxRecord)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new jukebox block
 		/// </summary>
 		public JukeboxBlock ()
@@ -90,6 +98,87 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new jukebox block
+		/// </summary>
+		/// <param name="contents">Contents of the jukebox</param>
+		public JukeboxBlock (JukeboxRecord contents)
+			: base((byte)contents)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Record contained in the jukebox
+		/// </summary>
+		public enum JukeboxRecord : byte
+		{
+			/// <summary>
+			/// No record in the jukebox
+			/// </summary>
+			None = 0x0,
+
+			/// <summary>
+			/// Gold disc - 13
+			/// </summary>
+			Gold = 0x1,
+
+			/// <summary>
+			/// Green disc - cat
+			/// </summary>
+			Green = 0x2,
+
+			/// <summary>
+			/// Orange disc - blocks
+			/// </summary>
+			Orange = 0x3,
+
+			/// <summary>
+			/// Red disc - chirp
+			/// </summary>
+			Red = 0x4,
+
+			/// <summary>
+			/// Lime green disc - far
+			/// </summary>
+			Lime = 0x5,
+
+			/// <summary>
+			/// Purple disc - mall
+			/// </summary>
+			Purple = 0x6,
+
+			/// <summary>
+			/// Violet disc - mellohi
+			/// </summary>
+			Violet = 0x7,
+
+			/// <summary>
+			/// Black disc - stal
+			/// </summary>
+			Black = 0x8,
+
+			/// <summary>
+			/// White disc - strad
+			/// </summary>
+			White = 0x9,
+
+			/// <summary>
+			/// Sea green disc - ward
+			/// </summary>
+			Sea = 0xa,
+
+			/// <summary>
+			/// Broken disc - 11
+			/// </summary>
+			Broken = 0xb,
+
+			/// <summary>
+			/// Blue disc - wait
+			/// </summary>
+			Blue = 0xc
 		}
 	}
 }
