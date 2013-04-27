@@ -67,9 +67,23 @@ namespace Lapis.Blocks
 		{
 			get { return 15f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the gate is facing
+		/// </summary>
+		public GateOrientation Orientation
+		{
+			get { return (GateOrientation)Data; }
+		}
+
+		/// <summary>
+		/// Whether or not the gate is open
+		/// </summary>
+		public bool Open
+		{
+			get { return (0x4 == (Data & 0x4)); }
+		}
 
 		/// <summary>
 		/// Creates a new gate block
@@ -88,6 +102,39 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new gate block
+		/// </summary>
+		/// <param name="orientation">Direction that the gate is facing</param>
+		public GateBlock (GateOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new gate block
+		/// </summary>
+		/// <param name="orientation">Direction that the gate is facing</param>
+		/// <param name="open">Whether or not the gate is open</param>
+		public GateBlock (GateOrientation orientation, bool open)
+			: base((byte)((byte)orientation | (open ? 0x4 : 0x0)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Direction that the gate is facing
+		/// </summary>
+		/// <remarks>The direction can easily be found by using the direction that the doors point when opened.</remarks>
+		public enum GateOrientation : byte
+		{
+			South = 0x0,
+			West  = 0x1,
+			North = 0x2,
+			East  = 0x3
 		}
 	}
 }
