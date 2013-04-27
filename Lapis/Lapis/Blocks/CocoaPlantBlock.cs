@@ -67,9 +67,32 @@ namespace Lapis.Blocks
 		{
 			get { return 15f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the cocoa plant is facing
+		/// </summary>
+		public CocoaPlantOrientation Orientation
+		{
+			get { return (CocoaPlantOrientation)(Data & 0x3); }
+		}
+
+		/// <summary>
+		/// Size of the cocoa plant
+		/// </summary>
+		/// <remarks>0 is small, 1 is medium, and 2 is large (fully grown).</remarks>
+		public byte Size
+		{
+			get { return (byte)(Data >> 2); }
+		}
+
+		/// <summary>
+		/// Whether or not the plant is fully grown
+		/// </summary>
+		public bool FullyGrown
+		{
+			get { return Size >= 2; }
+		}
 
 		/// <summary>
 		/// Creates a new cocoa plant block
@@ -88,6 +111,38 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new cocoa plant block
+		/// </summary>
+		/// <param name="orientation">Direction that the plant is facing</param>
+		public CocoaPlantBlock (CocoaPlantOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new cocoa plant block
+		/// </summary>
+		/// <param name="orientation">Direction that the plant is facing</param>
+		/// <param name="size">Size of the plant (0-2, 2 being the largest)</param>
+		public CocoaPlantBlock (CocoaPlantOrientation orientation, byte size)
+			: base((byte)((byte)orientation | ((size & 0x3) << 2)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Directions that the cocoa plants cant face (side of the tree it is on) 
+		/// </summary>
+		public enum CocoaPlantOrientation : byte
+		{
+			North = 0x0,
+			East  = 0x1,
+			South = 0x2,
+			West  = 0x3
 		}
 	}
 }

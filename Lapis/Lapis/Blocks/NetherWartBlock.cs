@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Whether or not the nether wart is fully grown
+		/// </summary>
+		public bool FullyGrown
+		{
+			get { return Stage >= 3; }
+		}
+
+		/// <summary>
 		/// Creates a new nether wart block
 		/// </summary>
 		public NetherWartBlock ()

@@ -25,6 +25,14 @@
 		}
 
 		/// <summary>
+		/// Whether or not the plant is fully grown
+		/// </summary>
+		public bool FullyGrown
+		{
+			get { return Age >= 15; }
+		}
+
+		/// <summary>
 		/// Creates a new plant block
 		/// </summary>
 		protected PlantBlock ()
