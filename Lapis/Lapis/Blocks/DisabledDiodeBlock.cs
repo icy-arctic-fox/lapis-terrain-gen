@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class DisabledDiodeBlock : Block
+	public class DisabledDiodeBlock : DiodeBlock
 	{
 		#region Properties
 		/// <summary>
@@ -13,69 +13,18 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Whether or not the block is solid (non-solid blocks can be passed through)
-		/// </summary>
-		public override bool IsSolid
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Whether or not the block can catch fire
-		/// </summary>
-		public override bool Flammable
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
-		/// </summary>
-		public override byte Opacity
-		{
-			get { return 15; }
-		}
-
-		/// <summary>
-		/// Whether or not the block diffuses light
-		/// </summary>
-		public override bool Diffuse
-		{
-			get { return false; }
-		}
-
-		/// <summary>
 		/// Amount of block light that the block gives off
 		/// </summary>
 		public override byte Luminance
 		{
 			get { return 0; }
 		}
-
-		/// <summary>
-		/// Amount of resistance to blasts before being destroyed
-		/// </summary>
-		public override float BlastResistance
-		{
-			get { return 0f; }
-		}
-
-		// TODO: Implement meta-data values
 		#endregion
 
 		/// <summary>
 		/// Creates a new disabled diode block
 		/// </summary>
 		public DisabledDiodeBlock ()
-			: base(0)
 		{
 			// ...
 		}
@@ -86,6 +35,17 @@ namespace Lapis.Blocks
 		/// <param name="data">Additional meta-data for the block</param>
 		public DisabledDiodeBlock (byte data)
 			: base(data)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new disabled diode block
+		/// </summary>
+		/// <param name="orientation">Direction that the diode block is pointing</param>
+		/// <param name="delay">Delay that the diode is set to (1-4)</param>
+		public DisabledDiodeBlock (DiodeOrientation orientation, byte delay)
+			: base(orientation, delay)
 		{
 			// ...
 		}
