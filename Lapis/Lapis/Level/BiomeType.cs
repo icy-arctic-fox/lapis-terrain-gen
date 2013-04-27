@@ -6,6 +6,11 @@
 	public enum BiomeType : byte
 	{
 		/// <summary>
+		/// Biome type not calculated yet, it will be computed as soon as Minecraft loads the chunk
+		/// </summary>
+		Uncalculated = 255,
+
+		/// <summary>
 		/// Large open biome made entirely of water
 		/// </summary>
 		Ocean = 0,
