@@ -72,6 +72,31 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// True if the trapdoor is on the top half of the block,
+		/// false if it is on the bottom half of the block
+		/// </summary>
+		public bool TopHalf
+		{
+			get { return (0x8 == (Data & 0x8)); }
+		}
+
+		/// <summary>
+		/// Whether or not the trapdoor is open
+		/// </summary>
+		public bool Open
+		{
+			get { return (0x4 == (Data & 0x4)); }
+		}
+
+		/// <summary>
+		/// Wall that the trapdoor is attached to
+		/// </summary>
+		public TrapdoorOrientation Orientation
+		{
+			get { return (TrapdoorOrientation)(Data & 0x3); }
+		}
+
+		/// <summary>
 		/// Creates a new trapdoor block
 		/// </summary>
 		public TrapdoorBlock ()
@@ -88,6 +113,29 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new trapdoor block
+		/// </summary>
+		/// <param name="orientation">Wall that the trapdoor is attached to</param>
+		/// <param name="topHalf">True if the trapdoor is on the top half of the block</param>
+		/// <param name="open">Whether or not the trapdoor is open</param>
+		public TrapdoorBlock (TrapdoorOrientation orientation, bool topHalf, bool open)
+			: base((byte)((byte)orientation | (open ? 0x4 : 0x0) | (topHalf ? 0x8 : 0x0)))
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Wall that the trapdoor is attached to
+		/// </summary>
+		public enum TrapdoorOrientation : byte
+		{
+			South = 0x0,
+			North = 0x1,
+			East  = 0x2,
+			West  = 0x3
 		}
 	}
 }
