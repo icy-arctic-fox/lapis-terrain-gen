@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Stage of growth the nether wart is in (0-3)
+		/// </summary>
+		public byte Stage
+		{
+			get { return Data; }
+		}
 
 		/// <summary>
 		/// Creates a new nether wart block
@@ -83,9 +89,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new nether wart block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public NetherWartBlock (byte data)
-			: base(data)
+		/// <param name="stage">Stage of growth the nether wart is in (0-3)</param>
+		public NetherWartBlock (byte stage)
+			: base((byte)(stage & 0x3))
 		{
 			// ...
 		}

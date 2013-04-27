@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 10f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Water level contained in the cauldron
+		/// </summary>
+		public byte WaterLevel
+		{
+			get { return Data; }
+		}
 
 		/// <summary>
 		/// Creates a new cauldron block
@@ -83,9 +89,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new cauldron block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CauldronBlock (byte data)
-			: base(data)
+		/// <param name="level">Water level contained in the cauldron (0-3)</param>
+		public CauldronBlock (byte level)
+			: base((byte)(level & 0x3))
 		{
 			// ...
 		}
