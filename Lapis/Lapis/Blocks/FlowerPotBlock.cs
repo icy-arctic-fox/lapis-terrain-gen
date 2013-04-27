@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Contents of the flower pot
+		/// </summary>
+		public FlowerPotContents Contents
+		{
+			get { return (FlowerPotContents)Data;}
+		}
 
 		/// <summary>
 		/// Creates a new flower pot block
@@ -88,6 +94,82 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new flower pot block
+		/// </summary>
+		/// <param name="contents">Contents of the flower pot</param>
+		public FlowerPotBlock (FlowerPotContents contents)
+			: base((byte)contents)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Contents of a flower pot
+		/// </summary>
+		public enum FlowerPotContents : byte
+		{
+			/// <summary>
+			/// Nothing in the flower pot
+			/// </summary>
+			Empty = 0x0,
+
+			/// <summary>
+			/// Red flower
+			/// </summary>
+			Rose = 0x1,
+
+			/// <summary>
+			/// Yellow flower
+			/// </summary>
+			Dandelion = 0x2,
+
+			/// <summary>
+			/// Sapling from an oak tree
+			/// </summary>
+			OakSapling = 0x3,
+
+			/// <summary>
+			/// Sapling from a spruce tree
+			/// </summary>
+			SpruceSapling = 0x4,
+
+			/// <summary>
+			/// Sapling from a birch tree
+			/// </summary>
+			BirchSapling = 0x5,
+
+			/// <summary>
+			/// Sapling from a jungle tree
+			/// </summary>
+			JungleTreeSapling = 0x6,
+
+			/// <summary>
+			/// Red mushroom
+			/// </summary>
+			RedMushroom = 0x7,
+
+			/// <summary>
+			/// Brown mushroom
+			/// </summary>
+			BrownMushroom = 0x8,
+
+			/// <summary>
+			/// Small cactus
+			/// </summary>
+			Cactus = 0x9,
+
+			/// <summary>
+			/// Dead bush from the desert
+			/// </summary>
+			DeadBush = 0xa,
+
+			/// <summary>
+			/// Small fern
+			/// </summary>
+			Fern = 0xb
 		}
 	}
 }
