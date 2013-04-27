@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 30f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Texture that appears on the wall
+		/// </summary>
+		public WallTexture Texture
+		{
+			get { return (WallTexture)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new cobblestone wall block
@@ -88,6 +94,32 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new cobblestone wall block
+		/// </summary>
+		/// <param name="texture">Texture that is used on the wall</param>
+		public CobblestoneWallBlock (WallTexture texture)
+			: base((byte)texture)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Texture that appears on the wall
+		/// </summary>
+		public enum WallTexture : byte
+		{
+			/// <summary>
+			/// Plain cobblestone
+			/// </summary>
+			Cobblestone = 0x0,
+
+			/// <summary>
+			/// Mossy cobblestone
+			/// </summary>
+			Mossy = 0x1
 		}
 	}
 }
