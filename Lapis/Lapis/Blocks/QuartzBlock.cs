@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 4f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Design that appears on the quartz block
+		/// </summary>
+		public QuartzTexture Texture
+		{
+			get { return (QuartzTexture)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new quartz block
@@ -88,6 +94,47 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new quartz block
+		/// </summary>
+		/// <param name="texture">Design that appears on the block</param>
+		public QuartzBlock (QuartzTexture texture)
+			: base((byte)texture)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Designs that can appear on the quartz block
+		/// </summary>
+		public enum QuartzTexture : byte
+		{
+			/// <summary>
+			/// Solid (default) block of quartz
+			/// </summary>
+			Solid = 0x0,
+
+			/// <summary>
+			/// Chiseled design
+			/// </summary>
+			Chiseled = 0x1,
+
+			/// <summary>
+			/// Pillar with lines going vertically
+			/// </summary>
+			Vertical = 0x2,
+
+			/// <summary>
+			/// Pillar with lines going vertically north and south
+			/// </summary>
+			NorthSouth = 0x3,
+
+			/// <summary>
+			/// Pillar with lines going horizontally east and west
+			/// </summary>
+			EastWest = 0x4
 		}
 	}
 }
