@@ -74,7 +74,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Whether or not the torch is powered and giving off a redstone current
 		/// </summary>
-		public bool Powered
+		public virtual bool Powered
 		{
 			get { return true; }
 		}
@@ -82,7 +82,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Strength of the redstone current that the torch is giving off
 		/// </summary>
-		public byte CurrentStrength
+		public virtual byte CurrentStrength
 		{
 			get { return 15; }
 		}
