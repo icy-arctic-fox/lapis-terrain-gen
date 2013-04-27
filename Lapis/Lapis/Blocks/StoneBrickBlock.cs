@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Texture that appears on the block
+		/// </summary>
+		public StoneBrickTexture Texture
+		{
+			get { return (StoneBrickTexture)Data; }
+		}
+
+		/// <summary>
 		/// Creates a new stone brick block
 		/// </summary>
 		public StoneBrickBlock ()
@@ -88,6 +96,27 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new stone brick block
+		/// </summary>
+		/// <param name="texture">Texture that appears on the block</param>
+		public StoneBrickBlock (StoneBrickTexture texture)
+			: base((byte)texture)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Types of textures that can appear on the stone brick block
+		/// </summary>
+		public enum StoneBrickTexture : byte
+		{
+			Normal   = 0x0,
+			Mossy    = 0x1,
+			Cracked  = 0x2,
+			Chiseled = 0x3
 		}
 	}
 }
