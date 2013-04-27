@@ -68,8 +68,6 @@ namespace Lapis.Blocks
 			get { return 30f; }
 		}
 
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'RecordPlayer'
 		#endregion
 

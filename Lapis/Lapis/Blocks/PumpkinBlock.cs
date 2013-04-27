@@ -67,9 +67,15 @@ namespace Lapis.Blocks
 		{
 			get { return 5f; }
 		}
-
-		// TODO: Implement meta-data values
 		#endregion
+
+		/// <summary>
+		/// Direction that the pumpkin is facing
+		/// </summary>
+		public PumpkinOrientation Orientation
+		{
+			get { return (PumpkinOrientation)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new pumpkin block
@@ -88,6 +94,32 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new pumpkin block
+		/// </summary>
+		/// <param name="orientation">Direction that the pumpkin is facing</param>
+		public PumpkinBlock (PumpkinOrientation orientation)
+			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Different directions that a pumpkin can face
+		/// </summary>
+		public enum PumpkinOrientation : byte
+		{
+			South = 0x0,
+			West  = 0x1,
+			North = 0x2,
+			East  = 0x3,
+
+			/// <summary>
+			/// The jack-o-lantern face won't appear on any sides of the pumpkin
+			/// </summary>
+			None  = 0x4
 		}
 	}
 }
