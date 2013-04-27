@@ -68,16 +68,22 @@ namespace Lapis.Blocks
 			get { return 5f; }
 		}
 
-		// TODO: Implement meta-data values
-
 		// TODO: Implement NBT data for 'Skull'
 		#endregion
+
+		/// <summary>
+		/// Position that the mob head is in
+		/// </summary>
+		public MobHeadPosition Position
+		{
+			get { return (MobHeadPosition)Data; }
+		}
 
 		/// <summary>
 		/// Creates a new mob head block
 		/// </summary>
 		public MobHeadBlock ()
-			: base(0)
+			: base((byte)MobHeadPosition.Floor)
 		{
 			// ...
 		}
@@ -90,6 +96,48 @@ namespace Lapis.Blocks
 			: base(data)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new mob head block
+		/// </summary>
+		/// <param name="position">Position of the mob head</param>
+		public MobHeadBlock (MobHeadPosition position)
+			: base((byte)position)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Positions that the mob head can have
+		/// </summary>
+		public enum MobHeadPosition : byte
+		{
+			/// <summary>
+			/// On the floor
+			/// </summary>
+			/// <remarks>The rotation data is stored in the NBT data.</remarks>
+			Floor = 0x1,
+
+			/// <summary>
+			/// Against a wall, facing north
+			/// </summary>
+			North = 0x2,
+
+			/// <summary>
+			/// Against a wall, facing south
+			/// </summary>
+			South = 0x3,
+
+			/// <summary>
+			/// Against a wall, facing east
+			/// </summary>
+			East = 0x4,
+
+			/// <summary>
+			/// Against a wall, facing west
+			/// </summary>
+			West = 0x5
 		}
 	}
 }
