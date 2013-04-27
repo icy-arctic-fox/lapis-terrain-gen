@@ -72,6 +72,14 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
+		/// Height of the snow
+		/// </summary>
+		public byte Height
+		{
+			get { return (byte)(Data & 0x7); }
+		}
+
+		/// <summary>
 		/// Creates a new snow cover block
 		/// </summary>
 		public SnowCoverBlock ()
@@ -83,9 +91,9 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new snow cover block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public SnowCoverBlock (byte data)
-			: base(data)
+		/// <param name="height">Height of the snow block (0-7)</param>
+		public SnowCoverBlock (byte height)
+			: base((byte)(height & 0x7))
 		{
 			// ...
 		}
