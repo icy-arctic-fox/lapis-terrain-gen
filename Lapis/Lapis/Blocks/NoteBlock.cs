@@ -152,5 +152,30 @@ namespace Lapis.Blocks
 			node.Add(pitchNode);
 		}
 		#endregion
+
+		/// <summary>
+		/// Compares another block to this one
+		/// </summary>
+		/// <param name="block">Block to compare against</param>
+		/// <returns>True if the blocks are the same</returns>
+		protected override bool Equals (Block block)
+		{
+			if(base.Equals(block))
+			{
+				var noteBlock = block as NoteBlock;
+				if(!ReferenceEquals(null, noteBlock))
+					return _pitch == noteBlock._pitch;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Generates a hash code from the note block
+		/// </summary>
+		/// <returns>A hash code</returns>
+		public override int GetHashCode ()
+		{
+			return base.GetHashCode() | (_pitch << 16);
+		}
 	}
 }
