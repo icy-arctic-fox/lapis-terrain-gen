@@ -285,6 +285,8 @@
     <Compile Include="IO\NBT\StringNode.cs" />
     <Compile Include="IO\NBT\Tree.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemType.cs" />
     <Compile Include="Level\BiomeType.cs" />
     <Compile Include="Level\BlockRef.cs" />
     <Compile Include="Level\Chunk.cs" />
