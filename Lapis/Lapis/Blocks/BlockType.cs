@@ -258,7 +258,7 @@
 		/// <summary>
 		/// An explosive block crafted from sand and gunpowder. A great mining tool if used carefully.
 		/// </summary>
-		TNT = 46,
+		Tnt = 46,
 
 		/// <summary>
 		/// Decorative block. Also used to power up enchantments. 
