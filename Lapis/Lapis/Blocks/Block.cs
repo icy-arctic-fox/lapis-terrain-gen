@@ -3,7 +3,7 @@
 namespace Lapis.Blocks
 {
 	/// <summary>
-	/// Base block data
+	/// Base class for all block types
 	/// </summary>
 	/// <remarks>Instances of this class are not tied to any active chunk data.
 	/// Updating the values in this block object will not update them in the chunk.
@@ -11,6 +11,10 @@ namespace Lapis.Blocks
 	/// All sub-classes of this base class must be immutable.</remarks>
 	public abstract partial class Block
 	{
+		/// <summary>
+		/// Raw data associated with the block
+		/// </summary>
+		/// <remarks>Only the lower 4 bits of this value are used (0x0-0xf).</remarks>
 		protected readonly byte _data;
 
 		#region Properties
@@ -105,7 +109,8 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="block">Block to compare against</param>
 		/// <returns>True if the block contents are the same or false if they aren't</returns>
-		/// <remarks>Sub-classes should override this method if they have additional properties (such as a tile-entity).</remarks>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a tile entity).
+		/// This method only compares the types and data.</remarks>
 		protected virtual bool Equals (Block block)
 		{
 			return (block.Type == Type && block._data == _data);
