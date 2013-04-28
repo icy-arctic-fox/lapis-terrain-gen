@@ -226,5 +226,34 @@ namespace Lapis.Blocks
 			node.Add(line4Node);
 		}
 		#endregion
+
+		/// <summary>
+		/// Compares the block to another block
+		/// </summary>
+		/// <param name="block">Block to compare against</param>
+		/// <returns>True if the block is the same</returns>
+		/// <remarks>The text on the sign is compared.</remarks>
+		protected override bool Equals (Block block)
+		{
+			if(base.Equals(block))
+			{
+				var signBlock = block as SignBlock;
+				if(!ReferenceEquals(null, signBlock))
+					return _line1 == signBlock._line1 &&
+						   _line2 == signBlock._line2 &&
+						   _line3 == signBlock._line3 &&
+						   _line4 == signBlock._line4;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Generates a hash code from the sign block
+		/// </summary>
+		/// <returns>A hash code</returns>
+		public override int GetHashCode ()
+		{
+			return HashUtility.ComputeHash(base.GetHashCode(), _line1, _line2, _line3, _line4);
+		}
 	}
 }
