@@ -93,12 +93,12 @@ namespace Lapis.Blocks
 				_knownBlockTypes[(byte)BlockType.Farmland]              = (data, tileData) => new FarmlandBlock(data);
 				_knownBlockTypes[(byte)BlockType.Furnace]               = (data, tileData) => new FurnaceBlock(data);
 				_knownBlockTypes[(byte)BlockType.LitFurnace]            = (data, tileData) => new LitFurnaceBlock(data);
-				_knownBlockTypes[(byte)BlockType.SignPost]              = (data, tileData) => new SignPostBlock(data);
+				_knownBlockTypes[(byte)BlockType.SignPost]              = (data, tileData) => new SignPostBlock(data, tileData);
 				_knownBlockTypes[(byte)BlockType.WoodDoor]              = (data, tileData) => new WoodDoorBlock(data);
 				_knownBlockTypes[(byte)BlockType.Ladder]                = (data, tileData) => new LadderBlock(data);
 				_knownBlockTypes[(byte)BlockType.Rail]                  = (data, tileData) => new RailBlock(data);
 				_knownBlockTypes[(byte)BlockType.CobblestoneStairs]     = (data, tileData) => new CobblestoneStairsBlock(data);
-				_knownBlockTypes[(byte)BlockType.WallSign]              = (data, tileData) => new WallSignBlock(data);
+				_knownBlockTypes[(byte)BlockType.WallSign]              = (data, tileData) => new WallSignBlock(data, tileData);
 				_knownBlockTypes[(byte)BlockType.Lever]                 = (data, tileData) => new LeverBlock(data);
 				_knownBlockTypes[(byte)BlockType.StonePlate]            = (data, tileData) => new StonePlateBlock(data);
 				_knownBlockTypes[(byte)BlockType.IronDoor]              = (data, tileData) => new IronDoorBlock(data);
