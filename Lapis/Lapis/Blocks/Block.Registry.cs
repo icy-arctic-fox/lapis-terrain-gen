@@ -55,7 +55,7 @@ namespace Lapis.Blocks
 				_knownBlockTypes[(byte)BlockType.LapisLazuli]           = (data, tileData) => new LapisLazuliBlock(data);
 				_knownBlockTypes[(byte)BlockType.Dispenser]             = (data, tileData) => new DispenserBlock(data);
 				_knownBlockTypes[(byte)BlockType.Sandstone]             = (data, tileData) => new SandstoneBlock(data);
-				_knownBlockTypes[(byte)BlockType.Note]                  = (data, tileData) => new NoteBlock(data);
+				_knownBlockTypes[(byte)BlockType.Note]                  = (data, tileData) => new NoteBlock(tileData);
 				_knownBlockTypes[(byte)BlockType.Bed]                   = (data, tileData) => new BedBlock(data);
 				_knownBlockTypes[(byte)BlockType.PoweredRail]           = (data, tileData) => new PoweredRailBlock(data);
 				_knownBlockTypes[(byte)BlockType.DetectorRail]          = (data, tileData) => new DetectorRailBlock(data);

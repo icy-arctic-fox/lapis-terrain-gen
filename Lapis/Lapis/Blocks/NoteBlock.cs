@@ -1,7 +1,12 @@
+using System;
+using Lapis.IO.NBT;
+
 namespace Lapis.Blocks
 {
-	public class NoteBlock : Block
+	public class NoteBlock : TileEntity
 	{
+		private readonly byte _pitch;
+
 		#region Properties
 		/// <summary>
 		/// Type that describes the block
@@ -72,22 +77,80 @@ namespace Lapis.Blocks
 		#endregion
 
 		/// <summary>
-		/// Creates a new note block
+		/// Pitch that the block is set to
 		/// </summary>
-		public NoteBlock ()
-			: base(0)
+		/// <remarks>This is effectively the number of right clicks used to set the pitch.</remarks>
+		public byte Pitch
 		{
-			// ...
+			get { return _pitch; }
 		}
 
 		/// <summary>
 		/// Creates a new note block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public NoteBlock (byte data)
-			: base(data)
+		public NoteBlock ()
+			: base(0)
 		{
-			// ...
+			_pitch = 0;
 		}
+
+		/// <summary>
+		/// Creates a new note block
+		/// </summary>
+		/// <param name="pitch">Pitch of the note block (0-24)</param>
+		public NoteBlock (byte pitch)
+			: base(0)
+		{
+			if(pitch > 24)
+				throw new ArgumentOutOfRangeException("pitch", "The pitch can't be higher than 24.");
+			_pitch = pitch;
+		}
+
+		#region NBT data
+		/// <summary>
+		/// Name of the node that stores the pitch
+		/// </summary>
+		protected const string PitchNodeName = "note";
+
+		/// <summary>
+		/// ID of the tile entity
+		/// </summary>
+		/// <remarks>The tile entity ID for this block is "Music"</remarks>
+		protected override string TileEntityId
+		{
+			get { return "Music"; }
+		}
+
+		/// <summary>
+		/// Creates a new note block
+		/// </summary>
+		/// <param name="tileData">Node that contains the tile entity data</param>
+		public NoteBlock (Node tileData)
+			: base(0, tileData)
+		{
+			_pitch = validatePitchNode((CompoundNode)tileData);
+		}
+
+		private static byte validatePitchNode (CompoundNode node)
+		{
+			if(node.Contains(PitchNodeName))
+			{
+				var tempNode = node[PitchNodeName] as ByteNode;
+				if(null != tempNode)
+					return tempNode.Value;
+			}
+			return 0;
+		}
+		
+		/// <summary>
+		/// Adds the NBT data associated 
+		/// </summary>
+		/// <param name="node">Node to add data to</param>
+		protected override void InsertDataIntoNode (CompoundNode node)
+		{
+			var pitchNode = new ByteNode(PitchNodeName, _pitch);
+			node.Add(pitchNode);
+		}
+		#endregion
 	}
 }
