@@ -7,7 +7,7 @@ namespace Lapis.Blocks
 	/// </summary>
 	/// <remarks>Door blocks have different data values for the top and bottom parts.
 	/// Be sure to check which part of the door it is before using properties.</remarks>
-	public abstract class DoorBlock : Block
+	public abstract class DoorBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -104,9 +104,22 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get
+			{
+				if(TopHalf)
+					return LeftHinge ? "TopHalf LeftHinge" : "TopHalf RightHinge";
+				return (Open ? "BottomHalf Open " : " BottomHalf Closed ") + Orientation.ToString();
+			}
+		}
+
+		/// <summary>
 		/// Creates a new door block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected DoorBlock (byte data)
 			: base(data)
 		{

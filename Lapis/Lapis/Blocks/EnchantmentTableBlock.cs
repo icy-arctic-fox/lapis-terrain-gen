@@ -83,8 +83,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new enchantment table block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public EnchantmentTableBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected EnchantmentTableBlock (byte data)
 			: base(data)
 		{
 			// ...

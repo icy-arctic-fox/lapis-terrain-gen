@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class FireBlock : Block
+	public class FireBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -83,6 +83,14 @@ namespace Lapis.Blocks
 		public bool Eternal
 		{
 			get { return 0xf == _data; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Eternal ? "Eternal" : "Age: " + Age.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 
 		/// <summary>

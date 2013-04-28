@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base class for pressure plate blocks
 	/// </summary>
-	public abstract class PlateBlock : Block, IRedstoneSourceBlock
+	public abstract class PlateBlock : Block, IRedstoneSourceBlock, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -64,6 +64,14 @@
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Powered ? "Pressed" : "Unpressed"; }
+		}
+
+		/// <summary>
 		/// Creates a new plate block
 		/// </summary>
 		protected PlateBlock ()
@@ -75,7 +83,7 @@
 		/// <summary>
 		/// Creates a new plate block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected PlateBlock (byte data)
 			: base(data)
 		{

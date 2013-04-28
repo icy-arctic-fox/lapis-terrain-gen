@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new end stone block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public EndStoneBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected EndStoneBlock (byte data)
 			: base(data)
 		{
 			// ...

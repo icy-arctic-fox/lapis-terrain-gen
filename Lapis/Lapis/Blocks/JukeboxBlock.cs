@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class JukeboxBlock : Block
+	public class JukeboxBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -80,6 +80,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Contents.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new jukebox block
 		/// </summary>
 		public JukeboxBlock ()
@@ -91,7 +99,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new jukebox block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public JukeboxBlock (byte data)
 			: base(data)
 		{

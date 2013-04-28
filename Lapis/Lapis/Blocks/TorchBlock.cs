@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class TorchBlock : Block
+	public class TorchBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new torch block
 		/// </summary>
 		public TorchBlock ()
@@ -89,7 +97,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new torch block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public TorchBlock (byte data)
 			: base(data)
 		{

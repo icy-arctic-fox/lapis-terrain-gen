@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sand block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public SandBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected SandBlock (byte data)
 			: base(data)
 		{
 			// ...

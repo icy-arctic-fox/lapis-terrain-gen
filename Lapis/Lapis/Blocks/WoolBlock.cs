@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class WoolBlock : Block
+	public class WoolBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Color.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new wool block
 		/// </summary>
 		public WoolBlock ()
@@ -89,7 +97,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new wool block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public WoolBlock (byte data)
 			: base(data)
 		{

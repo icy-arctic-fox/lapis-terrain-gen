@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new emerald ore block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public EmeraldOreBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected EmeraldOreBlock (byte data)
 			: base(data)
 		{
 			// ...

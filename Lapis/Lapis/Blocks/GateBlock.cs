@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class GateBlock : Block
+	public class GateBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -86,6 +86,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Orientation + (Open ? " Open" : " Closed"); }
+		}
+
+		/// <summary>
 		/// Creates a new gate block
 		/// </summary>
 		public GateBlock ()
@@ -97,7 +105,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new gate block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public GateBlock (byte data)
 			: base(data)
 		{

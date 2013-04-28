@@ -22,6 +22,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public override string DataString
+		{
+			get { return Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new rail block
 		/// </summary>
 		public RailBlock ()
@@ -32,7 +40,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new rail block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public RailBlock (byte data)
 			: base(data)
 		{

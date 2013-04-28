@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new dandelion block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public DandelionBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected DandelionBlock (byte data)
 			: base(data)
 		{
 			// ...

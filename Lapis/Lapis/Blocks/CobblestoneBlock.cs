@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new cobblestone block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CobblestoneBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected CobblestoneBlock (byte data)
 			: base(data)
 		{
 			// ...

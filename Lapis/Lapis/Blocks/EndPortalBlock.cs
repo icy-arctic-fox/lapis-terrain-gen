@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new end portal block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public EndPortalBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected EndPortalBlock (byte data)
 			: base(data)
 		{
 			// ...

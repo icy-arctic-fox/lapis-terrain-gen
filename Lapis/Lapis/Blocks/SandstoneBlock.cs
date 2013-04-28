@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class SandstoneBlock : Block
+	public class SandstoneBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Texture.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new sandstone block
 		/// </summary>
 		public SandstoneBlock ()
@@ -89,7 +97,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sandstone block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public SandstoneBlock (byte data)
 			: base(data)
 		{

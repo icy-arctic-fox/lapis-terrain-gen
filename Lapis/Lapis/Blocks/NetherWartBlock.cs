@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class NetherWartBlock : Block
+	public class NetherWartBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -83,6 +83,14 @@ namespace Lapis.Blocks
 		public bool FullyGrown
 		{
 			get { return Stage >= 3; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Stage.ToString(System.Globalization.CultureInfo.InvariantCulture) + "/3"; }
 		}
 
 		/// <summary>

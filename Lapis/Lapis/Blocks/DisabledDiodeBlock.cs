@@ -32,7 +32,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new disabled diode block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public DisabledDiodeBlock (byte data)
 			: base(data)
 		{

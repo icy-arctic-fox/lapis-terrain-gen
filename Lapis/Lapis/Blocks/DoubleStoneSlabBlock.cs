@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class DoubleStoneSlabBlock : Block
+	public class DoubleStoneSlabBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -86,6 +86,20 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get
+			{
+				var str = SlabType.ToString();
+				if(AlternateTexture)
+					str += " Alternate";
+				return str;
+			}
+		}
+
+		/// <summary>
 		/// Creates a new double stone slab block
 		/// </summary>
 		public DoubleStoneSlabBlock ()
@@ -97,7 +111,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new double stone slab block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public DoubleStoneSlabBlock (byte data)
 			: base(data)
 		{

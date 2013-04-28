@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new nether quartz ore block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public NetherQuartzOreBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected NetherQuartzOreBlock (byte data)
 			: base(data)
 		{
 			// ...

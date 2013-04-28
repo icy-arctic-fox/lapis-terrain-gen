@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class AnvilBlock : Block
+	public class AnvilBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -89,6 +89,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Orientation + " Damage: " + Damage + "/2"; }
+		}
+
+		/// <summary>
 		/// Creates a new anvil block
 		/// </summary>
 		public AnvilBlock ()
@@ -100,7 +108,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new anvil block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public AnvilBlock (byte data)
 			: base(data)
 		{

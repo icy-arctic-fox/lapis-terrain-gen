@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class StickyPistonBlock : Block
+	public class StickyPistonBlock : PistonBlock
 	{
 		#region Properties
 		/// <summary>
@@ -11,85 +11,12 @@ namespace Lapis.Blocks
 		{
 			get { return BlockType.StickyPiston; }
 		}
-
-		/// <summary>
-		/// Whether or not the block is solid (non-solid blocks can be passed through)
-		/// </summary>
-		public override bool IsSolid
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Whether or not the block can catch fire
-		/// </summary>
-		public override bool Flammable
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
-		/// </summary>
-		public override byte Opacity
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Whether or not the block diffuses light
-		/// </summary>
-		public override bool Diffuse
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of block light that the block gives off
-		/// </summary>
-		public override byte Luminance
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Amount of resistance to blasts before being destroyed
-		/// </summary>
-		public override float BlastResistance
-		{
-			get { return 2.5f; }
-		}
 		#endregion
-
-		/// <summary>
-		/// Direction that the piston is facing
-		/// </summary>
-		public PistonOrientation Orientation
-		{
-			get { return (PistonOrientation)(_data & 0x7); }
-		}
-
-		/// <summary>
-		/// Whether or not the piston is extended
-		/// </summary>
-		public bool Extended
-		{
-			get { return (0x8 == (_data & 0x8)); }
-		}
 
 		/// <summary>
 		/// Creates a new sticky piston block
 		/// </summary>
 		public StickyPistonBlock ()
-			: base(0)
 		{
 			// ...
 		}
@@ -97,7 +24,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sticky piston block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public StickyPistonBlock (byte data)
 			: base(data)
 		{
@@ -109,7 +36,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="orientation">Direction that the piston is facing</param>
 		public StickyPistonBlock (PistonOrientation orientation)
-			: base((byte)orientation)
+			: base(orientation)
 		{
 			// ...
 		}
@@ -120,7 +47,7 @@ namespace Lapis.Blocks
 		/// <param name="orientation">Direction that the piston is facing</param>
 		/// <param name="extended">Whether or not the piston is extended</param>
 		public StickyPistonBlock (PistonOrientation orientation, bool extended)
-			: base((byte)((byte)orientation | (extended ? 0x8 : 0x0)))
+			: base(orientation, extended)
 		{
 			// ...
 		}

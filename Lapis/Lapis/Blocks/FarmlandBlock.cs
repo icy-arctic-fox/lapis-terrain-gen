@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class FarmlandBlock : Block
+	public class FarmlandBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -83,6 +83,14 @@ namespace Lapis.Blocks
 		public bool Dry
 		{
 			get { return 0 == _data; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return "Moisture: " + Moisture; }
 		}
 
 		/// <summary>

@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class TallGrassBlock : Block
+	public class TallGrassBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Shrub.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new tall grass block
 		/// </summary>
 		public TallGrassBlock ()
@@ -89,7 +97,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new tall grass block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public TallGrassBlock (byte data)
 			: base(data)
 		{

@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class PistonBlock : Block
+	public class PistonBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -86,6 +86,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return (Extended ? "Extended " : "Contracted ") + Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new piston block
 		/// </summary>
 		public PistonBlock ()
@@ -97,7 +105,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new piston block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public PistonBlock (byte data)
 			: base(data)
 		{

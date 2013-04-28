@@ -50,7 +50,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new (empty) ender chest block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public EnderChestBlock (byte data)
 			: base(data)
 		{

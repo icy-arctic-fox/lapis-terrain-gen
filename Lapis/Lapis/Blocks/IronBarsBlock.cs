@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new iron bars block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public IronBarsBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected IronBarsBlock (byte data)
 			: base(data)
 		{
 			// ...

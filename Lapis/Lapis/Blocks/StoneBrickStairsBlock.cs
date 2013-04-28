@@ -40,7 +40,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new stone brick stairs block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public StoneBrickStairsBlock (byte data)
 			: base(data)
 		{

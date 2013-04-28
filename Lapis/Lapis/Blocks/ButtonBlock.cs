@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base class for button blocks
 	/// </summary>
-	public abstract class ButtonBlock : Block, IRedstoneSourceBlock
+	public abstract class ButtonBlock : Block, IRedstoneSourceBlock, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -72,6 +72,14 @@
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return (Powered ? "Pressed" : "Unpressed ") + Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new button block
 		/// </summary>
 		protected ButtonBlock ()
@@ -83,7 +91,7 @@
 		/// <summary>
 		/// Creates a new button block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected ButtonBlock (byte data)
 			: base(data)
 		{

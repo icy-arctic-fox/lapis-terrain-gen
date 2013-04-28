@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new soul sand block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public SoulSandBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected SoulSandBlock (byte data)
 			: base(data)
 		{
 			// ...

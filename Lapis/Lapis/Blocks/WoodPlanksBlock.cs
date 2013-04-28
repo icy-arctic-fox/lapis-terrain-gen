@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return TreeType.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new wood planks block
 		/// </summary>
 		public WoodPlanksBlock ()
@@ -89,7 +97,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new wood planks block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public WoodPlanksBlock (byte data)
 			: base(data)
 		{

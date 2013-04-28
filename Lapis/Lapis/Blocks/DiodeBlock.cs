@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class DiodeBlock : Block
+	public class DiodeBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -86,6 +86,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Orientation + " " + Delay.ToString(System.Globalization.CultureInfo.InvariantCulture) + " delay"; }
+		}
+
+		/// <summary>
 		/// Creates a new diode block
 		/// </summary>
 		public DiodeBlock ()
@@ -97,7 +105,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new diode block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public DiodeBlock (byte data)
 			: base(data)
 		{

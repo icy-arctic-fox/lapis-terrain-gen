@@ -13,7 +13,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates the base for a tile entity
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected TileEntity (byte data)
 			: base(data)
 		{

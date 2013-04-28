@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base class for plant blocks that can grow
 	/// </summary>
-	public abstract class PlantBlock : Block
+	public abstract class PlantBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -30,6 +30,14 @@
 		public bool FullyGrown
 		{
 			get { return Age >= 15; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Age.ToString(System.Globalization.CultureInfo.InvariantCulture) + "/15"; }
 		}
 
 		/// <summary>

@@ -40,7 +40,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new spruce wood stairs block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public SpruceWoodStairsBlock (byte data)
 			: base(data)
 		{

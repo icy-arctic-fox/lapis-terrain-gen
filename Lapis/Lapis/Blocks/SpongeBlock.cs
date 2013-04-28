@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sponge block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public SpongeBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected SpongeBlock (byte data)
 			: base(data)
 		{
 			// ...

@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new ice block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public IceBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected IceBlock (byte data)
 			: base(data)
 		{
 			// ...

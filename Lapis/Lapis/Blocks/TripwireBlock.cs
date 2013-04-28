@@ -2,7 +2,7 @@ using System;
 
 namespace Lapis.Blocks
 {
-	public class TripwireBlock : Block
+	public class TripwireBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -80,6 +80,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return State.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new tripwire block
 		/// </summary>
 		public TripwireBlock ()
@@ -91,7 +99,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new tripwire block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public TripwireBlock (byte data)
 			: base(data)
 		{

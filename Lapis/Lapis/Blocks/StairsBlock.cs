@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base for all stair block types
 	/// </summary>
-	public abstract class StairsBlock : Block
+	public abstract class StairsBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -64,6 +64,14 @@
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return (UpsideDown ? "Upside-down " : "Regular ") + Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new stairs block
 		/// </summary>
 		protected StairsBlock ()
@@ -75,7 +83,7 @@
 		/// <summary>
 		/// Creates a new stairs block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected StairsBlock (byte data)
 			: base(data)
 		{

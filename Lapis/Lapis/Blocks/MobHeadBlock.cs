@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class MobHeadBlock : Block
+	public class MobHeadBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -80,6 +80,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Position.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new mob head block
 		/// </summary>
 		public MobHeadBlock ()
@@ -91,7 +99,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new mob head block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public MobHeadBlock (byte data)
 			: base(data)
 		{

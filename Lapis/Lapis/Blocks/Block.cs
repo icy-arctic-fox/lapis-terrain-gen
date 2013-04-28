@@ -71,7 +71,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates the base for a block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected Block (byte data)
 		{
 			_data = data;
@@ -135,16 +135,13 @@ namespace Lapis.Blocks
 		{
 			var sb = new System.Text.StringBuilder();
 			sb.Append(Type);
-			if(_data != 0)
-			{
-				sb.Append('(');
-				var dataBlock = this as IDataBlock;
-				if(dataBlock != null)
-					sb.Append(dataBlock.DataString);
-				else
-					sb.AppendFormat("{0:x}", _data);
-				sb.Append(')');
-			}
+			sb.Append('(');
+			var dataBlock = this as IDataBlock;
+			if(dataBlock != null)
+				sb.Append(dataBlock.DataString);
+			else
+				sb.AppendFormat("{0:x}", _data);
+			sb.Append(')');
 			return sb.ToString();
 		}
 	}

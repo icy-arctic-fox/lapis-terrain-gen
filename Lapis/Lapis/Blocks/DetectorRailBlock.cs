@@ -24,7 +24,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new detector rail block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public DetectorRailBlock (byte data)
 			: base(data)
 		{

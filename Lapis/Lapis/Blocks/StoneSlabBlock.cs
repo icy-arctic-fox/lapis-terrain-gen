@@ -1,3 +1,5 @@
+using System;
+
 namespace Lapis.Blocks
 {
 	public class StoneSlabBlock : SlabBlock
@@ -34,7 +36,15 @@ namespace Lapis.Blocks
 		/// </summary>
 		public SlabTexture SlabType
 		{
-			get { return (SlabTexture)TextureData; }
+			get { return (SlabTexture) TextureData; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public override string DataString
+		{
+			get { return String.Join(" ", base.DataString, SlabType.ToString()); }
 		}
 
 		/// <summary>
@@ -48,7 +58,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new stone slab block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public StoneSlabBlock (byte data)
 			: base(data)
 		{

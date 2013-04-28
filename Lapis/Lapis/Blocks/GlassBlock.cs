@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new glass block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public GlassBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected GlassBlock (byte data)
 			: base(data)
 		{
 			// ...

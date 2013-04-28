@@ -2,7 +2,7 @@ using System;
 
 namespace Lapis.Blocks
 {
-	public class BrewingStandBlock : Block
+	public class BrewingStandBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -81,6 +81,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return SlotsFilled.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new brewing stand block
 		/// </summary>
 		public BrewingStandBlock ()
@@ -92,7 +100,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new brewing stand block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public BrewingStandBlock (byte data)
 			: base(data)
 		{

@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class HugeBrownMushroomBlock : Block
+	public class HugeBrownMushroomBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -78,6 +78,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Texture.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new huge brown mushroom block
 		/// </summary>
 		public HugeBrownMushroomBlock ()
@@ -89,7 +97,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new huge brown mushroom block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public HugeBrownMushroomBlock (byte data)
 			: base(data)
 		{

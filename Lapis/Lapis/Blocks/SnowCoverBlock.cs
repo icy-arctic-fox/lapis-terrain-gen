@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class SnowCoverBlock : Block
+	public class SnowCoverBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -75,6 +75,14 @@ namespace Lapis.Blocks
 		public byte Height
 		{
 			get { return (byte)(_data & 0x7); }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return "Height: " + Height.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 
 		/// <summary>

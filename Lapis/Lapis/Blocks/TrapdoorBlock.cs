@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class TrapdoorBlock : Block
+	public class TrapdoorBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -73,7 +73,7 @@ namespace Lapis.Blocks
 		/// True if the trapdoor is on the top half of the block,
 		/// false if it is on the bottom half of the block
 		/// </summary>
-		public bool TopHalf
+		public bool Upper
 		{
 			get { return (0x8 == (_data & 0x8)); }
 		}
@@ -95,6 +95,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return (Upper ? "Upper " : "Lower ") + (Open ? "Open " : "Closed ") + Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new trapdoor block
 		/// </summary>
 		public TrapdoorBlock ()
@@ -106,7 +114,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new trapdoor block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public TrapdoorBlock (byte data)
 			: base(data)
 		{

@@ -24,6 +24,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public override string DataString
+		{
+			get { return Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new sign post block
 		/// </summary>
 		public SignPostBlock ()
@@ -35,7 +43,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sign post block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		/// <param name="tileData">Node that contains the tile entity data</param>
 		public SignPostBlock (byte data, Node tileData)
 			: base(data, tileData)

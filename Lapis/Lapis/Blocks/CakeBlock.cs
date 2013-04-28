@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class CakeBlock : Block
+	public class CakeBlock : Block, IDataBlock
 	{
 		/// <summary>
 		/// Total number of pieces of cake
@@ -88,6 +88,14 @@ namespace Lapis.Blocks
 		public byte PiecesLeft
 		{
 			get { return (byte)(TotalPieces - PiecesEaten); }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return "Eaten: " + PiecesEaten; }
 		}
 
 		/// <summary>

@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new nether brick block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public NetherBrickBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected NetherBrickBlock (byte data)
 			: base(data)
 		{
 			// ...

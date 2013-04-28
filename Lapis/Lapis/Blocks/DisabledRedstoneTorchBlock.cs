@@ -48,7 +48,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new disabled redstone torch block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public DisabledRedstoneTorchBlock (byte data)
 			: base(data)
 		{
