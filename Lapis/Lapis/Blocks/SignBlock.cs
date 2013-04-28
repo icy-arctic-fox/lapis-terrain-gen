@@ -1,5 +1,6 @@
 ﻿using System;
 using Lapis.IO.NBT;
+using Lapis.Utility;
 
 namespace Lapis.Blocks
 {
@@ -133,10 +134,24 @@ namespace Lapis.Blocks
 		protected SignBlock (byte data, string line1, string line2, string line3, string line4)
 			: base(data)
 		{
-			_line1 = (line1 == null) ? String.Empty : line1.Substring(0, MaxLineLength);
-			_line2 = (line2 == null) ? String.Empty : line2.Substring(0, MaxLineLength);
-			_line3 = (line3 == null) ? String.Empty : line3.Substring(0, MaxLineLength);
-			_line4 = (line4 == null) ? String.Empty : line4.Substring(0, MaxLineLength);
+			_line1 = correctLine(line1);
+			_line2 = correctLine(line2);
+			_line3 = correctLine(line3);
+			_line4 = correctLine(line4);
+		}
+
+		private static string correctLine (string line)
+		{
+			if(line != null)
+			{
+				if(line.Length > MaxLineLength)
+					line = line.Substring(0, MaxLineLength);
+				line = line.Replace('\n', ' ');
+				line = line.Replace('\r', ' ');
+			}
+			else
+				line = String.Empty;
+			return line;
 		}
 
 		#region NBT data
@@ -190,7 +205,7 @@ namespace Lapis.Blocks
 			{
 				var tempNode = node[nodeName] as StringNode;
 				if(null != tempNode)
-					return tempNode.Value.Substring(0, MaxLineLength);
+					return correctLine(tempNode.Value);
 			}
 			return String.Empty;
 		}
