@@ -1,6 +1,8 @@
+using Lapis.IO.NBT;
+
 namespace Lapis.Blocks
 {
-	public class WallSignBlock : Block
+	public class WallSignBlock : SignBlock
 	{
 		#region Properties
 		/// <summary>
@@ -11,64 +13,6 @@ namespace Lapis.Blocks
 		{
 			get { return BlockType.WallSign; }
 		}
-
-		/// <summary>
-		/// Whether or not the block is solid (non-solid blocks can be passed through)
-		/// </summary>
-		public override bool IsSolid
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Whether or not the block obeys physics
-		/// </summary>
-		public override bool Physics
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Whether or not the block can catch fire
-		/// </summary>
-		public override bool Flammable
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Amount of light the block absorbs (0 is fully transparent and 15 is fully opaque)
-		/// </summary>
-		public override byte Opacity
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Whether or not the block diffuses light
-		/// </summary>
-		public override bool Diffuse
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Amount of block light that the block gives off
-		/// </summary>
-		public override byte Luminance
-		{
-			get { return 0; }
-		}
-
-		/// <summary>
-		/// Amount of resistance to blasts before being destroyed
-		/// </summary>
-		public override float BlastResistance
-		{
-			get { return 5f; }
-		}
-
-		// TODO: Implement NBT data for 'Sign'
 		#endregion
 
 		/// <summary>
@@ -92,8 +36,9 @@ namespace Lapis.Blocks
 		/// Creates a new wall sign block
 		/// </summary>
 		/// <param name="data">Additional meta-data for the block</param>
-		public WallSignBlock (byte data)
-			: base(data)
+		/// <param name="tileData">Node that contains the tile entity data</param>
+		public WallSignBlock (byte data, Node tileData)
+			: base(data, tileData)
 		{
 			// ...
 		}
@@ -105,6 +50,33 @@ namespace Lapis.Blocks
 		/// <remarks>The orientation of the sign can't be Up or Down.</remarks>
 		public WallSignBlock (BlockOrientation orientation)
 			: base((byte)orientation)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wall sign block with text on it
+		/// </summary>
+		/// <param name="orientation">Side of the wall that the sign is attached to</param>
+		/// <param name="line1">First line of text</param>
+		/// <param name="line2">Second line of text</param>
+		/// <param name="line3">Third line of text</param>
+		/// <param name="line4">Last line of text</param>
+		public WallSignBlock (BlockOrientation orientation, string line1, string line2, string line3, string line4)
+			: base((byte)orientation, line1, line2, line3, line4)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wall sign block with text on it
+		/// </summary>
+		/// <param name="line1">First line of text</param>
+		/// <param name="line2">Second line of text</param>
+		/// <param name="line3">Third line of text</param>
+		/// <param name="line4">Last line of text</param>
+		public WallSignBlock (string line1, string line2, string line3, string line4)
+			: base(0, line1, line2, line3, line4)
 		{
 			// ...
 		}
