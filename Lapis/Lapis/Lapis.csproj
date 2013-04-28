@@ -342,6 +342,7 @@
     <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\DelegateUtility.cs" />
     <Compile Include="Utility\EndianUtility.cs" />
+    <Compile Include="Utility\HashUtility.cs" />
     <Compile Include="Utility\NibbleArray.cs" />
     <Compile Include="Utility\StringManipulation.cs" />
     <Compile Include="Utility\Timestamp.cs" />
