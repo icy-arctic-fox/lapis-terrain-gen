@@ -135,9 +135,16 @@ namespace Lapis.Blocks
 		{
 			var sb = new System.Text.StringBuilder();
 			sb.Append(Type);
-			sb.Append('(');
-			sb.AppendFormat("{0:x}", _data);
-			sb.Append(')');
+			if(_data != 0)
+			{
+				sb.Append('(');
+				var dataBlock = this as IDataBlock;
+				if(dataBlock != null)
+					sb.Append(dataBlock.DataString);
+				else
+					sb.AppendFormat("{0:x}", _data);
+				sb.Append(')');
+			}
 			return sb.ToString();
 		}
 	}

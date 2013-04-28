@@ -157,6 +157,7 @@
     <Compile Include="Blocks\HugeBrownMushroomBlock.cs" />
     <Compile Include="Blocks\HugeRedMushroomBlock.cs" />
     <Compile Include="Blocks\IceBlock.cs" />
+    <Compile Include="Blocks\IDataBlock.cs" />
     <Compile Include="Blocks\InactiveComparatorBlock.cs" />
     <Compile Include="Blocks\InactiveLampBlock.cs" />
     <Compile Include="Blocks\IRedstoneSourceBlock.cs" />
