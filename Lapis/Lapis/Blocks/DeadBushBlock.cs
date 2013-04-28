@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new dead bush block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public DeadBushBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected DeadBushBlock (byte data)
 			: base(data)
 		{
 			// ...

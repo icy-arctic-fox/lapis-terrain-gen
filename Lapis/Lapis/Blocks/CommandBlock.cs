@@ -83,8 +83,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new command block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CommandBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected CommandBlock (byte data)
 			: base(data)
 		{
 			// ...

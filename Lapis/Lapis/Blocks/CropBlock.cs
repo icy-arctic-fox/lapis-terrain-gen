@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base class for all growable crop blocks
 	/// </summary>
-	public abstract class CropBlock : Block
+	public abstract class CropBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -77,6 +77,14 @@
 		public bool FullyGrown
 		{
 			get { return _data >= 0x7; }
+		}
+
+		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Stage.ToString(System.Globalization.CultureInfo.InvariantCulture) + "/7"; }
 		}
 
 		/// <summary>

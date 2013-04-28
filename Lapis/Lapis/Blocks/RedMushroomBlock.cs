@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new red mushroom block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public RedMushroomBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected RedMushroomBlock (byte data)
 			: base(data)
 		{
 			// ...

@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new bedrock block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public BedrockBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected BedrockBlock (byte data)
 			: base(data)
 		{
 			// ...

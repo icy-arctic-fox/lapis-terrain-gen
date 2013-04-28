@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new rose block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public RoseBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected RoseBlock (byte data)
 			: base(data)
 		{
 			// ...

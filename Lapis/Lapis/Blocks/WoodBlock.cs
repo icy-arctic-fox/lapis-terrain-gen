@@ -1,6 +1,8 @@
+using System;
+
 namespace Lapis.Blocks
 {
-	public class WoodBlock : Block
+	public class WoodBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -86,6 +88,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return String.Join(" ", Orientation.ToString(), TreeType.ToString()); }
+		}
+
+		/// <summary>
 		/// Creates a new wood block
 		/// </summary>
 		public WoodBlock ()
@@ -97,7 +107,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new wood block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public WoodBlock (byte data)
 			: base(data)
 		{

@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new nether portal block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public NetherPortalBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected NetherPortalBlock (byte data)
 			: base(data)
 		{
 			// ...

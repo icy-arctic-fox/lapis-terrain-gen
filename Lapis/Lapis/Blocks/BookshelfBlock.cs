@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new bookshelf block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public BookshelfBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected BookshelfBlock (byte data)
 			: base(data)
 		{
 			// ...

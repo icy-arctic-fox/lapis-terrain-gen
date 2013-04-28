@@ -2,7 +2,7 @@ using System;
 
 namespace Lapis.Blocks
 {
-	public class TripwireHookBlock : Block, IRedstoneSourceBlock
+	public class TripwireHookBlock : Block, IRedstoneSourceBlock, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -104,6 +104,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return String.Join(" ", State.ToString(), Orientation.ToString()); }
+		}
+
+		/// <summary>
 		/// Creates a new tripwire hook block
 		/// </summary>
 		public TripwireHookBlock ()
@@ -115,7 +123,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new tripwire hook block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public TripwireHookBlock (byte data)
 			: base(data)
 		{

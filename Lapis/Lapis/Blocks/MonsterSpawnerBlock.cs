@@ -83,8 +83,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new monster spawner block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public MonsterSpawnerBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected MonsterSpawnerBlock (byte data)
 			: base(data)
 		{
 			// ...

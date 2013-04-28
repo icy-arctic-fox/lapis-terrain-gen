@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new dirt block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public DirtBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected DirtBlock (byte data)
 			: base(data)
 		{
 			// ...

@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new redstone ore block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public RedstoneOreBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected RedstoneOreBlock (byte data)
 			: base(data)
 		{
 			// ...

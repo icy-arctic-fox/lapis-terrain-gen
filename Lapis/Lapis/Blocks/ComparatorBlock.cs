@@ -1,6 +1,8 @@
+using System;
+
 namespace Lapis.Blocks
 {
-	public class ComparatorBlock : Block
+	public class ComparatorBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -67,9 +69,17 @@ namespace Lapis.Blocks
 		{
 			get { return 0f; }
 		}
+		#endregion
 
 		// TODO: Implement meta-data values
-		#endregion
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { throw new NotImplementedException(); }
+		}
 
 		/// <summary>
 		/// Creates a new comparator block
@@ -83,7 +93,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new comparator block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public ComparatorBlock (byte data)
 			: base(data)
 		{

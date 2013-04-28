@@ -41,7 +41,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new wood door block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public WoodDoorBlock (byte data)
 			: base(data)
 		{

@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new moss stone block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public MossStoneBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected MossStoneBlock (byte data)
 			: base(data)
 		{
 			// ...

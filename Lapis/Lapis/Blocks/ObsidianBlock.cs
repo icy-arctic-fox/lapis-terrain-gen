@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new obsidian block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public ObsidianBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected ObsidianBlock (byte data)
 			: base(data)
 		{
 			// ...

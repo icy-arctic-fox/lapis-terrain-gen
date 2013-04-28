@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new dragon egg block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public DragonEggBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected DragonEggBlock (byte data)
 			: base(data)
 		{
 			// ...

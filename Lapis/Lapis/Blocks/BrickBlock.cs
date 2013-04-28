@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new brick block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public BrickBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected BrickBlock (byte data)
 			: base(data)
 		{
 			// ...

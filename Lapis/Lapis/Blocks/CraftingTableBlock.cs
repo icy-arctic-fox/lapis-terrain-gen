@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new crafting table block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CraftingTableBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected CraftingTableBlock (byte data)
 			: base(data)
 		{
 			// ...

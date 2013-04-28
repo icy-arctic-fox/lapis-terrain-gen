@@ -40,7 +40,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new stone plate block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public StonePlateBlock (byte data)
 			: base(data)
 		{

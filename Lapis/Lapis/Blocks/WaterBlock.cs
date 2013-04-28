@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new water block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public WaterBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected WaterBlock (byte data)
 			: base(data)
 		{
 			// ...

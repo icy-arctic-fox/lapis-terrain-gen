@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new air block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public AirBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected AirBlock (byte data)
 			: base(data)
 		{
 			// ...

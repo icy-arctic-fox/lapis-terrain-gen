@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class CauldronBlock : Block
+	public class CauldronBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -75,6 +75,14 @@ namespace Lapis.Blocks
 		public byte WaterLevel
 		{
 			get { return _data; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return "Water: " + WaterLevel; }
 		}
 
 		/// <summary>

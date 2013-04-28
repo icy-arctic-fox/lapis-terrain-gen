@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new coal ore block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CoalOreBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected CoalOreBlock (byte data)
 			: base(data)
 		{
 			// ...

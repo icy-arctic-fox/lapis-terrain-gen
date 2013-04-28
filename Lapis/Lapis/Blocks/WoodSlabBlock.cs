@@ -1,3 +1,5 @@
+using System;
+
 namespace Lapis.Blocks
 {
 	public class WoodSlabBlock : SlabBlock
@@ -38,6 +40,14 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public override string DataString
+		{
+			get { return String.Join(" ", base.DataString, SlabType.ToString()); }
+		}
+
+		/// <summary>
 		/// Creates a new wood slab block
 		/// </summary>
 		public WoodSlabBlock ()
@@ -48,7 +58,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new wood slab block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public WoodSlabBlock (byte data)
 			: base(data)
 		{

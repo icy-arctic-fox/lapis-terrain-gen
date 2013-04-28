@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new melon block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public MelonBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected MelonBlock (byte data)
 			: base(data)
 		{
 			// ...

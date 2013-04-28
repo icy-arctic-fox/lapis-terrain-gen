@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new fence block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public FenceBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected FenceBlock (byte data)
 			: base(data)
 		{
 			// ...

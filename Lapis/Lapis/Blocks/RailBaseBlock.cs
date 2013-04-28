@@ -4,7 +4,7 @@
 	/// Base class for all rail types
 	/// </summary>
 	/// <remarks>All rail blocks derive from this, so a block can be quickly checked if it is a rail by using this type.</remarks>
-	public abstract class RailBaseBlock : Block
+	public abstract class RailBaseBlock : Block, IDataBlock
 	{
 		#region Properties
 
@@ -67,6 +67,11 @@
 		#endregion
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public abstract string DataString { get; }
+
+		/// <summary>
 		/// Creates a new rail block
 		/// </summary>
 		protected RailBaseBlock ()
@@ -78,7 +83,7 @@
 		/// <summary>
 		/// Creates a new rail block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected RailBaseBlock (byte data)
 			: base(data)
 		{

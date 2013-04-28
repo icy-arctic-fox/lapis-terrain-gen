@@ -2,7 +2,7 @@ using System;
 
 namespace Lapis.Blocks
 {
-	public class VinesBlock : Block
+	public class VinesBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -76,7 +76,15 @@ namespace Lapis.Blocks
 		/// </summary>
 		public VinesLocation Sides
 		{
-			get { return (VinesLocation)_data; }
+			get { return (VinesLocation) _data; }
+		}
+		
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return Sides.ToString(); }
 		}
 
 		/// <summary>
@@ -91,7 +99,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new vines block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public VinesBlock (byte data)
 			: base(data)
 		{

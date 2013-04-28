@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class LeavesBlock : Block
+	public class LeavesBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -97,6 +97,20 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get
+			{
+				var str = TreeType + (PlayerPlaced ? " PlayerPlaced" : " Natural");
+				if(PendingDecay)
+					str += " Pending";
+				return str;
+			}
+		}
+
+		/// <summary>
 		/// Creates a new leaves block
 		/// </summary>
 		public LeavesBlock ()
@@ -108,7 +122,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new leaves block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public LeavesBlock (byte data)
 			: base(data)
 		{

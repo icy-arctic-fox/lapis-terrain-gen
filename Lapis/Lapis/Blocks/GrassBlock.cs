@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new grass block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public GrassBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected GrassBlock (byte data)
 			: base(data)
 		{
 			// ...

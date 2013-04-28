@@ -15,6 +15,14 @@
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public override string DataString
+		{
+			get { return Orientation.ToString(); }
+		}
+
+		/// <summary>
 		/// Creates a new un-curved rail block
 		/// </summary>
 		protected UncurvedRailBlock ()
@@ -25,7 +33,7 @@
 		/// <summary>
 		/// Creates a new un-curved rail block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		protected UncurvedRailBlock (byte data)
 			: base(data)
 		{

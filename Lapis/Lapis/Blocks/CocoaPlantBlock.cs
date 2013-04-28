@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class CocoaPlantBlock : Block
+	public class CocoaPlantBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -95,6 +95,21 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get
+			{
+				if(Size == 0)
+					return "Small " + Orientation;
+				if(Size == 2)
+					return "Medium " + Orientation;
+				return "Large " + Orientation;
+			}
+		}
+
+		/// <summary>
 		/// Creates a new cocoa plant block
 		/// </summary>
 		public CocoaPlantBlock ()
@@ -106,7 +121,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new cocoa plant block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		public CocoaPlantBlock (byte data)
 			: base(data)
 		{

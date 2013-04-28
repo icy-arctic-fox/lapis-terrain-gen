@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new cobweb block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public CobwebBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected CobwebBlock (byte data)
 			: base(data)
 		{
 			// ...

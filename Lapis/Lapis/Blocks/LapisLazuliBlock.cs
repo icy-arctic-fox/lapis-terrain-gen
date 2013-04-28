@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new lapis lazuli block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public LapisLazuliBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected LapisLazuliBlock (byte data)
 			: base(data)
 		{
 			// ...

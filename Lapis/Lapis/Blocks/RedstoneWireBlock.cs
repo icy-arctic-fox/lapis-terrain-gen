@@ -1,6 +1,6 @@
 namespace Lapis.Blocks
 {
-	public class RedstoneWireBlock : Block
+	public class RedstoneWireBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -75,6 +75,14 @@ namespace Lapis.Blocks
 		public byte Strength
 		{
 			get { return _data; }
+		}
+
+		/// <summary>
+		/// Representation of the block's data as a string
+		/// </summary>
+		public string DataString
+		{
+			get { return "Strength: " + Strength.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 
 		/// <summary>

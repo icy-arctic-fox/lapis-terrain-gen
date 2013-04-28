@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base block class for slabs
 	/// </summary>
-	public abstract class SlabBlock : Block
+	public abstract class SlabBlock : Block, IDataBlock
 	{
 		#region Properties
 		/// <summary>
@@ -58,9 +58,14 @@
 		/// <summary>
 		/// Whether or not the slab is on the top-half of the block
 		/// </summary>
-		public bool UpsideDown
+		public bool TopHalf
 		{
 			get { return (0x8 == (_data & 0x8)); }
+		}
+
+		public virtual string DataString
+		{
+			get { return TopHalf ? "Top" : "Bottom"; }
 		}
 
 		/// <summary>

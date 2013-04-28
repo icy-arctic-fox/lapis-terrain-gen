@@ -7,7 +7,7 @@ namespace Lapis.Blocks
 	/// <summary>
 	/// Base class for sign blocks
 	/// </summary>
-	public abstract class SignBlock : TileEntity
+	public abstract class SignBlock : TileEntity, IDataBlock
 	{
 		/// <summary>
 		/// Maximum number of characters allowed on one line
@@ -109,6 +109,11 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
+		/// Block data value as a string
+		/// </summary>
+		public abstract string DataString { get; }
+
+		/// <summary>
 		/// Creates a new sign block
 		/// </summary>
 		/// <param name="data">Additional meta-data associated with the block</param>
@@ -187,7 +192,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new sign block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
+		/// <param name="data">Additional data for the block</param>
 		/// <param name="tileData">Node that contains the tile entity data</param>
 		protected SignBlock (byte data, Node tileData)
 			: base(data, tileData)
@@ -254,6 +259,21 @@ namespace Lapis.Blocks
 		public override int GetHashCode ()
 		{
 			return HashUtility.ComputeHash(base.GetHashCode(), _line1, _line2, _line3, _line4);
+		}
+
+		/// <summary>
+		/// Generates a string that contains information about and the contents of the sign
+		/// </summary>
+		/// <returns>A string</returns>
+		public override string ToString ()
+		{
+			var sb = new System.Text.StringBuilder(base.ToString());
+			sb.Append(Environment.NewLine);
+			sb.AppendLine(_line1);
+			sb.AppendLine(_line2);
+			sb.AppendLine(_line3);
+			sb.Append(_line4);
+			return sb.ToString();
 		}
 	}
 }

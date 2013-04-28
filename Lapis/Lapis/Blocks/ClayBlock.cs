@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new clay block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public ClayBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected ClayBlock (byte data)
 			: base(data)
 		{
 			// ...

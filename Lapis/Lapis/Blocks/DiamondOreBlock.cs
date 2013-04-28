@@ -81,8 +81,8 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Creates a new diamond ore block
 		/// </summary>
-		/// <param name="data">Additional meta-data for the block</param>
-		public DiamondOreBlock (byte data)
+		/// <param name="data">Additional data for the block</param>
+		protected DiamondOreBlock (byte data)
 			: base(data)
 		{
 			// ...
