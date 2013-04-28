@@ -76,7 +76,7 @@ namespace Lapis.Blocks
 				_knownBlockTypes[(byte)BlockType.DoubleStoneSlab]       = (data, tileData) => new DoubleStoneSlabBlock(data);
 				_knownBlockTypes[(byte)BlockType.StoneSlab]             = (data, tileData) => new StoneSlabBlock(data);
 				_knownBlockTypes[(byte)BlockType.Brick]                 = (data, tileData) => new BrickBlock();
-				_knownBlockTypes[(byte)BlockType.TNT]                   = (data, tileData) => new TntBlock();
+				_knownBlockTypes[(byte)BlockType.Tnt]                   = (data, tileData) => new TntBlock();
 				_knownBlockTypes[(byte)BlockType.Bookshelf]             = (data, tileData) => new BookshelfBlock();
 				_knownBlockTypes[(byte)BlockType.MossStone]             = (data, tileData) => new MossStoneBlock();
 				_knownBlockTypes[(byte)BlockType.Obsidian]              = (data, tileData) => new ObsidianBlock();
