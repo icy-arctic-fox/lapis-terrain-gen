@@ -29,7 +29,10 @@ namespace Lapis.Level.Generation.Noise
 		/// </summary>
 		/// <param name="seed">Random seed</param>
 		/// <param name="octaves">Number of times to stack noise</param>
-		/// <param name="persistence">How much each octave should affect the final result</param>
+		/// <param name="persistence">Amount that each octave should affect the final result</param>
+		/// <param name="frequency">Rate at which points should change per octave</param>
+		/// <param name="lacunarity">Multiplier for <paramref name="frequency"/> after each octave</param>
+		/// <param name="quality">Quality of the computation when interpolating between points</param>
 		public PerlinNoiseGenerator (long seed, int octaves = DefaultOctaves, double persistence = DefaultPersistence, double frequency = DefaultFrequency, double lacunarity = DefaultLacunarity, NoiseQuality quality = NoiseQuality.Standard)
 		{
 			// Unlike Java, .NET C# only supports 32-bit seeds

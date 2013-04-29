@@ -22,6 +22,8 @@ namespace Lapis.Level.Generation.Noise
 		/// Creates a new cell noise generator
 		/// </summary>
 		/// <param name="seed">Random seed</param>
+		/// <param name="method">Method used for calculating the distance between points</param>
+		/// <param name="combination">Method used for combining resultant point values</param>
 		public CellNoiseGenerator (long seed, DistanceMethod method = DistanceMethod.Euclidian, CombinationMethod combination = CombinationMethod.D1)
 		{
 			// Unlike Java, .NET C# only supports 32-bit seeds
