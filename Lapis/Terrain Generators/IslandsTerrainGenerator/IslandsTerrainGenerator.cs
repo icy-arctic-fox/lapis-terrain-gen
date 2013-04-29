@@ -51,6 +51,12 @@ namespace IslandsTerrainGenerator
 		}
 		#endregion
 
+		private SimplexNoiseGenerator _bedrockNoise;
+		private PerlinNoiseGenerator _stoneNoise;
+		private PerlinNoiseGenerator _dirtNoise;
+		private PerlinNoiseGenerator _sandNoise;
+		private PerlinNoiseGenerator _surfaceNoise;
+
 		/// <summary>
 		/// Options string used to customize the generator
 		/// </summary>
@@ -75,16 +81,19 @@ namespace IslandsTerrainGenerator
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
 		public void Initialize (long seed, string options)
 		{
-			var floorGenerator = new PerlinNoiseGenerator(seed);
-			floorGenerator.AddPostProcess(new RangePostProcessor(-1.0, -0.7));
-			var surfaceGenerator = new PerlinNoiseGenerator(unchecked(seed + 1));
-			surfaceGenerator.AddPreProcess(new ScalePreProcessor(1.0 / 5.0));
-			surfaceGenerator.AddPostProcess(new RangePostProcessor(-0.6, 0.5));
-			_noise = new NoiseCombiner(floorGenerator, surfaceGenerator);
-			_noise.AddPostProcess(new RangePostProcessor(20, Chunk.Height));
+			_bedrockNoise = new SimplexNoiseGenerator(seed);
+			_bedrockNoise.AddPostProcess(new RangePostProcessor(1, 3));
+
+			_stoneNoise = new PerlinNoiseGenerator(unchecked(seed + 1));
+			_stoneNoise.AddPostProcess(new RangePostProcessor(20, 40));
+
+			_dirtNoise = new PerlinNoiseGenerator(unchecked(seed + 2));
+			_dirtNoise.AddPostProcess(new RangePostProcessor(3, 7));
+
+			_sandNoise = new PerlinNoiseGenerator(unchecked(seed + 3));
+			_sandNoise.AddPostProcess(new RangePostProcessor(2, 5));
 		}
 
-		private NoiseGenerator _noise;
 		private const double Scale = 1 / 128.0; // TODO: Make customizable
 		private const byte SeaLevel = 64; // TODO: Make customizable
 		private const byte Raise = 2; // TODO: Make customizable
@@ -109,37 +118,34 @@ namespace IslandsTerrainGenerator
 						LevelDataUtility.LocalToGlobalXZ(cx, cz, bx, bz, out gx, out gz);
 						var x = gx * Scale;
 						var z = gz * Scale;
-						var height = _noise.GenerateNoise(x, z, 0) + Raise;
-						var by = (byte)height;
 
-						if(by < SeaLevel)
-						{// Ocean
-							for(var i = by; i < SeaLevel; ++i)
-								column[i] = BlockType.Water;
-							// TODO: Set biome to ocean
-						}
-						else
-						{
-							// TODO: Set biome type to beach
-						}
+						var bedrockHeight = (int)_bedrockNoise.GenerateNoise(x, z);
+						var stoneHeight   = (int)_stoneNoise.GenerateNoise(x, z);
+						var dirtHeight    = (int)_dirtNoise.GenerateNoise(x, z);
+						var sandHeight    = (int)_sandNoise.GenerateNoise(x, z);
 
-						var sandStart = (byte)Math.Max(1, height - 5);
-						var dirtStart = (byte)Math.Max(sandStart - 1, sandStart - 7);
-						for(var i = (byte)1; i < dirtStart; ++i)
+						var pos = 0;
+						for(var i = 0; i < bedrockHeight && pos < Chunk.Height; ++i, ++pos)
+							column[i] = BlockType.Bedrock;
+						for(var i = 0; i < stoneHeight && pos < Chunk.Height; ++i, ++pos)
 							column[i] = BlockType.Stone;
-						for(var i = dirtStart; i < sandStart; ++i)
+						for(var i = 0; i < dirtHeight && pos < Chunk.Height; ++i, ++pos)
 							column[i] = BlockType.Dirt;
-						for(var i = sandStart; i < by; ++i)
+						for(var i = 0; i < sandHeight && pos < Chunk.Height; ++i, ++pos)
 							column[i] = BlockType.Sand;
 
-						if(4 < by - SeaLevel)
-						{
-							for(var i = dirtStart; i < by - 1; ++i)
-								column[i] = BlockType.Dirt;
-							column[by - 1] = BlockType.Grass;
+						if(pos < SeaLevel)
+						{// Ocean
+							for(var i = pos; i < SeaLevel; ++i)
+								column[i] = BlockType.Water;
+							// TODO: Set biome type to Ocean
 						}
 
-						column[0] = BlockType.Bedrock;
+						else
+						{//Island
+							// TODO: Set biome type to Beach
+						}
+
 						builder.FillColumn(bx, bz, column);
 					}
 				return builder.GetChunkData();
