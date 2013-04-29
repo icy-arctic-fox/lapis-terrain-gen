@@ -390,7 +390,7 @@ namespace Lapis.Level
 		/// <returns>A new realm</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="world"/> is null</exception>
 		/// <remarks>A custom realm will not be detected by vanilla Minecraft.</remarks>
-		internal static Realm Create (Level.World world, ITerrainGenerator generator, string options, Dimension dimension = Dimension.Normal)
+		internal static Realm Create (World world, ITerrainGenerator generator, string options, Dimension dimension = Dimension.Normal)
 		{
 			if(null == generator)
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Lapis.IO
+﻿namespace Lapis.IO
 {
 	/// <summary>
 	/// An object that can be serialized and de-serialized so that it can be sent over a stream

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Lapis.Blocks;
 using Lapis.IO.NBT;
 using Lapis.Utility;

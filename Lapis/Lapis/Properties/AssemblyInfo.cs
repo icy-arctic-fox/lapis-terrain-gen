@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -8,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Lapis")]
 [assembly: AssemblyDescription("Core libraries for the Lapis terrain generator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("dotDev Studio")]
+[assembly: AssemblyCompany("Lapis MC")]
 [assembly: AssemblyProduct("Lapis")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © Lapis MC 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Lapis.Utility;
+﻿using Lapis.Utility;
 
 namespace Lapis.Level.Generation.Noise
 {
