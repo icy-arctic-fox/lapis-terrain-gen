@@ -20,14 +20,14 @@ namespace Lapis.Items
 		/// <summary>
 		/// Numerical ID of the item
 		/// </summary>
-		public abstract short Id { get; }
+		public abstract short ItemId { get; }
 
 		/// <summary>
 		/// Whether or not the item is a block
 		/// </summary>
 		public bool IsBlock
 		{
-			get { return Id <= byte.MaxValue; }
+			get { return ItemId <= byte.MaxValue; }
 		}
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace Lapis.Items
 		/// </summary>
 		public bool IsItem
 		{
-			get { return Id > byte.MaxValue; }
+			get { return ItemId > byte.MaxValue; }
 		}
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace Lapis.Items
 			{
 				if(!IsBlock)
 					throw new InvalidOperationException("The item is not a block.");
-				return (BlockType)Id;
+				return (BlockType)ItemId;
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace Lapis.Items
 			{
 				if(!IsItem)
 					throw new InvalidOperationException("The item is a block.");
-				return (ItemType)Id;
+				return (ItemType)ItemId;
 			}
 		}
 
