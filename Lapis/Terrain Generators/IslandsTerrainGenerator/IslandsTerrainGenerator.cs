@@ -125,14 +125,14 @@ namespace IslandsTerrainGenerator
 						var sandHeight    = (int)_sandNoise.GenerateNoise(x, z);
 
 						var pos = 0;
-						for(var i = 0; i < bedrockHeight && pos < Chunk.Height; ++i, ++pos)
-							column[i] = BlockType.Bedrock;
-						for(var i = 0; i < stoneHeight && pos < Chunk.Height; ++i, ++pos)
-							column[i] = BlockType.Stone;
-						for(var i = 0; i < dirtHeight && pos < Chunk.Height; ++i, ++pos)
-							column[i] = BlockType.Dirt;
-						for(var i = 0; i < sandHeight && pos < Chunk.Height; ++i, ++pos)
-							column[i] = BlockType.Sand;
+						for(var i = 0; i < bedrockHeight && pos < column.Length; ++i, ++pos)
+							column[pos] = BlockType.Bedrock;
+						for(var i = 0; i < stoneHeight && pos < column.Length; ++i, ++pos)
+							column[pos] = BlockType.Stone;
+						for(var i = 0; i < dirtHeight && pos < column.Length; ++i, ++pos)
+							column[pos] = BlockType.Dirt;
+						for(var i = 0; i < sandHeight && pos < column.Length; ++i, ++pos)
+							column[pos] = BlockType.Sand;
 
 						if(pos < SeaLevel)
 						{// Ocean
