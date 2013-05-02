@@ -33,7 +33,7 @@ namespace Lapis.Level.Generation
 		public ChunkData GetChunkData ()
 		{
 			// Mark the sections that we touched as modified
-			var sectionCount = _data.HeightMap.Maximum / Chunk.SectionHeight;
+			var sectionCount = (_data.HeightMap.Maximum - 1) / Chunk.SectionHeight;
 			for(var i = 0; i <= sectionCount; ++i)
 				_data.Sections[i].MarkAsModified();
 
