@@ -15,9 +15,11 @@ namespace Lapis.Level.Generation.Noise
 		public const int DefaultOctaves       = 8;
 		public const double DefaultFrequency  = 2.0;
 		public const double DefaultLacunarity = 2.0;
+		public const double DefaultOffset     = 1.0;
+		public const double DefaultGain       = 2.0;
 
 		private readonly int _octaves, _seed;
-		private readonly double _frequency, _lacunarity;
+		private readonly double _frequency, _lacunarity, _offset, _gain;
 		private readonly int _xOff, _yOff, _zOff;
 		private readonly CurveMethod _curve;
 
@@ -32,8 +34,10 @@ namespace Lapis.Level.Generation.Noise
 		/// <param name="octaves">Number of times to stack noise</param>
 		/// <param name="frequency">Rate at which points should change per octave</param>
 		/// <param name="lacunarity">Multiplier for <paramref name="frequency"/> after each octave</param>
+		/// <param name="offset">Offset from the center of the ride</param>
+		/// <param name="gain">Rate at which the ridge tapers off</param>
 		/// <param name="quality">Quality of the computation when interpolating between points</param>
-		public RidgedMultifractalNoiseGenerator (long seed, int octaves = DefaultOctaves, double frequency = DefaultFrequency, double lacunarity = DefaultLacunarity, NoiseQuality quality = NoiseQuality.Standard)
+		public RidgedMultifractalNoiseGenerator (long seed, int octaves = DefaultOctaves, double frequency = DefaultFrequency, double lacunarity = DefaultLacunarity, double offset = DefaultOffset, double gain = DefaultGain, NoiseQuality quality = NoiseQuality.Standard)
 		{
 			// Unlike Java, .NET C# only supports 32-bit seeds
 			// Split it up to achieve a similar random range
@@ -48,6 +52,8 @@ namespace Lapis.Level.Generation.Noise
 			_octaves    = octaves;
 			_frequency  = frequency;
 			_lacunarity = lacunarity;
+			_offset     = offset;
+			_gain       = gain;
 
 			switch(quality)
 			{
@@ -85,9 +91,6 @@ namespace Lapis.Level.Generation.Noise
 			var value  = 0d;
 			var weight = 1d;
 
-			const double offset = 1d;
-			const double gain   = 2d;
-
 			x += _xOff;
 			y += _yOff;
 			x *= _frequency;
@@ -100,11 +103,11 @@ namespace Lapis.Level.Generation.Noise
 
 				if(signal < 0)
 					signal = -1d * signal;
-				signal  = offset - signal;
+				signal  = _offset - signal;
 				signal *= signal;
 				signal *= weight;
 
-				weight = signal * gain;
+				weight = signal * _gain;
 				if(1d < weight)
 					weight = 1d;
 				else if(0d > weight)
@@ -136,9 +139,6 @@ namespace Lapis.Level.Generation.Noise
 			var value  = 0d;
 			var weight = 1d;
 
-			const double offset = 1d;
-			const double gain   = 2d;
-
 			x += _xOff;
 			y += _yOff;
 			z += _zOff;
@@ -153,11 +153,11 @@ namespace Lapis.Level.Generation.Noise
 
 				if(signal < 0d)
 					signal = -1d * signal;
-				signal  = offset - signal;
+				signal  = _offset - signal;
 				signal *= signal;
 				signal *= weight;
 
-				weight = signal * gain;
+				weight = signal * _gain;
 				if(1d < weight)
 					weight = 1d;
 				else if(0d > weight)
