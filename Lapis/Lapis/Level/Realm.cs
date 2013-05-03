@@ -418,7 +418,7 @@ namespace Lapis.Level
 			{
 				cleanupInactiveChunks();
 				var toSave = (from wr in _activeChunks.Values where wr.IsAlive select (Chunk)wr.Target).ToList();
-				foreach(var chunk in toSave.Where(chunk => null != chunk))// && chunk.Modified))
+				foreach(var chunk in toSave.Where(chunk => null != chunk && chunk.Modified))
 					chunk.Save();
 
 				saveLevelData(_levelFilePath, _levelData);

@@ -68,7 +68,7 @@ namespace Lapis.Level.Generation.Noise
 				break;
 			}
 
-			const double h = 1d;
+			const double h = 1d; // TODO: Make into a parameter
 
 			// Pre-compute weights
 			_spectralWeights = new double[octaves];
