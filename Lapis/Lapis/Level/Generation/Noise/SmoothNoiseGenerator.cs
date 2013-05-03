@@ -129,13 +129,51 @@ namespace Lapis.Level.Generation.Noise
 		}
 		#endregion
 
+		#region Noise quality
+		/// <summary>
+		/// Quality (smoothness) of the produced noise
+		/// </summary>
+		public enum NoiseQuality
+		{
+			/// <summary>
+			/// Fastest calculation, but produces sharper noise
+			/// </summary>
+			Fast,
+
+			/// <summary>
+			/// Balance of quality and speed
+			/// </summary>
+			Standard,
+
+			/// <summary>
+			/// Slowest calculation, but produces smoother noise
+			/// </summary>
+			Best
+		}
+
+		protected delegate double CurveMethod (double a);
+
+		protected static double SCurve3 (double a)
+		{
+			return a * a * (3.0 - 2.0 * a);
+		}
+
+		protected static double SCurve5 (double a)
+		{
+			var a3 = a * a * a;
+			var a4 = a3 * a;
+			var a5 = a4 * a;
+			return (6.0 * a5) - (15.0 * a4) + (10.0 * a3);
+		}
+		#endregion
+
 		private const int XNoisePrime    = 1619;
 		private const int YNoisePrime    = 31337;
 		private const int ZNoisePrime    = 263;
 		private const int SeedNoisePrime = 1013;
 
 		/// <summary>
-		/// Generates a reproducable noise value from -1 to 1
+		/// Generates a reproducible noise value from -1 to 1
 		/// </summary>
 		/// <param name="seed">Seed</param>
 		/// <param name="x">X value</param>

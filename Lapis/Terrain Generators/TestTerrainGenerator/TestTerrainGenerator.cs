@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lapis.Blocks;
 using Lapis.Level;
 using Lapis.Level.Data;
 using Lapis.Level.Generation;
@@ -74,16 +75,13 @@ namespace TestTerrainGenerator
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
 		public void Initialize (long seed, string options)
 		{
-			var generatorA = new PerlinNoiseGenerator(seed);
-			var generatorB = new SimplexNoiseGenerator(unchecked(seed + 1));
-			var selector   = new CellNoiseGenerator(seed);
-			_noise = new NoiseSelector(generatorA, generatorB, selector);
-			_noise.AddPostProcess(new RangePostProcessor(0, Chunk.Height));
+			_noise = new RidgedMultifractalNoiseGenerator(seed);
 		}
 
 		private NoiseGenerator _noise;
-		private const double Scale = 1 / 256d;
-
+		private const double ScaleX = 1 / 72d;
+		private const double ScaleY = 1 / 64d;
+		private const double ScaleZ = 1 / 72d;
 
 		/// <summary>
 		/// Generates a chunk at the given coordinate
@@ -93,33 +91,29 @@ namespace TestTerrainGenerator
 		/// <returns>The generated chunk data</returns>
 		public ChunkData GenerateChunk (int cx, int cz)
 		{
-			var data = new ChunkData(cx, cz);
-			for(var bx = (byte)0; bx < Chunk.Size; ++bx)
-				for(var bz = (byte)0; bz < Chunk.Size; ++bz)
+			using(var builder = new ChunkBuilder(cx, cz))
+			{
+				for(var bx = (byte)0; bx < Chunk.Size; ++bx)
 				{
-					int gx, gz;
-					LevelDataUtility.LocalToGlobalXZ(cx, cz, bx, bz, out gx, out gz);
-					var x = gx * Scale;
-					var z = gz * Scale;
-					var height = _noise.GenerateNoise(x, z, 0);
-					for(var by = (byte)(height - 1); by > 0; --by)
-						data.SetBlockType(bx, by, bz, Lapis.Blocks.BlockType.Dirt);
-					if(height < 64)
+					for(var bz = (byte)0; bz < Chunk.Size; ++bz)
 					{
-						for(var by = (byte)height; by < height + 3; ++by)
-							data.SetBlockType(bx, by, bz, Lapis.Blocks.BlockType.Sand);
-						for(var by = (byte)(height + 3); by < 65; ++by)
-							data.SetBlockType(bx, by, bz, Lapis.Blocks.BlockType.Water);
-						height = 64;
+						var column = new BlockType[64];
+						int gx, gz;
+						LevelDataUtility.LocalToGlobalXZ(cx, cz, bx, bz, out gx, out gz);
+						var x = gx * ScaleX;
+						var z = gz * ScaleZ;
+						for(var by = 0; by < column.Length; ++by)
+						{
+							var y = by * ScaleY;
+							var noiseValue = _noise.GenerateNoise(x, y, z);
+							if(noiseValue < -0.25 || noiseValue > 0.25)
+								column[by] = BlockType.Stone;
+						}
+						builder.FillColumn(bx, bz, column);
 					}
-					else
-					{
-						data.SetBlockType(bx, (byte)height, bz, height > 220 ? Lapis.Blocks.BlockType.SnowCover : Lapis.Blocks.BlockType.Grass);
-					}
-					data.SetBlockType(bx, 0, bz, Lapis.Blocks.BlockType.Bedrock);
-					data.HeightMap[bx, bz] = (byte)height;
 				}
-			return data;
+				return builder.GetChunkData();
+			}
 		}
 	}
 }
