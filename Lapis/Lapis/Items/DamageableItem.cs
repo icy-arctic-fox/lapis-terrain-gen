@@ -71,7 +71,7 @@ namespace Lapis.Items
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected DamageableItem (short damage, string name, string[] lore)
+		protected DamageableItem (short damage, string name, IEnumerable<string> lore)
 			: base(damage, name, lore)
 		{
 			_cost = 0;
@@ -84,7 +84,7 @@ namespace Lapis.Items
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected DamageableItem (short damage, int repairCost, string name, string[] lore)
+		protected DamageableItem (short damage, int repairCost, string name, IEnumerable<string> lore)
 			: base(damage, name, lore)
 		{
 			_cost = repairCost;
@@ -124,7 +124,7 @@ namespace Lapis.Items
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		protected DamageableItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+			: base(data, enchantments, name, lore)
 		{
 			_cost = 0;
 		}
@@ -139,7 +139,7 @@ namespace Lapis.Items
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		protected DamageableItem (short data, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+			: base(data, enchantments, name, lore)
 		{
 			_cost = repairCost;
 		}
