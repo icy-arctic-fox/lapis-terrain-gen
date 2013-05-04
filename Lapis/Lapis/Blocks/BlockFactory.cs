@@ -3,7 +3,10 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Blocks
 {
-	public partial class Block
+	/// <summary>
+	/// Manages the creation of new blocks
+	/// </summary>
+	public static class BlockFactory
 	{
 		// TODO: Possibly add value lookup (i.e. GetLuminance(type))
 
@@ -25,7 +28,7 @@ namespace Lapis.Blocks
 		/// <summary>
 		/// Registers all default block types
 		/// </summary>
-		static Block ()
+		static BlockFactory ()
 		{
 			lock(_knownBlockTypes)
 			{
@@ -193,7 +196,7 @@ namespace Lapis.Blocks
 		}
 
 		/// <summary>
-		/// Registers a block type
+		/// Registers a new type of block
 		/// </summary>
 		/// <param name="type">Block type</param>
 		/// <param name="constructor">Method that statically creates the block</param>
@@ -207,7 +210,7 @@ namespace Lapis.Blocks
 		}
 		#endregion
 
-		#region Creation
+		#region Factory methods
 		/// <summary>
 		/// Creates a new block with meta-data
 		/// </summary>

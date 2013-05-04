@@ -186,7 +186,7 @@ namespace Lapis.Level
 				data     = _data.GetBlockData(bx, by, bz);
 				tileData = _data.GetTileEntityData(bx, by, bz);
 			}
-			return (null == tileData) ? Block.Create(type, data) : Block.Create(type, data, tileData);
+			return (null == tileData) ? BlockFactory.Create(type, data) : BlockFactory.Create(type, data, tileData);
 		}
 
 		/// <summary>

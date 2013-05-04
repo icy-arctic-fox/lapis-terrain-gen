@@ -89,7 +89,7 @@
     <Compile Include="Blocks\BirchWoodStairsBlock.cs" />
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockOrientation.cs" />
-    <Compile Include="Blocks\Block.Registry.cs" />
+    <Compile Include="Blocks\BlockFactory.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BookshelfBlock.cs" />
     <Compile Include="Blocks\BrewingStandBlock.cs" />
