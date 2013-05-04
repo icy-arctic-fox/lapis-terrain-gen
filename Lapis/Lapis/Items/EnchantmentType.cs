@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Types of enchantments that items can have
 	/// </summary>
-	public enum EnchantmentType : byte
+	public enum EnchantmentType : short
 	{
 		/// <summary>
 		/// Reduces damage done
