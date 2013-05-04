@@ -35,7 +35,6 @@ namespace Lapis.Items
 
 		// TODO: Add constructor for enchanted items (requires enchanted values first)
 
-		#region Serialization
 		/// <summary>
 		/// Creates a new gold item from NBT data
 		/// </summary>
@@ -43,14 +42,7 @@ namespace Lapis.Items
 		protected GoldItem (Node node)
 			: base(node)
 		{
-			throw new NotImplementedException();
+			// ...
 		}
-
-		#region Validation
-		#endregion
-
-		#region Construction
-		#endregion
-		#endregion
 	}
 }

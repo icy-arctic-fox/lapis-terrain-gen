@@ -6,7 +6,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// Armor made out of leather
 	/// </summary>
-	public abstract class LeatherArmor : DamageableItem, IArmorItem
+	public abstract class LeatherArmor : DamageableItem, IArmorItem, IDyeableItem
 	{
 		#region Properties
 		#endregion
@@ -45,6 +45,8 @@ namespace Lapis.Items
 		{
 			throw new NotImplementedException();
 		}
+
+		// TODO: Add node data for dyeable
 
 		#region Validation
 		#endregion

@@ -11,11 +11,17 @@ namespace Lapis.Items
 		private readonly string _name;
 		private readonly string[] _lore;
 
+		/// <summary>
+		/// Visible name of the item
+		/// </summary>
 		public string Name
 		{
 			get { return _name; }
 		}
 
+		/// <summary>
+		/// Additional description (or "lore") displayed on the item
+		/// </summary>
 		public string[] Lore
 		{
 			// Make sure the contents of the array can't be modified
