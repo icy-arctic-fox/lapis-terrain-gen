@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Lapis.Blocks;
 using Lapis.IO.NBT;
 
@@ -92,12 +93,43 @@ namespace Lapis.Items
 		/// Creates a new item from NBT data
 		/// </summary>
 		/// <param name="node">Node containing information about the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidDataException">Thrown if the structure of the node is invalid</exception>
 		protected Item (Node node)
 		{
-			throw new NotImplementedException();
+			if(null == node)
+				throw new ArgumentNullException("node", "The root node can't be null.");
+
+			var root = validateRootNode(node);
+			_data = validateDataNode(root);
 		}
 
+		#region Node names
+		private const string IdNodeName    = "id";
+		private const string DataNodeName  = "Damage";
+		private const string CountNodeName = "Count";
+		private const string SlotNodeName  = "Slot";
+		#endregion
+
 		#region Validation
+		private static CompoundNode validateRootNode (Node node)
+		{
+			var root = node as CompoundNode;
+			if(null == root)
+				throw new InvalidDataException("The root node type is not of the correct type");
+			return root;
+		}
+
+		private static short validateDataNode (CompoundNode root)
+		{
+			if(root.Contains(DataNodeName))
+			{
+				var dataNode = root[DataNodeName] as ShortNode;
+				if(null != dataNode)
+					return dataNode.Value;
+			}
+			return 0;
+		}
 		#endregion
 
 		#region Construction
@@ -108,7 +140,7 @@ namespace Lapis.Items
 		/// <returns>A node containing information about the item</returns>
 		public Node GetNbtData (string name)
 		{
-			throw new NotImplementedException();
+			return constructNode(name, 1);
 		}
 
 		/// <summary>
@@ -119,7 +151,7 @@ namespace Lapis.Items
 		/// <returns>A node containing information about the item</returns>
 		public Node GetNbtData (string name, byte count)
 		{
-			throw new NotImplementedException();
+			return constructNode(name, count);
 		}
 
 		/// <summary>
@@ -131,12 +163,20 @@ namespace Lapis.Items
 		/// <returns>A node containing information about the item</returns>
 		public Node GetNbtData (string name, byte count, byte slot)
 		{
-			throw new NotImplementedException();
+			var root = constructNode(name, count);
+			root.Add(new ByteNode(SlotNodeName, slot));
+			return root;
 		}
 
-		private CompoundNode constructNode (string name)
+		private CompoundNode constructNode (string name, byte count)
 		{
-			throw new NotImplementedException();
+			var root = new CompoundNode(name);
+			root.Add(new ShortNode(IdNodeName, ItemId));
+			root.Add(new ShortNode(DataNodeName, _data));
+			root.Add(new ByteNode(CountNodeName, count));
+
+			InsertIntoItemData(root);
+			return root;
 		}
 
 		/// <summary>
