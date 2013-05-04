@@ -75,7 +75,9 @@ namespace TestTerrainGenerator
 		/// <param name="options">Options string used to customize the generator (does nothing for this generator)</param>
 		public void Initialize (long seed, string options)
 		{
-			_noise = new RidgedMultifractalNoiseGenerator(seed);
+			_noise = new NoiseCombiner(new RidgedMultifractalNoiseGenerator(seed, RidgedMultifractalNoiseGenerator.DefaultOctaves, RidgedMultifractalNoiseGenerator.DefaultFrequency, MathConstants.Sqrt3),
+				new RidgedMultifractalNoiseGenerator(unchecked(seed + 1), RidgedMultifractalNoiseGenerator.DefaultOctaves, RidgedMultifractalNoiseGenerator.DefaultFrequency, MathConstants.Sqrt3),
+				NoiseCombiner.CombinationMethod.Multiply);
 		}
 
 		private NoiseGenerator _noise;
@@ -106,7 +108,7 @@ namespace TestTerrainGenerator
 						{
 							var y = by * ScaleY;
 							var noiseValue = _noise.GenerateNoise(x, y, z);
-							if(noiseValue < -0.25 || noiseValue > 0.25)
+							if(noiseValue > 0d)
 								column[by] = BlockType.Stone;
 						}
 						builder.FillColumn(bx, bz, column);
