@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Lapis.IO.NBT;
 
 namespace Lapis.Items
@@ -24,7 +25,7 @@ namespace Lapis.Items
 		/// <param name="data">Data value (damage or other information)</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected EnchantableItem (short data, string name, string[] lore)
+		protected EnchantableItem (short data, string name, IEnumerable<string> lore)
 			: base(data, name, lore)
 		{
 			throw new NotImplementedException();
