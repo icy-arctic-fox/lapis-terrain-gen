@@ -23,6 +23,11 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// The item's tool type
+		/// </summary>
+		public abstract ToolType ToolType { get; }
+
+		/// <summary>
 		/// Creates a new stone tool
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>

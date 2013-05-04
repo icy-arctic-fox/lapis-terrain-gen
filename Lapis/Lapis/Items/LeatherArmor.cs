@@ -9,6 +9,47 @@ namespace Lapis.Items
 	/// </summary>
 	public abstract class LeatherArmor : DamageableItem, IArmorItem, IDyeableItem
 	{
+		private readonly int _color;
+
+		/// <summary>
+		/// Color value for the leather armor
+		/// </summary>
+		/// <remarks>The color is in the format RGB using the formula:
+		/// Red &lt;&lt; 16 | Green &lt;&lt; 8 | Blue</remarks>
+		public int Color
+		{
+			get { return _color; }
+		}
+
+		/// <summary>
+		/// Amount of red in the leather armor
+		/// </summary>
+		public byte Red
+		{
+			get { return (byte)((_color >> 16) & 0xff); }
+		}
+
+		/// <summary>
+		/// Amount of green in the leather armor
+		/// </summary>
+		public byte Green
+		{
+			get { return (byte)((_color >> 8) & 0xff); }
+		}
+
+		/// <summary>
+		/// Amount of blue in the leather armor
+		/// </summary>
+		public byte Blue
+		{
+			get { return (byte)(_color & 0xff); }
+		}
+
+		/// <summary>
+		/// The item's armor type
+		/// </summary>
+		public abstract ArmorType ArmorType { get; }
+
 		/// <summary>
 		/// Creates a new leather armor item
 		/// </summary>

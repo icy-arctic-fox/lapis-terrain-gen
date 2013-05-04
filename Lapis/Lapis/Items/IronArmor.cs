@@ -10,6 +10,11 @@ namespace Lapis.Items
 	public abstract class IronArmor : DamageableItem, IArmorItem
 	{
 		/// <summary>
+		/// The item's armor type
+		/// </summary>
+		public abstract ArmorType ArmorType { get; }
+
+		/// <summary>
 		/// Creates a new iron armor item
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>

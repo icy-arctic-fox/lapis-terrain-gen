@@ -285,6 +285,7 @@
     <Compile Include="IO\NBT\StringNode.cs" />
     <Compile Include="IO\NBT\Tree.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="Items\ArmorType.cs" />
     <Compile Include="Items\ChainArmor.cs" />
     <Compile Include="Items\DamageableItem.cs" />
     <Compile Include="Items\DiamondArmor.cs" />
@@ -307,6 +308,7 @@
     <Compile Include="Items\NameableItem.cs" />
     <Compile Include="Items\StoneTool.cs" />
     <Compile Include="Items\TaggableItem.cs" />
+    <Compile Include="Items\ToolType.cs" />
     <Compile Include="Items\WoodTool.cs" />
     <Compile Include="Level\BiomeType.cs" />
     <Compile Include="Level\BlockRef.cs" />
