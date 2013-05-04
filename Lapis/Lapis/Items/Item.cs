@@ -170,10 +170,11 @@ namespace Lapis.Items
 
 		private CompoundNode constructNode (string name, byte count)
 		{
-			var root = new CompoundNode(name);
-			root.Add(new ShortNode(IdNodeName, ItemId));
-			root.Add(new ShortNode(DataNodeName, _data));
-			root.Add(new ByteNode(CountNodeName, count));
+			var root = new CompoundNode(name) {
+				new ShortNode(IdNodeName, ItemId),
+				new ShortNode(DataNodeName, _data),
+				new ByteNode(CountNodeName, count)
+			};
 
 			InsertIntoItemData(root);
 			return root;

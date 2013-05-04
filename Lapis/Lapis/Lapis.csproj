@@ -299,6 +299,7 @@
     <Compile Include="Items\IToolItem.cs" />
     <Compile Include="Items\IWeaponItem.cs" />
     <Compile Include="Items\LeatherArmor.cs" />
+    <Compile Include="Items\NameableItem.cs" />
     <Compile Include="Items\StoneItem.cs" />
     <Compile Include="Items\TaggableItem.cs" />
     <Compile Include="Items\WoodItem.cs" />

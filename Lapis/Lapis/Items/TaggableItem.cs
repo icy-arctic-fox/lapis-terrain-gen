@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.IO;
 using Lapis.IO.NBT;
 
 namespace Lapis.Items
@@ -8,26 +8,6 @@ namespace Lapis.Items
 	/// </summary>
 	public abstract class TaggableItem : Item
 	{
-		private readonly string _name;
-		private readonly string[] _lore;
-
-		/// <summary>
-		/// Visible name of the item
-		/// </summary>
-		public string Name
-		{
-			get { return _name; }
-		}
-
-		/// <summary>
-		/// Additional description (or "lore") displayed on the item
-		/// </summary>
-		public string[] Lore
-		{
-			// Make sure the contents of the array can't be modified
-			get { throw new NotImplementedException(); }
-		}
-
 		/// <summary>
 		/// Creates a new item
 		/// </summary>
@@ -35,19 +15,7 @@ namespace Lapis.Items
 		protected TaggableItem (short data)
 			: base(data)
 		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Creates a new item with tag data
-		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
-		/// <param name="name">Visible name of the item</param>
-		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected TaggableItem (short data, string name, string[] lore)
-			: base(data)
-		{
-			throw new NotImplementedException();
+			// ...
 		}
 
 		#region Serialization
@@ -58,13 +26,49 @@ namespace Lapis.Items
 		protected TaggableItem (Node node)
 			: base(node)
 		{
-			throw new NotImplementedException();
-		}
+			validateTagNode((CompoundNode)node);
+		}		
+
+		#region Node names
+		/// <summary>
+		/// Name of the tag node
+		/// </summary>
+		protected const string TagNodeName = "tag";
+		#endregion
 
 		#region Validation
+		private static void validateTagNode (CompoundNode root)
+		{
+			if(!root.Contains(TagNodeName))
+				throw new InvalidDataException("The root node does not contain tag data");
+			var tagNode = root[TagNodeName] as CompoundNode;
+			if(null == tagNode)
+				throw new InvalidDataException("The tag node is not of the correct type");
+		}
 		#endregion
 
 		#region Construction
+		/// <summary>
+		/// Inserts the tag data into the root of the item node
+		/// </summary>
+		/// <param name="node">Node to insert into</param>
+		protected override void InsertIntoItemData (CompoundNode node)
+		{
+			base.InsertIntoItemData(node);
+			var tagNode = new CompoundNode(TagNodeName);
+			InsertIntoTagData(tagNode);
+			node.Add(tagNode);
+		}
+
+		/// <summary>
+		/// Inserts custom item information into the tag of the item node
+		/// </summary>
+		/// <param name="tagNode">Node to insert values into</param>
+		/// <remarks>This method does nothing, but is virtual so that sub-classes can add data if needed.</remarks>
+		protected virtual void InsertIntoTagData (CompoundNode tagNode)
+		{
+			// ...
+		}
 		#endregion
 		#endregion
 	}

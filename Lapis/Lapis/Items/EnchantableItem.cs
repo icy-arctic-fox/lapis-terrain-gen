@@ -6,7 +6,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// An item that can be enchanted
 	/// </summary>
-	public abstract class EnchantableItem : TaggableItem
+	public abstract class EnchantableItem : NameableItem
 	{
 		/// <summary>
 		/// Creates a new item
