@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Lapis.IO.NBT;
 
 namespace Lapis.Items
@@ -39,11 +42,21 @@ namespace Lapis.Items
 		/// <summary>
 		/// Additional description (or "lore") displayed on the item
 		/// </summary>
-		/// <remarks>This property will be null if the item doesn't have a description.</remarks>
+		/// <remarks>This property will be null if the item doesn't have a description.
+		/// Modifying the elements of this property will not update the item.</remarks>
 		public string[] Lore
 		{
-			// Make sure the contents of the array can't be modified
-			get { throw new NotImplementedException(); }
+			get
+			{
+				if(null != _lore)
+				{
+					var lore = new string[_lore.Length];
+					for(var i = 0; i < _lore.Length; ++i)
+						lore[i] = _lore[i];
+					return lore;
+				}
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -63,10 +76,11 @@ namespace Lapis.Items
 		/// <param name="data">Data value (damage or other information)</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected NameableItem (short data, string name, string[] lore)
+		protected NameableItem (short data, string name, IEnumerable<string> lore)
 			: base(data)
 		{
-			throw new NotImplementedException();
+			_name = name;
+			_lore = (null == lore) ? null : lore.ToArray();
 		}
 
 		#region Serialization
@@ -92,7 +106,12 @@ namespace Lapis.Items
 		#region Validation
 		private static CompoundNode validateDisplayNode (CompoundNode tagNode)
 		{
-			throw new NotImplementedException();
+			if(!tagNode.Contains(DisplayNodeName))
+				throw new InvalidDataException("The tag node does not contain a display node");
+			var displayNode = tagNode[DisplayNodeName] as CompoundNode;
+			if(null == displayNode)
+				throw new InvalidDataException("The display node is not of the correct type");
+			return displayNode;
 		}
 
 		private static string validateNameNode (CompoundNode displayNode)
@@ -108,11 +127,48 @@ namespace Lapis.Items
 
 		private static string[] validateLoreNode (CompoundNode displayNode)
 		{
-			throw new NotImplementedException();
+			if(displayNode.Contains(LoreNodeName))
+			{
+				var loreNode = displayNode[LoreNodeName] as ListNode;
+				if(null != loreNode && loreNode.ElementType == NodeType.String)
+					return (from StringNode lore in loreNode where lore != null && lore.Value != null select lore.Value).ToArray();
+			}
+			return null;
 		}
 		#endregion
 
 		#region Construction
+		/// <summary>
+		/// Inserts the display data into the tag of the item node
+		/// </summary>
+		/// <param name="tagNode">Node to insert into</param>
+		protected override void InsertIntoTagData (CompoundNode tagNode)
+		{
+			base.InsertIntoTagData(tagNode);
+			var displayNode = new CompoundNode(DisplayNodeName);
+			if(null != _name)
+				displayNode.Add(new StringNode(NameNodeName, _name));
+			if(null != _lore)
+			{
+				var loreNode = new ListNode(LoreNodeName, NodeType.String);
+				for(var i = 0; i < _lore.Length; ++i)
+					loreNode.Add(new StringNode("Lore", _lore[i]));
+				displayNode.Add(loreNode);
+			}
+
+			InsertIntoDisplayData(displayNode);
+			tagNode.Add(displayNode);
+		}
+
+		/// <summary>
+		/// Inserts custom item information into the display node of the tag
+		/// </summary>
+		/// <param name="displayNode">Node to insert values into</param>
+		/// <remarks>This method does nothing, but is virtual so that sub-classes can add data if needed.</remarks>
+		protected virtual void InsertIntoDisplayData (CompoundNode displayNode)
+		{
+			// ...
+		}
 		#endregion
 		#endregion
 	}
