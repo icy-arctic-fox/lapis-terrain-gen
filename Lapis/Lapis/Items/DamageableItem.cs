@@ -47,6 +47,15 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new item
 		/// </summary>
+		protected DamageableItem ()
+			: base(0)
+		{
+			_cost = 0;
+		}
+
+		/// <summary>
+		/// Creates a new item
+		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		protected DamageableItem (short damage)
 			: base(damage)
@@ -63,6 +72,17 @@ namespace Lapis.Items
 			: base(damage)
 		{
 			_cost = repairCost;
+		}
+
+		/// <summary>
+		/// Creates a new item with tag data
+		/// </summary>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		protected DamageableItem (string name, IEnumerable<string> lore)
+			: base(0, name, lore)
+		{
+			_cost = 0;
 		}
 
 		/// <summary>
@@ -93,11 +113,10 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected DamageableItem (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		protected DamageableItem (IEnumerable<Enchantment> enchantments)
+			: base(0, enchantments)
 		{
 			_cost = 0;
 		}
@@ -105,12 +124,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected DamageableItem (short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			_cost = 0;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected DamageableItem (short data, int repairCost, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		protected DamageableItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
 		{
 			_cost = repairCost;
 		}
@@ -118,13 +149,12 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected DamageableItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		protected DamageableItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(0, enchantments, name, lore)
 		{
 			_cost = 0;
 		}
@@ -132,14 +162,28 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected DamageableItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			_cost = 0;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected DamageableItem (short data, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		protected DamageableItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
 		{
 			_cost = repairCost;
 		}

@@ -97,9 +97,12 @@ namespace Lapis.Items
 		}		
 
 		#region Node names
-		private const string DisplayNodeName = "display";
-		private const string NameNodeName    = "Name";
-		private const string LoreNodeName    = "Lore";
+		/// <summary>
+		/// Name of the display node under the tag node
+		/// </summary>
+		protected const string DisplayNodeName = "display";
+		private const string NameNodeName      = "Name";
+		private const string LoreNodeName      = "Lore";
 		#endregion
 
 		#region Validation

@@ -9,6 +9,11 @@ namespace Lapis.Items
 	/// </summary>
 	public abstract class LeatherArmor : DamageableItem, IArmorItem, IDyeableItem
 	{
+		/// <summary>
+		/// Default color of the leather armor
+		/// </summary>
+		public const int DefaultColor = 0;
+
 		private readonly int _color;
 
 		/// <summary>
@@ -53,101 +58,176 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new leather armor item
 		/// </summary>
+		protected LeatherArmor ()
+		{
+			_color = DefaultColor;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item
+		/// </summary>
+		/// <param name="color">Color of the armor</param>
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color)
+		{
+			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item
+		/// </summary>
+		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
-		protected LeatherArmor (short damage)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage)
 			: base(damage)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new leather armor item with a repair cost
 		/// </summary>
+		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
-		protected LeatherArmor (short damage, int repairCost)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, int repairCost)
 			: base(damage, repairCost)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new leather armor item with tag data
 		/// </summary>
+		/// <param name="color">Color of the armor</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, string name, IEnumerable<string> lore)
+			: base(name, lore)
+		{
+			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item with tag data
+		/// </summary>
+		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected LeatherArmor (short damage, string name, IEnumerable<string> lore)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, string name, IEnumerable<string> lore)
 			: base(damage, name, lore)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new leather armor item with tag data
 		/// </summary>
+		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected LeatherArmor (short damage, int repairCost, string name, IEnumerable<string> lore)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, int repairCost, string name, IEnumerable<string> lore)
 			: base(damage, repairCost, name, lore)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="color">Color of the armor</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected LeatherArmor (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, IEnumerable<Enchantment> enchantments)
+			: base(enchantments)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="color">Color of the armor</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
+		/// <param name="color">Color of the armor</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected LeatherArmor (short data, int repairCost, IEnumerable<Enchantment> enchantments)
-			: base(data, repairCost, enchantments)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, repairCost, enchantments)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="color">Color of the armor</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected LeatherArmor (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(enchantments, name, lore)
 		{
-			// ...
+			_color = color;
 		}
 
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="color">Color of the armor</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
+		/// <param name="color">Color of the armor</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected LeatherArmor (short data, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, repairCost, enchantments, name, lore)
+		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
+		protected LeatherArmor (int color, short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, enchantments, name, lore)
 		{
-			// ...
+			_color = color;
 		}
 
 		#region Serialization
@@ -158,7 +238,8 @@ namespace Lapis.Items
 		protected LeatherArmor (Node node)
 			: base(node)
 		{
-			// TODO: Implement color
+			var displayNode = ((CompoundNode)((CompoundNode)node)[TagNodeName])[DisplayNodeName] as CompoundNode;
+			_color = validateColorNode(displayNode);
 		}
 
 		#region Node names
@@ -166,10 +247,41 @@ namespace Lapis.Items
 		#endregion
 
 		#region Validation
+		private static int validateColorNode (CompoundNode displayNode)
+		{
+			if(displayNode.Contains(ColorNodeName))
+			{
+				var colorNode = displayNode[ColorNodeName] as IntNode;
+				if(null != colorNode)
+					return colorNode.Value;
+			}
+			return 0;
+		}
 		#endregion
 
 		#region Construction
+		/// <summary>
+		/// Inserts the color value into the display node
+		/// </summary>
+		/// <param name="displayNode">Node to insert into</param>
+		protected override void InsertIntoDisplayData (CompoundNode displayNode)
+		{
+			base.InsertIntoDisplayData(displayNode);
+			displayNode.Add(new IntNode(ColorNodeName, _color));
+		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Makes a color value from its components
+		/// </summary>
+		/// <param name="red">Amount of red</param>
+		/// <param name="green">Amount of green</param>
+		/// <param name="blue">Amount of blue</param>
+		/// <returns>A color value</returns>
+		public static int MakeColor (byte red, byte green, byte blue)
+		{
+			return (red << 16) | (green << 8) | blue;
+		}
 	}
 }

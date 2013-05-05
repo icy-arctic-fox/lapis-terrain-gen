@@ -28,7 +28,15 @@ namespace Lapis.Items
 		public abstract ToolType ToolType { get; }
 
 		/// <summary>
-		/// Creates a new wood tool
+		/// Creates a new wood tool item
+		/// </summary>
+		protected WoodTool ()
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood tool item
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		protected WoodTool (short damage)
@@ -38,7 +46,7 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// Creates a new wood tool with a repair cost
+		/// Creates a new wood tool item with a repair cost
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
@@ -49,7 +57,18 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// Creates a new wood tool with tag data
+		/// Creates a new wood tool item with tag data
+		/// </summary>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		protected WoodTool (string name, IEnumerable<string> lore)
+			: base(name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood tool item with tag data
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
@@ -61,7 +80,7 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// Creates a new wood tool with tag data
+		/// Creates a new wood tool item with tag data
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
@@ -74,55 +93,79 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// Creates a new enchanted wood tool
+		/// Creates a new enchanted wood tool item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected WoodTool (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		protected WoodTool (IEnumerable<Enchantment> enchantments)
+			: base(enchantments)
 		{
 			// ...
 		}
 
 		/// <summary>
-		/// Creates a new enchanted wood tool
+		/// Creates a new enchanted wood tool item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected WoodTool (short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted wood tool item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected WoodTool (short data, int repairCost, IEnumerable<Enchantment> enchantments)
-			: base(data, repairCost, enchantments)
+		protected WoodTool (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, repairCost, enchantments)
 		{
 			// ...
 		}
 
 		/// <summary>
-		/// Creates a new enchanted wood tool
+		/// Creates a new enchanted wood tool item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected WoodTool (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		protected WoodTool (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(enchantments, name, lore)
 		{
 			// ...
 		}
 
 		/// <summary>
-		/// Creates a new enchanted wood tool
+		/// Creates a new enchanted wood tool item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected WoodTool (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted wood tool item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected WoodTool (short data, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, repairCost, enchantments, name, lore)
+		protected WoodTool (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, enchantments, name, lore)
 		{
 			// ...
 		}
