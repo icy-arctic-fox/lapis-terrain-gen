@@ -20,7 +20,7 @@ namespace Lapis.Level.Generation.Population
 	/// </list></remarks>
 	public class SkyLightPopulator : IChunkPopulator
 	{
-		#region Meta-data
+		#region Plugin properties
 		/// <summary>
 		/// Name of the chunk populator
 		/// </summary>
@@ -50,10 +50,10 @@ namespace Lapis.Level.Generation.Population
 		/// <summary>
 		/// Creator of the chunk populator
 		/// </summary>
-		/// <remarks>The creator of this populator is Mike Miller &lt;dotMaiku@gmail.com&gt;</remarks>
+		/// <remarks>The creator of this populator is Lapis MC</remarks>
 		public string Author
 		{
-			get { return "Mike Miller <dotMaiku@gmail.com>"; }
+			get { return "Lapis MC"; }
 		}
 		#endregion
 

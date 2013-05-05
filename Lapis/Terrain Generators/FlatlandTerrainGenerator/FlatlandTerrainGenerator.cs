@@ -15,7 +15,7 @@ namespace FlatlandTerrainGenerator
 	/// </summary>
 	public class FlatlandTerrainGenerator : ITerrainGenerator
 	{
-		#region Meta-data
+		#region Plugin properties
 		/// <summary>
 		/// Name of the terrain generator
 		/// </summary>
@@ -37,10 +37,10 @@ namespace FlatlandTerrainGenerator
 		/// <summary>
 		/// Name of the person that wrote the terrain generator
 		/// </summary>
-		/// <remarks>The creator of this generator is Mike Miller &lt;dotMaiku@gmail.com&gt;</remarks>
+		/// <remarks>The creator of this generator is Lapis MC</remarks>
 		public string Author
 		{
-			get { return "Mike Miller <dotMaikU@gmail.com>"; }
+			get { return "Lapis MC"; }
 		}
 
 		/// <summary>
