@@ -9,12 +9,15 @@ namespace Lapis.Items
 	/// </summary>
 	public abstract class LeatherArmor : DamageableItem, IArmorItem, IDyeableItem
 	{
-		/// <summary>
-		/// Default color of the leather armor
-		/// </summary>
-		public const int DefaultColor = 0;
+		private readonly int? _color;
 
-		private readonly int _color;
+		/// <summary>
+		/// Whether or not the leather armor has been dyed
+		/// </summary>
+		public bool Dyed
+		{
+			get { return _color.HasValue; }
+		}
 
 		/// <summary>
 		/// Color value for the leather armor
@@ -23,7 +26,7 @@ namespace Lapis.Items
 		/// Red &lt;&lt; 16 | Green &lt;&lt; 8 | Blue</remarks>
 		public int Color
 		{
-			get { return _color; }
+			get { return _color.HasValue ? _color.Value : 0; }
 		}
 
 		/// <summary>
@@ -31,7 +34,7 @@ namespace Lapis.Items
 		/// </summary>
 		public byte Red
 		{
-			get { return (byte)((_color >> 16) & 0xff); }
+			get { return (byte)((Color >> 16) & 0xff); }
 		}
 
 		/// <summary>
@@ -39,7 +42,7 @@ namespace Lapis.Items
 		/// </summary>
 		public byte Green
 		{
-			get { return (byte)((_color >> 8) & 0xff); }
+			get { return (byte)((Color >> 8) & 0xff); }
 		}
 
 		/// <summary>
@@ -47,7 +50,7 @@ namespace Lapis.Items
 		/// </summary>
 		public byte Blue
 		{
-			get { return (byte)(_color & 0xff); }
+			get { return (byte)(Color & 0xff); }
 		}
 
 		/// <summary>
@@ -60,7 +63,7 @@ namespace Lapis.Items
 		/// </summary>
 		protected LeatherArmor ()
 		{
-			_color = DefaultColor;
+			_color = null;
 		}
 
 		/// <summary>
@@ -76,6 +79,16 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new leather armor item
 		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		protected LeatherArmor (short damage)
+			: base(damage)
+		{
+			_color = null;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item
+		/// </summary>
 		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <remarks>MakeColor can be used to get a color value from its components.</remarks>
@@ -83,6 +96,17 @@ namespace Lapis.Items
 			: base(damage)
 		{
 			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item with a repair cost
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		protected LeatherArmor (short damage, int repairCost)
+			: base(damage, repairCost)
+		{
+			_color = null;
 		}
 
 		/// <summary>
@@ -101,6 +125,17 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new leather armor item with tag data
 		/// </summary>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		protected LeatherArmor (string name, IEnumerable<string> lore)
+			: base(name, lore)
+		{
+			_color = null;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item with tag data
+		/// </summary>
 		/// <param name="color">Color of the armor</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
@@ -109,6 +144,18 @@ namespace Lapis.Items
 			: base(name, lore)
 		{
 			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item with tag data
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		protected LeatherArmor (short damage, string name, IEnumerable<string> lore)
+			: base(damage, name, lore)
+		{
+			_color = null;
 		}
 
 		/// <summary>
@@ -123,6 +170,19 @@ namespace Lapis.Items
 			: base(damage, name, lore)
 		{
 			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new leather armor item with tag data
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		protected LeatherArmor (short damage, int repairCost, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, name, lore)
+		{
+			_color = null;
 		}
 
 		/// <summary>
@@ -143,6 +203,17 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected LeatherArmor (IEnumerable<Enchantment> enchantments)
+			: base(enchantments)
+		{
+			_color = null;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
 		/// <param name="color">Color of the armor</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
@@ -151,6 +222,18 @@ namespace Lapis.Items
 			: base(enchantments)
 		{
 			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected LeatherArmor (short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			_color = null;
 		}
 
 		/// <summary>
@@ -170,6 +253,19 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected LeatherArmor (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, repairCost, enchantments)
+		{
+			_color = null;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
 		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
@@ -180,6 +276,19 @@ namespace Lapis.Items
 			: base(damage, repairCost, enchantments)
 		{
 			_color = color;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected LeatherArmor (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(enchantments, name, lore)
+		{
+			_color = null;
 		}
 
 		/// <summary>
@@ -216,6 +325,20 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted leather armor item
 		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		protected LeatherArmor (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			_color = null;
+		}
+
+		/// <summary>
+		/// Creates a new enchanted leather armor item
+		/// </summary>
 		/// <param name="color">Color of the armor</param>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
@@ -238,8 +361,22 @@ namespace Lapis.Items
 		protected LeatherArmor (Node node)
 			: base(node)
 		{
-			var displayNode = ((CompoundNode)((CompoundNode)node)[TagNodeName])[DisplayNodeName] as CompoundNode;
-			_color = validateColorNode(displayNode);
+			_color = null;
+
+			var rootNode = (CompoundNode)node;
+			if(rootNode.Contains(TagNodeName))
+			{
+				var tagNode = rootNode[TagNodeName] as CompoundNode;
+				if(null != tagNode)
+				{
+					if(tagNode.Contains(DisplayNodeName))
+					{
+						var displayNode = tagNode[DisplayNodeName] as CompoundNode;
+						if(null != displayNode)
+							_color = validateColorNode(displayNode);
+					}
+				}
+			}
 		}
 
 		#region Node names
@@ -247,7 +384,7 @@ namespace Lapis.Items
 		#endregion
 
 		#region Validation
-		private static int validateColorNode (CompoundNode displayNode)
+		private static int? validateColorNode (CompoundNode displayNode)
 		{
 			if(displayNode.Contains(ColorNodeName))
 			{
@@ -255,7 +392,7 @@ namespace Lapis.Items
 				if(null != colorNode)
 					return colorNode.Value;
 			}
-			return 0;
+			return null;
 		}
 		#endregion
 
@@ -267,7 +404,8 @@ namespace Lapis.Items
 		protected override void InsertIntoDisplayData (CompoundNode displayNode)
 		{
 			base.InsertIntoDisplayData(displayNode);
-			displayNode.Add(new IntNode(ColorNodeName, _color));
+			if(_color.HasValue)
+				displayNode.Add(new IntNode(ColorNodeName, _color.Value));
 		}
 		#endregion
 		#endregion

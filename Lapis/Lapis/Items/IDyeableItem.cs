@@ -6,6 +6,11 @@
 	public interface IDyeableItem
 	{
 		/// <summary>
+		/// Whether or not the item has been dyed
+		/// </summary>
+		bool Dyed { get; }
+
+		/// <summary>
 		/// Color value for the item
 		/// </summary>
 		/// <remarks>The color is in the format RGB using the formula:

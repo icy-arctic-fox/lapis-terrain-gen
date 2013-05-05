@@ -16,7 +16,7 @@ namespace Lapis.Items
 		/// <summary>
 		/// Whether or not the item has enchantments
 		/// </summary>
-		public bool HasEnchantments
+		public bool Enchanted
 		{
 			get { return _enchants.Length > 0; }
 		}
@@ -105,8 +105,17 @@ namespace Lapis.Items
 		protected EnchantableItem (Node node)
 			: base(node)
 		{
-			var tagNode = ((CompoundNode)node)[TagNodeName] as CompoundNode;
-			_enchants = validateEnchantsNode(tagNode);
+			var rootNode = (CompoundNode)node;
+			if(rootNode.Contains(TagNodeName))
+			{
+				var tagNode = rootNode[TagNodeName] as CompoundNode;
+				if(null != tagNode)
+					_enchants = validateEnchantsNode(tagNode);
+				else
+					_enchants = new Enchantment[0];
+			}
+			else
+				_enchants = new Enchantment[0];
 		}
 
 		#region Node names
@@ -148,7 +157,8 @@ namespace Lapis.Items
 		protected override void InsertIntoTagData (CompoundNode tagNode)
 		{
 			base.InsertIntoTagData(tagNode);
-			tagNode.Add(constructEnchantNode());
+			if(0 < _enchants.Length)
+				tagNode.Add(constructEnchantNode());
 		}
 
 		private Node constructEnchantNode ()

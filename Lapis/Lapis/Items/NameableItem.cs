@@ -90,10 +90,20 @@ namespace Lapis.Items
 		protected NameableItem (Node node)
 			: base(node)
 		{
-			var tagNode = ((CompoundNode)node)[TagNodeName] as CompoundNode;
-			var displayNode = validateDisplayNode(tagNode);
-			_name = validateNameNode(displayNode);
-			_lore = validateLoreNode(displayNode);
+			var rootNode = (CompoundNode)node;
+			if(rootNode.Contains(TagNodeName))
+			{
+				var tagNode = rootNode[TagNodeName] as CompoundNode;
+				if(null != tagNode)
+				{
+					var displayNode = validateDisplayNode(tagNode);
+					if(null != displayNode)
+					{
+						_name = validateNameNode(displayNode);
+						_lore = validateLoreNode(displayNode);
+					}
+				}
+			}
 		}		
 
 		#region Node names
@@ -108,12 +118,13 @@ namespace Lapis.Items
 		#region Validation
 		private static CompoundNode validateDisplayNode (CompoundNode tagNode)
 		{
-			if(!tagNode.Contains(DisplayNodeName))
-				throw new InvalidDataException("The tag node does not contain a display node");
-			var displayNode = tagNode[DisplayNodeName] as CompoundNode;
-			if(null == displayNode)
-				throw new InvalidDataException("The display node is not of the correct type");
-			return displayNode;
+			if(tagNode.Contains(DisplayNodeName))
+			{
+				var displayNode = tagNode[DisplayNodeName] as CompoundNode;
+				if(null != displayNode)
+					return displayNode;
+			}
+			return null;
 		}
 
 		private static string validateNameNode (CompoundNode displayNode)
@@ -159,7 +170,8 @@ namespace Lapis.Items
 			}
 
 			InsertIntoDisplayData(displayNode);
-			tagNode.Add(displayNode);
+			if(0 < displayNode.Count)
+				tagNode.Add(displayNode);
 		}
 
 		/// <summary>

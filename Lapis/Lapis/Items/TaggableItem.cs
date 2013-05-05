@@ -26,7 +26,7 @@ namespace Lapis.Items
 		protected TaggableItem (Node node)
 			: base(node)
 		{
-			validateTagNode((CompoundNode)node);
+			// ...
 		}		
 
 		#region Node names
@@ -34,17 +34,6 @@ namespace Lapis.Items
 		/// Name of the tag node
 		/// </summary>
 		protected const string TagNodeName = "tag";
-		#endregion
-
-		#region Validation
-		private static void validateTagNode (CompoundNode root)
-		{
-			if(!root.Contains(TagNodeName))
-				throw new InvalidDataException("The root node does not contain tag data");
-			var tagNode = root[TagNodeName] as CompoundNode;
-			if(null == tagNode)
-				throw new InvalidDataException("The tag node is not of the correct type");
-		}
 		#endregion
 
 		#region Construction
@@ -57,7 +46,8 @@ namespace Lapis.Items
 			base.InsertIntoItemData(node);
 			var tagNode = new CompoundNode(TagNodeName);
 			InsertIntoTagData(tagNode);
-			node.Add(tagNode);
+			if(0 < tagNode.Count)
+				node.Add(tagNode);
 		}
 
 		/// <summary>
