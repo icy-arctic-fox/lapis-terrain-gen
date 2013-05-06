@@ -5,7 +5,6 @@
 	/// </summary>
 	public interface IPlugin
 	{
-		#region Meta-data
 		/// <summary>
 		/// Name of the plug-in
 		/// </summary>
@@ -27,6 +26,5 @@
 		/// Name and email address of the creator of the plug-in
 		/// </summary>
 		string Author { get; }
-		#endregion
 	}
 }

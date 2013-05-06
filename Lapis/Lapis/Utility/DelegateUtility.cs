@@ -17,8 +17,6 @@ namespace Lapis.Utility
 		/// <param name="args">Event arguments to pass</param>
 		public static void TriggerEvent<TEventArgs> (this EventHandler<TEventArgs> ev, object sender, TEventArgs args) where TEventArgs : EventArgs
 		{
-			if(null == sender)
-				throw new ArgumentNullException("sender", "The sender of the event can't be null.");
 			if(null == args)
 				throw new ArgumentNullException("args", "The event arguments can't be null.");
 

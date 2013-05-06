@@ -355,6 +355,8 @@
     <Compile Include="Level\Generation\Schematic.cs" />
     <Compile Include="Level\RealmRef.cs" />
     <Compile Include="Level\WorldRef.cs" />
+    <Compile Include="PluginLoader.cs" />
+    <Compile Include="PluginLoadErrorEventArgs.cs" />
     <Compile Include="Spatial\XYZCoordinate.cs" />
     <Compile Include="Spatial\XZYSection.cs" />
     <Compile Include="Level\Generation\BulkGenerator.cs" />
