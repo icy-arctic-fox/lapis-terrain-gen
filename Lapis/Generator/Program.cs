@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Lapis;
 using Lapis.Level;
 using Lapis.Level.Generation;
 
@@ -276,6 +277,10 @@ namespace Generator
 			else
 			{
 				initThreadPool();
+
+				PluginLoader.LoadError += PluginLoader_LoadError;
+				PluginLoader.LoadPlugins();
+
 				if(args.Length == 1 && (InteractiveTag == args[0] || ExtendedInteractiveTag == args[0]))
 					interactiveMode();
 				else
@@ -285,6 +290,19 @@ namespace Generator
 						doGeneration(parameters);
 				}
 			}
+		}
+
+		static void PluginLoader_LoadError (object sender, PluginLoadErrorEventArgs e)
+		{
+			var filepath  = e.Filepath;
+			var className = e.PluginClassName;
+			var exception = e.Exception;
+			if(null == className) // Error loading .dll
+				Console.Error.WriteLine("Error loading " + filepath);
+			else
+				Console.Error.WriteLine("Error loading plug-in " + className + " from " + filepath);
+			Console.Error.WriteLine(exception.Message);
+			Console.Error.WriteLine(exception.StackTrace);
 		}
 
 		private static void initThreadPool ()
