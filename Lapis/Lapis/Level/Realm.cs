@@ -272,7 +272,7 @@ namespace Lapis.Level
 			var temp = new byte[sizeof(long)];
 			_rng.NextBytes(temp);
 			var seed  = temp.ToLong();
-			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seed, generator.PluginName, generator.PluginVersion, generator.GeneratorOptions);
 			generator.Initialize(seed, null);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
@@ -296,7 +296,7 @@ namespace Lapis.Level
 			if(null == generator)
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
-			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seed, generator.PluginName, generator.PluginVersion, generator.GeneratorOptions);
 			generator.Initialize(seed, null);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
@@ -321,7 +321,7 @@ namespace Lapis.Level
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
 			var seedValue = GenerateSeedFromString(seed);
-			var level = new LevelData(world.Name, seedValue, generator.Name, generator.Version, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seedValue, generator.PluginName, generator.PluginVersion, generator.GeneratorOptions);
 			generator.Initialize(seedValue, null);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
@@ -346,7 +346,7 @@ namespace Lapis.Level
 			if(null == generator)
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
-			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seed, generator.PluginName, generator.PluginVersion, generator.GeneratorOptions);
 			generator.Initialize(seed, options);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
@@ -372,7 +372,7 @@ namespace Lapis.Level
 				throw new ArgumentNullException("generator", "The terrain generator can't be null.");
 
 			var seedValue = GenerateSeedFromString(seed);
-			var level = new LevelData(world.Name, seedValue, generator.Name, generator.Version, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seedValue, generator.PluginName, generator.PluginVersion, generator.GeneratorOptions);
 			generator.Initialize(seedValue, options);
 
 			var realm = new Realm(world, realmId, dimension, level, generator);
@@ -398,7 +398,7 @@ namespace Lapis.Level
 			var temp = new byte[sizeof(long)];
 			_rng.NextBytes(temp);
 			var seed  = temp.ToLong();
-			var level = new LevelData(world.Name, seed, generator.Name, generator.Version, generator.GeneratorOptions);
+			var level = new LevelData(world.Name, seed, generator.PluginName, generator.PluginVersion, generator.GeneratorOptions);
 			generator.Initialize(seed, null);
 
 			var realm = new Realm(world, (int)dimension, dimension, level, generator);

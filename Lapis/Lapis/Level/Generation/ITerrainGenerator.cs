@@ -9,7 +9,7 @@ namespace Lapis.Level.Generation
 	/// </summary>
 	/// <remarks>Terrain generators may require additional configuration and parameters when they're created.
 	/// After a generator is set up, a combination of the version and options string can produce the same generator later.</remarks>
-	public interface ITerrainGenerator : IPlugin
+	public interface ITerrainGenerator : IPluginInfo
 	{
 		/// <summary>
 		/// Options string used to customize the generator

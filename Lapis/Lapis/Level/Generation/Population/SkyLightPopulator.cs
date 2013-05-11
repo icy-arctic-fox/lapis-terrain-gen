@@ -25,7 +25,7 @@ namespace Lapis.Level.Generation.Population
 		/// Name of the chunk populator
 		/// </summary>
 		/// <remarks>The name of this populator is "Sky Light Populator"</remarks>
-		public string Name
+		public string PluginName
 		{
 			get { return "Sky Light Populator"; }
 		}
@@ -34,7 +34,7 @@ namespace Lapis.Level.Generation.Population
 		/// Version of the chunk populator
 		/// </summary>
 		/// <remarks>The version of this populator is 1</remarks>
-		public int Version
+		public int PluginVersion
 		{
 			get { return 1; }
 		}
@@ -42,7 +42,7 @@ namespace Lapis.Level.Generation.Population
 		/// <summary>
 		/// Description of what the chunk populator does
 		/// </summary>
-		public string Description
+		public string PluginDescription
 		{
 			get { return "Fills chunks with sky light"; }
 		}
@@ -51,7 +51,7 @@ namespace Lapis.Level.Generation.Population
 		/// Creator of the chunk populator
 		/// </summary>
 		/// <remarks>The creator of this populator is Lapis MC</remarks>
-		public string Author
+		public string PluginCreator
 		{
 			get { return "Lapis MC"; }
 		}

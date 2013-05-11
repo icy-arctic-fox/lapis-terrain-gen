@@ -129,11 +129,12 @@ namespace Lapis
 		/// <summary>
 		/// Collection of all loaded plug-ins
 		/// </summary>
-		public static IPlugin[] Plugins
+		public static string[] Plugins
 		{
 			get { throw new NotImplementedException(); }
 		}
 
+		#region Activation
 		/// <summary>
 		/// Collection of active plug-ins
 		/// </summary>
@@ -142,17 +143,50 @@ namespace Lapis
 			get { throw new NotImplementedException(); }
 		}
 
-		public static void ActivatePlugin (string pluginName)
+		public static bool ActivatePlugin (string pluginName)
 		{
 			throw new NotImplementedException();
 		}
 
-		public static void DeactivatePlugin (string pluginName)
+		public static bool ActivatePlugin (string pluginName, int version)
 		{
 			throw new NotImplementedException();
 		}
 
-		public static void GetPlugin (string pluginName)
+		public static bool ActivatePluginClass (string className)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region Deactivation
+		public static bool DeactivatePlugin (string pluginName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static bool DeactivatePlugin (string pluginName, int version)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static bool DeactivatePluginClass (string className)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		public static IPlugin GetPlugin (string pluginName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static IPlugin GetPlugin (string pluginName, int version)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static IPlugin GetPluginClass (string className)
 		{
 			throw new NotImplementedException();
 		}

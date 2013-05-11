@@ -261,7 +261,7 @@ namespace Lapis.Level.Generation
 				var lastZ     = work.StartZ + work.CountZ;
 				var populated = _populatorsDone + 1 >= _populatorCount; // True if this is the last populator and we need to mark the chunks as populated
 #if TRACE
-				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] " + populator.Name + ": " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
+				Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "] " + populator.PluginName + ": " + work.StartX + ", " + work.StartZ + " (" + work.CountX + ", " + work.CountZ + ")");
 #endif
 				for(var x = work.StartX; x < lastX; ++x)
 					for(var z = work.StartZ; z < lastZ; ++z)
@@ -281,7 +281,7 @@ namespace Lapis.Level.Generation
 					total     = _total;
 				}
 
-				var args = new PopulationProgressEventArgs(_realm, work.StartX, work.StartZ, work.CountX, work.CountZ, completed, total, populator.Name, _populatorsDone, _populatorCount);
+				var args = new PopulationProgressEventArgs(_realm, work.StartX, work.StartZ, work.CountX, work.CountZ, completed, total, populator.PluginName, _populatorsDone, _populatorCount);
 				OnPopulationProgress(args);
 				work.Done();
 			}

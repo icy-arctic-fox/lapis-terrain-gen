@@ -20,7 +20,7 @@ namespace FlatlandTerrainGenerator
 		/// Name of the terrain generator
 		/// </summary>
 		/// <remarks>The name of this generator is "Flat".</remarks>
-		public string Name
+		public string PluginName
 		{
 			get { return "Flat"; }
 		}
@@ -29,7 +29,7 @@ namespace FlatlandTerrainGenerator
 		/// Version of the generator
 		/// </summary>
 		/// <remarks>The version of this generator is 1.</remarks>
-		public int Version
+		public int PluginVersion
 		{
 			get { return 1; }
 		}
@@ -38,7 +38,7 @@ namespace FlatlandTerrainGenerator
 		/// Name of the person that wrote the terrain generator
 		/// </summary>
 		/// <remarks>The creator of this generator is Lapis MC</remarks>
-		public string Author
+		public string PluginCreator
 		{
 			get { return "Lapis MC"; }
 		}
@@ -46,7 +46,7 @@ namespace FlatlandTerrainGenerator
 		/// <summary>
 		/// Brief description of what the generator does
 		/// </summary>
-		public string Description
+		public string PluginDescription
 		{
 			get { return "Generates completely flat and identical terrain"; }
 		}

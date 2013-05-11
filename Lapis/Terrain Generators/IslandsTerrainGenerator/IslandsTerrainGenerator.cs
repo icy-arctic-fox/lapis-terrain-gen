@@ -19,7 +19,7 @@ namespace IslandsTerrainGenerator
 		/// Name of the terrain generator
 		/// </summary>
 		/// <remarks>The name of this generator is "Islands".</remarks>
-		public string Name
+		public string PluginName
 		{
 			get { return "Islands"; }
 		}
@@ -28,7 +28,7 @@ namespace IslandsTerrainGenerator
 		/// Version of the generator
 		/// </summary>
 		/// <remarks>The version of this generator is 2.</remarks>
-		public int Version
+		public int PluginVersion
 		{
 			get { return 2; }
 		}
@@ -37,7 +37,7 @@ namespace IslandsTerrainGenerator
 		/// Name of the person that wrote the terrain generator
 		/// </summary>
 		/// <remarks>The creator of this generator is Lapis MC</remarks>
-		public string Author
+		public string PluginCreator
 		{
 			get { return "Lapis MC"; }
 		}
@@ -45,7 +45,7 @@ namespace IslandsTerrainGenerator
 		/// <summary>
 		/// Brief description of what the generator does
 		/// </summary>
-		public string Description
+		public string PluginDescription
 		{
 			get { return "Generates a vast ocean with lots of islands"; }
 		}

@@ -4,7 +4,7 @@
 	/// Populates a chunk with an object
 	/// </summary>
 	/// <remarks>Populators may spill their contents over into other chunks.</remarks>
-	public interface IChunkPopulator : IPlugin
+	public interface IChunkPopulator : IPluginInfo
 	{
 		/// <summary>
 		/// Populates a chunk

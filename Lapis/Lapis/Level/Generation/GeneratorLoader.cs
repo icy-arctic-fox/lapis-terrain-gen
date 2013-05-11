@@ -57,8 +57,8 @@ namespace Lapis.Level.Generation
 				foreach(var type in types)
 				{
 					var instance = (ITerrainGenerator)Activator.CreateInstance(type);
-					var name = instance.Name;
-					var version = instance.Version;
+					var name = instance.PluginName;
+					var version = instance.PluginVersion;
 					List<Tuple<int, Type>> list;
 					if(_terrainGeneratorTypes.ContainsKey(name)) // Multiple versions under the same name
 						list = _terrainGeneratorTypes[name];
