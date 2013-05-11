@@ -297,10 +297,10 @@ namespace Generator
 			var filepath  = e.Filepath;
 			var className = e.PluginClassName;
 			var exception = e.Exception;
-			if(null == className) // Error loading .dll
-				Console.Error.WriteLine("Error loading " + filepath);
-			else
-				Console.Error.WriteLine("Error loading plug-in " + className + " from " + filepath);
+			if(null == className) // Error loading a .dll
+				Console.Error.WriteLine("An error occurred while loading " + filepath);
+			else // Error loading/activating a plug-in
+				Console.Error.WriteLine("An error occurred while loading the plug-in " + className + " from " + filepath);
 			Console.Error.WriteLine(exception.Message);
 			Console.Error.WriteLine(exception.StackTrace);
 		}
