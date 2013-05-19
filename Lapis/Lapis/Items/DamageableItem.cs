@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Lapis.IO.NBT;
 
 namespace Lapis.Items
@@ -229,5 +230,21 @@ namespace Lapis.Items
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Gets a string representation of the item
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will be formatted as: TYPE(DATA_HEX) "NAME" # Enchants USES_REMAINING/MAX_USES</remarks>
+		public override string ToString ()
+		{
+			var baseString = base.ToString();
+			var sb = new StringBuilder(baseString);
+			sb.Append(' ');
+			sb.Append(UsesRemaining);
+			sb.Append('/');
+			sb.Append(MaxUses);
+			return sb.ToString();
+		}
 	}
 }

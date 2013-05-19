@@ -411,6 +411,22 @@ namespace Lapis.Items
 		#endregion
 
 		/// <summary>
+		/// Gets a string representation of the item
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will be formatted as: TYPE(DATA_HEX) "NAME" # Enchants USES_REMAINING/MAX_USES COLOR_HEX</remarks>
+		public override string ToString ()
+		{
+			var baseString = base.ToString();
+			if(_color.HasValue)
+			{
+				var colorString = _color.Value.ToString("x6");
+				return String.Join(" ", baseString, colorString);
+			}
+			return baseString;
+		}
+
+		/// <summary>
 		/// Makes a color value from its components
 		/// </summary>
 		/// <param name="red">Amount of red</param>

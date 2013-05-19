@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lapis.IO.NBT;
 
@@ -185,5 +185,18 @@ namespace Lapis.Items
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Gets a string representation of the item
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will be formatted as: TYPE(DATA_HEX) "NAME"</remarks>
+		public override string ToString ()
+		{
+			var baseString = base.ToString();
+			if(null != _name)
+				return String.Join(" ", baseString, _name);
+			return baseString;
+		}
 	}
 }

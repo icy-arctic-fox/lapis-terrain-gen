@@ -191,5 +191,20 @@ namespace Lapis.Items
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Gets a string representation of the item
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will be formatted as: TYPE(DATA_HEX)</remarks>
+		public override string ToString ()
+		{
+			var sb = new System.Text.StringBuilder();
+			sb.Append(IsBlock ? BlockType.ToString() : ItemType.ToString());
+			sb.Append('(');
+			sb.AppendFormat("{0:x}", _data);
+			sb.Append(')');
+			return sb.ToString();
+		}
 	}
 }

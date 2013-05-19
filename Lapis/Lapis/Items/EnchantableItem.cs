@@ -177,5 +177,18 @@ namespace Lapis.Items
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Gets a string representation of the item
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will be formatted as: TYPE(DATA_HEX) "NAME" # Enchants</remarks>
+		public override string ToString ()
+		{
+			var baseString = base.ToString();
+			if(0 < _enchants.Length)
+				return String.Join(" ", baseString, _enchants.Length, "Enchants");
+			return baseString;
+		}
 	}
 }
