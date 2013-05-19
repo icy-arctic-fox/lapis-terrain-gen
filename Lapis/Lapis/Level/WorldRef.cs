@@ -8,7 +8,7 @@ namespace Lapis.Level
 	/// <remarks>World references are useful for when you want to reference a world, but don't care about what's there.
 	/// A world reference doesn't contain any block information.
 	/// However, a world reference won't cause the chunk data to become loaded in memory.</remarks>
-	public class WorldRef
+	public class WorldRef : IEquatable<WorldRef>, IEquatable<World>
 	{
 		private readonly string _name;
 
@@ -166,10 +166,34 @@ namespace Lapis.Level
 				return this == world;
 			return false;
 		}
+
+		/// <summary>
+		/// Compares the world reference against another world reference to check if they're equal
+		/// </summary>
+		/// <param name="other">Reference to compare against</param>
+		/// <returns>True if the world references point to the same world</returns>
+		public bool Equals (WorldRef other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if the world reference points to a world
+		/// </summary>
+		/// <param name="other">World to compare against</param>
+		/// <returns>True if the world reference refers to <paramref name="other"/></returns>
+		public bool Equals (World other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
 		#endregion
 
 		/// <summary>
-		/// Generages a hash code from the object
+		/// Generates a hash code from the object
 		/// </summary>
 		/// <returns>A hash code</returns>
 		public override int GetHashCode ()

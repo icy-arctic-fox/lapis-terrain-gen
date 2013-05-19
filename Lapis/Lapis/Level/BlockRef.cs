@@ -9,7 +9,7 @@ namespace Lapis.Level
 	/// <remarks>Block references are useful for when you want to reference a location, but don't care about what's there.
 	/// A block reference doesn't contain any block information.
 	/// However, a block reference won't cause the chunk data to become loaded in memory.</remarks>
-	public class BlockRef
+	public class BlockRef : IEquatable<BlockRef>, IEquatable<Block>
 	{
 		private readonly byte _bx, _by, _bz;
 		private readonly ChunkRef _chunk;
@@ -359,10 +359,34 @@ namespace Lapis.Level
 				return this == block;
 			return false;
 		}
+
+		/// <summary>
+		/// Compares the block reference against another block reference to check if they're equal
+		/// </summary>
+		/// <param name="other">Reference to compare against</param>
+		/// <returns>True if the block references point to the same block</returns>
+		public bool Equals (BlockRef other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if the block data that the reference points to is the same
+		/// </summary>
+		/// <param name="other">Block to compare against</param>
+		/// <returns>True if the realm reference refers to <paramref name="other"/></returns>
+		public bool Equals (Block other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
 		#endregion
 
 		/// <summary>
-		/// Generages a hash code from the object
+		/// Generates a hash code from the object
 		/// </summary>
 		/// <returns>A hash code</returns>
 		public override int GetHashCode ()

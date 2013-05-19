@@ -8,7 +8,7 @@ namespace Lapis.Level
 	/// <remarks>Realm references are useful for when you want to reference a realm (or dimension), but don't care about what's there.
 	/// A realm reference doesn't contain any block information.
 	/// However, a realm reference won't cause the chunk data to become loaded in memory.</remarks>
-	public class RealmRef
+	public class RealmRef : IEquatable<RealmRef>, IEquatable<Realm>
 	{
 		private readonly int _id;
 		private readonly WorldRef _world;
@@ -191,10 +191,34 @@ namespace Lapis.Level
 				return this == realm;
 			return false;
 		}
+
+		/// <summary>
+		/// Compares the realm reference against another realm reference to check if they're equal
+		/// </summary>
+		/// <param name="other">Reference to compare against</param>
+		/// <returns>True if the realm references point to the same realm</returns>
+		public bool Equals (RealmRef other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if the realm reference points to a realm
+		/// </summary>
+		/// <param name="other">Realm to compare against</param>
+		/// <returns>True if the realm reference refers to <paramref name="other"/></returns>
+		public bool Equals (Realm other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
 		#endregion
 
 		/// <summary>
-		/// Generages a hash code from the object
+		/// Generates a hash code from the object
 		/// </summary>
 		/// <returns>A hash code</returns>
 		public override int GetHashCode ()

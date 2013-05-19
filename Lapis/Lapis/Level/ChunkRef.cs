@@ -8,7 +8,7 @@ namespace Lapis.Level
 	/// <remarks>Chunk references are useful for when you want to reference a location, but don't care about what's there.
 	/// A chunk reference doesn't contain any block information.
 	/// However, a chunk reference won't cause the chunk data to become loaded in memory.</remarks>
-	public class ChunkRef
+	public class ChunkRef : IEquatable<ChunkRef>, IEquatable<Chunk>
 	{
 		private readonly int _cx, _cz;
 		private readonly RealmRef _realm;
@@ -307,10 +307,34 @@ namespace Lapis.Level
 				return this == chunk;
 			return false;
 		}
+
+		/// <summary>
+		/// Compares the chunk reference against another chunk reference to check if they're equal
+		/// </summary>
+		/// <param name="other">Reference to compare against</param>
+		/// <returns>True if the chunk references point to the same chunk</returns>
+		public bool Equals (ChunkRef other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if the chunk reference points to a chunk
+		/// </summary>
+		/// <param name="other">Chunk to compare against</param>
+		/// <returns>True if the chunk reference refers to <paramref name="other"/></returns>
+		public bool Equals (Chunk other)
+		{
+			if(!ReferenceEquals(null, other))
+				return this == other;
+			return false;
+		}
 		#endregion
 
 		/// <summary>
-		/// Generages a hash code from the object
+		/// Generates a hash code from the object
 		/// </summary>
 		/// <returns>A hash code</returns>
 		public override int GetHashCode ()
