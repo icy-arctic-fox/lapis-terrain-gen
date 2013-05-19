@@ -1,4 +1,6 @@
-﻿namespace Lapis.Items
+﻿using System.Text;
+
+namespace Lapis.Items
 {
 	/// <summary>
 	/// Information about an enchantment
@@ -37,6 +39,68 @@
 		{
 			_type  = type;
 			_level = level;
+		}
+
+		#region Equality operators
+		/// <summary>
+		/// Compares two enchantments to check if they're equal
+		/// </summary>
+		/// <param name="enchA">First enchantment</param>
+		/// <param name="enchB">Second enchantment</param>
+		/// <returns>True if the enchantments are the same type and level</returns>
+		public static bool operator == (Enchantment enchA, Enchantment enchB)
+		{
+			return (enchA._type == enchB._type && enchA._level == enchB._level);
+		}
+
+		/// <summary>
+		/// Compares two enchantments to check if they're different
+		/// </summary>
+		/// <param name="enchA">First enchantment</param>
+		/// <param name="enchB">Second enchantment</param>
+		/// <returns>True if the enchantments have a different type or level than each other</returns>
+		public static bool operator != (Enchantment enchA, Enchantment enchB)
+		{
+			return (enchA._type != enchB._type || enchA._level != enchB._level);
+		}
+		#endregion
+
+		/// <summary>
+		/// Compares another object to the enchantment to check if they're equal
+		/// </summary>
+		/// <param name="obj">Object to compare against</param>
+		/// <returns>True if <paramref name="obj"/> is an enchantment and has the same properties (type and level)</returns>
+		public override bool Equals (object obj)
+		{
+			if(obj is Enchantment)
+			{
+				var ench = (Enchantment)obj;
+				return ench == this; // Call equality == operator above
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Generates a hash code of the enchantment
+		/// </summary>
+		/// <returns>A hash</returns>
+		public override int GetHashCode ()
+		{
+			return (_level | ((int)_type << 16));
+		}
+		
+		/// <summary>
+		/// Generates a string representation of the enchantment
+		/// </summary>
+		/// <returns>A string</returns>
+		/// <remarks>The string will be in the format: TYPE Level #</remarks>
+		public override string ToString ()
+		{
+			var sb = new StringBuilder();
+			sb.Append(_type);
+			sb.Append(" Level ");
+			sb.Append(_level + 1);
+			return sb.ToString();
 		}
 	}
 }
