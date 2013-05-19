@@ -186,9 +186,7 @@ namespace Lapis.Items
 		public override string ToString ()
 		{
 			var baseString = base.ToString();
-			if(0 < _enchants.Length)
-				return String.Join(" ", baseString, _enchants.Length, "Enchants");
-			return baseString;
+			return (0 >= _enchants.Length) ? baseString : String.Join(" ", baseString, _enchants.Length, "Enchants");
 		}
 	}
 }

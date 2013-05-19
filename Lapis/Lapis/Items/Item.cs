@@ -2,6 +2,7 @@
 using System.IO;
 using Lapis.Blocks;
 using Lapis.IO.NBT;
+using Lapis.Level;
 
 namespace Lapis.Items
 {
@@ -191,6 +192,72 @@ namespace Lapis.Items
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Checks if the item is equal to another object
+		/// </summary>
+		/// <param name="obj">Object to compare against</param>
+		/// <returns>True if <paramref name="obj"/> is considered equal to the item or false if it's not</returns>
+		/// <remarks><paramref name="obj"/> is considered equal if it's not null, is an Item or Block/BlockRef, and the item/block type and data are the same.
+		/// Sub-classes that have additional properties will want to override the protected Equals() method instead of this one.</remarks>
+		public override bool Equals (object obj)
+		{
+			if(null != obj)
+			{
+				var item = obj as Item;
+				if(item != null)
+					return Equals(item);
+				if(IsBlock)
+				{
+					var blockRef = obj as BlockRef;
+					if(blockRef != null)
+					{
+						Block block = blockRef;
+						return Equals(block);
+					}
+					else
+					{
+						var block = obj as Block;
+						if(block != null)
+							return Equals(block);
+					}
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the item against a block
+		/// </summary>
+		/// <param name="block">Block to compare against</param>
+		/// <returns>True if the item is a block and has the same type and value as <paramref name="block"/></returns>
+		public bool Equals (Block block)
+		{
+			if(IsBlock && null != block)
+				return (block.Type == BlockType && block.Data == _data);
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if an item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).
+		/// This method only compares the types and data.</remarks>
+		protected virtual bool Equals (Item item)
+		{
+			return (item.ItemId == ItemId && item._data == _data);
+		}
+
+		/// <summary>
+		/// Generates a hash code of the item
+		/// </summary>
+		/// <returns>A hash</returns>
+		public override int GetHashCode ()
+		{
+			return ItemId | (Data << 16);
+		}
 
 		/// <summary>
 		/// Gets a string representation of the item

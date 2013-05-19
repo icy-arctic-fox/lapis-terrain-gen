@@ -194,9 +194,7 @@ namespace Lapis.Items
 		public override string ToString ()
 		{
 			var baseString = base.ToString();
-			if(null != _name)
-				return String.Join(" ", baseString, _name);
-			return baseString;
+			return (null == _name) ? baseString : String.Join(" ", baseString, _name);
 		}
 	}
 }
