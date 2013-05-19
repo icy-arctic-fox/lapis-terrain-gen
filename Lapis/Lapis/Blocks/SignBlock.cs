@@ -238,7 +238,7 @@ namespace Lapis.Blocks
 		/// <param name="block">Block to compare against</param>
 		/// <returns>True if the block is the same</returns>
 		/// <remarks>The text on the sign is compared.</remarks>
-		protected override bool Equals (Block block)
+		public override bool Equals (Block block)
 		{
 			if(base.Equals(block))
 			{

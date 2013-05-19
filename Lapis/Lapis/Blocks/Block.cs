@@ -1,4 +1,5 @@
-﻿using Lapis.Level;
+﻿using System;
+using Lapis.Level;
 
 namespace Lapis.Blocks
 {
@@ -9,7 +10,7 @@ namespace Lapis.Blocks
 	/// Updating the values in this block object will not update them in the chunk.
 	/// This class should be used to retrieve block information from a chunk and construct block information before storing it in a chunk.
 	/// All sub-classes of this base class must be immutable.</remarks>
-	public abstract class Block
+	public abstract class Block : IEquatable<Block>, IComparable<Block>
 	{
 		/// <summary>
 		/// Raw data associated with the block
@@ -83,7 +84,7 @@ namespace Lapis.Blocks
 		/// <param name="obj">Object to compare against</param>
 		/// <returns>True if <paramref name="obj"/> is considered equal to the block or false if it's not</returns>
 		/// <remarks><paramref name="obj"/> is considered equal if it's not null, is a Block or BlockRef, and the block type and data are the same.
-		/// Sub-classes that have additional properties will want to override the protected Equals() method instead of this one.</remarks>
+		/// Sub-classes that have additional properties will want to override the Equals(Block) method instead of this one.</remarks>
 		public override bool Equals (object obj)
 		{
 			if(null != obj)
@@ -111,9 +112,24 @@ namespace Lapis.Blocks
 		/// <returns>True if the block contents are the same or false if they aren't</returns>
 		/// <remarks>Sub-classes should override this method if they have additional properties (such as a tile entity).
 		/// This method only compares the types and data.</remarks>
-		protected virtual bool Equals (Block block)
+		public virtual bool Equals (Block block)
 		{
 			return (block.Type == Type && block._data == _data);
+		}
+
+		/// <summary>
+		/// Compares the block to another block
+		/// </summary>
+		/// <param name="block">Block to compare against</param>
+		/// <returns>Less than 0 if <paramref name="block"/> is less than the current one, 0 if they're equal, or greater than 0 if <paramref name="block"/> is greater</returns>
+		public virtual int CompareTo (Block block)
+		{
+			if(null != block)
+			{
+				var val = Type.CompareTo(block.Type);
+				return (0 == val) ? _data.CompareTo(block._data) : val;
+			}
+			return 1;
 		}
 
 		/// <summary>
