@@ -10,7 +10,7 @@ namespace Lapis.Level.Generation
 	/// Provides an interface for creating structures made of blocks and then inserting them into chunks
 	/// </summary>
 	/// <remarks>This class is not thread-safe.</remarks>
-	public class BlockCanvas : IDisposable
+	public class BlockCanvas : IDisposable, ICloneable
 	{
 		private readonly Dictionary<XYZCoordinate, Block> _blocks = new Dictionary<XYZCoordinate, Block>();
 
@@ -235,5 +235,23 @@ namespace Lapis.Level.Generation
 			Dispose(false);
 		}
 		#endregion
+
+		/// <summary>
+		/// Copies the canvas to a new one with the same contents
+		/// </summary>
+		/// <returns>A copy of the canvas</returns>
+		public object Clone ()
+		{
+			return CloneCanvas();
+		}
+
+		/// <summary>
+		/// Copies the canvas to a new one with the same contents
+		/// </summary>
+		/// <returns>A copy of the canvas</returns>
+		public BlockCanvas CloneCanvas ()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

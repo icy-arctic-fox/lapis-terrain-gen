@@ -10,7 +10,7 @@ namespace Lapis.Level.Generation
 	/// <summary>
 	/// A schematic for an object made of blocks that can be placed in a world
 	/// </summary>
-	public class Schematic : ISerializable
+	public class Schematic : ISerializable, ICloneable
 	{
 		private readonly BlockType[] _blocks;
 		private readonly byte[] _data;
@@ -184,5 +184,23 @@ namespace Lapis.Level.Generation
 		#endregion
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Copies the schematic to a new one with the same contents
+		/// </summary>
+		/// <returns>A copy of the schematic</returns>
+		public object Clone ()
+		{
+			return CloneSchematic();
+		}
+
+		/// <summary>
+		/// Copies the schematic to a new one with the same contents
+		/// </summary>
+		/// <returns>A copy of the schematic</returns>
+		public Schematic CloneSchematic ()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
