@@ -9,7 +9,7 @@ namespace Lapis.IO.NBT
 	/// Base class for all NBT node types.
 	/// This class also provides functions for reading and writing nodes.
 	/// </summary>
-	public abstract class Node
+	public abstract class Node : ICloneable, IEquatable<Node>, IComparable<Node>
 	{
 		/// <summary>
 		/// Character to use for indenting in ToString()
@@ -158,6 +158,51 @@ namespace Lapis.IO.NBT
 			}
 		}
 		#endregion
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		public object Clone ()
+		{
+			return CloneNode();
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>Implementing methods should perform a deep copy of the node's contents.</remarks>
+		public abstract Node CloneNode ();
+
+		/// <summary>
+		/// Compares the node against another node to check if they're equal
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>True if the nodes are equal</returns>
+		public virtual bool Equals (Node other)
+		{
+			if(null != other)
+				return (other.Type == Type && other._name == _name);
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the node against another node
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>Less than 0 if the node is less than <paramref name="other"/>,
+		/// 0 if the nodes are equal,
+		/// or greater than 1 if the node is greater than <paramref name="other"/></returns>
+		public virtual int CompareTo (Node other)
+		{
+			if(null != other)
+			{
+				var val = Type.CompareTo(other.Type);
+				return (0 == val) ? String.Compare(_name, other._name, StringComparison.Ordinal) : val;
+			}
+			return 1;
+		}
 
 		/// <summary>
 		/// Gets a string representation of the node structure

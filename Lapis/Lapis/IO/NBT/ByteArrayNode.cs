@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Lapis.Utility;
 
 namespace Lapis.IO.NBT
@@ -6,7 +8,7 @@ namespace Lapis.IO.NBT
 	/// <summary>
 	/// A node that contains an array of bytes
 	/// </summary>
-	public class ByteArrayNode : Node
+	public class ByteArrayNode : Node, IEnumerable<byte>
 	{
 		private byte[] _data;
 
@@ -50,6 +52,25 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Number of bytes in the array
+		/// </summary>
+		public int Length
+		{
+			get { return _data.Length; }
+		}
+
+		/// <summary>
+		/// Access to the underlying byte array
+		/// </summary>
+		/// <param name="index">Index of the byte to access</param>
+		/// <returns>Byte value at the given index</returns>
+		public byte this[int index]
+		{
+			get { return _data[index]; }
+			set { _data[index] = value; }
+		}
+
+		/// <summary>
 		/// Creates a new byte array node
 		/// </summary>
 		/// <param name="name">Name of the node</param>
@@ -69,6 +90,26 @@ namespace Lapis.IO.NBT
 				_data = new byte[data.Length];
 				data.Copy(_data);
 			}
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>A deep copy of the data is performed.</remarks>
+		public override Node CloneNode ()
+		{
+			return Duplicate();
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>A deep copy of the data is performed.</remarks>
+		public ByteArrayNode Duplicate ()
+		{
+			return new ByteArrayNode(Name, _data);
 		}
 
 		#region Serialization
@@ -113,6 +154,24 @@ namespace Lapis.IO.NBT
 			sb.Append("\"): [");
 			sb.Append(_data.Length);
 			sb.Append(" bytes]\n");
+		}
+
+		/// <summary>
+		/// Gets an enumerator that goes over the array of bytes
+		/// </summary>
+		/// <returns>An enumerator</returns>
+		public IEnumerator<byte> GetEnumerator ()
+		{
+			return ((IEnumerable<byte>)_data).GetEnumerator();
+		}
+
+		/// <summary>
+		/// Gets an enumerator that goes over the array of bytes
+		/// </summary>
+		/// <returns>An enumerator</returns>
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return _data.GetEnumerator();
 		}
 	}
 }

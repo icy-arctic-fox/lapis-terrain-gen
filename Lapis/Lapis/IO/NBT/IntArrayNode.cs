@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 #if !DEBUG
@@ -10,7 +12,7 @@ namespace Lapis.IO.NBT
 	/// <summary>
 	/// A node that contains an array of signed 32-bit integers
 	/// </summary>
-	public class IntArrayNode : Node
+	public class IntArrayNode : Node, IEnumerable<int>
 	{
 		private int[] _data;
 
@@ -54,6 +56,25 @@ namespace Lapis.IO.NBT
 		}
 
 		/// <summary>
+		/// Number of integers in the array
+		/// </summary>
+		public int Length
+		{
+			get { return _data.Length; }
+		}
+
+		/// <summary>
+		/// Access to the underlying integer array
+		/// </summary>
+		/// <param name="index">Index of the integer to access</param>
+		/// <returns>Integer value at the given index</returns>
+		public int this[int index]
+		{
+			get { return _data[index]; }
+			set { _data[index] = value; }
+		}
+
+		/// <summary>
 		/// Creates a new integer array node
 		/// </summary>
 		/// <param name="name">Name of the node</param>
@@ -73,6 +94,26 @@ namespace Lapis.IO.NBT
 				_data = new int[data.Length];
 				copy(data, _data);
 			}
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>A deep copy of the node is performed.</remarks>
+		public override Node CloneNode ()
+		{
+			return Duplicate();
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>A deep copy of the node is performed.</remarks>
+		public IntArrayNode Duplicate ()
+		{
+			return new IntArrayNode(Name, _data);
 		}
 
 		#region Serialization
@@ -194,6 +235,24 @@ namespace Lapis.IO.NBT
 			sb.Append("\"): [");
 			sb.Append(_data.Length);
 			sb.Append(" integers]\n");
+		}
+
+		/// <summary>
+		/// Gets an enumerator that goes over the array of integers
+		/// </summary>
+		/// <returns>An enumerator</returns>
+		public IEnumerator<int> GetEnumerator ()
+		{
+			return ((IEnumerable<int>)_data).GetEnumerator();
+		}
+
+		/// <summary>
+		/// Gets an enumerator that goes over the array of integers
+		/// </summary>
+		/// <returns>An enumerator</returns>
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return _data.GetEnumerator();
 		}
 
 		#region Utility

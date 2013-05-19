@@ -88,6 +88,29 @@ namespace Lapis.IO.NBT
 			}
 		}
 
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>A deep copy of the node is performed - all sub-nodes are duplicated.</remarks>
+		public override Node CloneNode ()
+		{
+			return Duplicate();
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		/// <remarks>A deep copy of the node is performed - all sub-nodes are duplicated.</remarks>
+		public CompoundNode Duplicate ()
+		{
+			var dupNodes = new List<Node>(_nodes.Count);
+			foreach(var node in _nodes.Values)
+				dupNodes.Add(node.CloneNode());
+			return new CompoundNode(Name, dupNodes);
+		}
+
 		#region Serialization
 		/// <summary>
 		/// Writes just the payload portion of the node to a stream

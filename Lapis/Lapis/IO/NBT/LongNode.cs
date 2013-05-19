@@ -5,7 +5,7 @@ namespace Lapis.IO.NBT
 	/// <summary>
 	/// A node that contains a long integer (64 bits)
 	/// </summary>
-	public class LongNode : Node
+	public class LongNode : Node, IEquatable<LongNode>, IEquatable<long>, IComparable<LongNode>, IComparable<long>
 	{
 		private long _value;
 
@@ -48,6 +48,24 @@ namespace Lapis.IO.NBT
 			_value = value;
 		}
 
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		public override Node CloneNode ()
+		{
+			return Duplicate();
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		public LongNode Duplicate ()
+		{
+			return new LongNode(Name, _value);
+		}
+
 		#region Serialization
 		/// <summary>
 		/// Writes just the payload portion of the node to a stream
@@ -72,5 +90,77 @@ namespace Lapis.IO.NBT
 			return new LongNode(name, value);
 		}
 		#endregion
+
+		/// <summary>
+		/// Compares the node against another node to check if they're equal
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>True if the nodes are equal</returns>
+		public override bool Equals (Node other)
+		{
+			if(base.Equals(other))
+				return (_value == ((LongNode)other)._value);
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the node against another node to check if they're equal
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>True if the nodes are equal</returns>
+		public bool Equals (LongNode other)
+		{
+			if(base.Equals(other))
+				return (_value == other._value);
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the node against a value to check if they're equal
+		/// </summary>
+		/// <param name="other">Other value to compare against</param>
+		/// <returns>True if the node's value and <paramref name="other"/> are equal</returns>
+		public bool Equals (long other)
+		{
+			return (_value == other);
+		}
+
+		/// <summary>
+		/// Compares the node against another node
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>Less than 0 if the node is less than <paramref name="other"/>,
+		/// 0 if the nodes are equal,
+		/// or greater than 1 if the node is greater than <paramref name="other"/></returns>
+		public override int CompareTo (Node other)
+		{
+			var val = base.CompareTo(other);
+			return (0 == val) ? _value.CompareTo(((LongNode)other)._value) : val;
+		}
+
+		/// <summary>
+		/// Compares the node against another node
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>Less than 0 if the node is less than <paramref name="other"/>,
+		/// 0 if the nodes are equal,
+		/// or greater than 1 if the node is greater than <paramref name="other"/></returns>
+		public int CompareTo (LongNode other)
+		{
+			var val = base.CompareTo(other);
+			return (0 == val) ? _value.CompareTo(other._value) : val;
+		}
+
+		/// <summary>
+		/// Compares the node against another value
+		/// </summary>
+		/// <param name="other">Other value to compare against</param>
+		/// <returns>Less than 0 if the node's value is less than <paramref name="other"/>,
+		/// 0 if the node's value and <paramref name="other"/> are equal,
+		/// or greater than 1 if the node's value is greater than <paramref name="other"/></returns>
+		public int CompareTo (long other)
+		{
+			return _value.CompareTo(other);
+		}
 	}
 }

@@ -6,7 +6,7 @@ namespace Lapis.IO.NBT
 	/// <summary>
 	/// A node that contains a UTF-8 string
 	/// </summary>
-	public class StringNode : Node
+	public class StringNode : Node, IEquatable<StringNode>, IEquatable<string>, IComparable<StringNode>, IComparable<string>
 	{
 		private string _value;
 
@@ -64,6 +64,24 @@ namespace Lapis.IO.NBT
 			_value = value;
 		}
 
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		public override Node CloneNode ()
+		{
+			return Duplicate();
+		}
+
+		/// <summary>
+		/// Duplicates the contents of the node and returns it
+		/// </summary>
+		/// <returns>A copy of the node</returns>
+		public StringNode Duplicate ()
+		{
+			return new StringNode(Name, _value);
+		}
+
 		#region Serialization
 		/// <summary>
 		/// Writes just the payload portion of the node to a stream
@@ -93,5 +111,77 @@ namespace Lapis.IO.NBT
 			return new StringNode(name, value);
 		}
 		#endregion
+
+		/// <summary>
+		/// Compares the node against another node to check if they're equal
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>True if the nodes are equal</returns>
+		public override bool Equals (Node other)
+		{
+			if(base.Equals(other))
+				return (_value == ((StringNode)other)._value);
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the node against another node to check if they're equal
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>True if the nodes are equal</returns>
+		public bool Equals (StringNode other)
+		{
+			if(base.Equals(other))
+				return (_value == other._value);
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the node against a value to check if they're equal
+		/// </summary>
+		/// <param name="other">Other value to compare against</param>
+		/// <returns>True if the node's value and <paramref name="other"/> are equal</returns>
+		public bool Equals (string other)
+		{
+			return (_value == other);
+		}
+
+		/// <summary>
+		/// Compares the node against another node
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>Less than 0 if the node is less than <paramref name="other"/>,
+		/// 0 if the nodes are equal,
+		/// or greater than 1 if the node is greater than <paramref name="other"/></returns>
+		public override int CompareTo (Node other)
+		{
+			var val = base.CompareTo(other);
+			return (0 == val) ? String.Compare(_value, ((StringNode)other)._value, StringComparison.Ordinal) : val;
+		}
+
+		/// <summary>
+		/// Compares the node against another node
+		/// </summary>
+		/// <param name="other">Other node to compare against</param>
+		/// <returns>Less than 0 if the node is less than <paramref name="other"/>,
+		/// 0 if the nodes are equal,
+		/// or greater than 1 if the node is greater than <paramref name="other"/></returns>
+		public int CompareTo (StringNode other)
+		{
+			var val = base.CompareTo(other);
+			return (0 == val) ? String.Compare(_value, other._value, StringComparison.Ordinal) : val;
+		}
+
+		/// <summary>
+		/// Compares the node against another value
+		/// </summary>
+		/// <param name="other">Other value to compare against</param>
+		/// <returns>Less than 0 if the node's value is less than <paramref name="other"/>,
+		/// 0 if the node's value and <paramref name="other"/> are equal,
+		/// or greater than 1 if the node's value is greater than <paramref name="other"/></returns>
+		public int CompareTo (string other)
+		{
+			return String.Compare(_value, other, StringComparison.Ordinal);
+		}
 	}
 }

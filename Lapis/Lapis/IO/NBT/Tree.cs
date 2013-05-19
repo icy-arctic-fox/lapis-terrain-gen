@@ -6,7 +6,7 @@ namespace Lapis.IO.NBT
 	/// <summary>
 	/// Container for NBT nodes
 	/// </summary>
-	public class Tree
+	public class Tree : ICloneable
 	{
 		private readonly CompoundNode _container;
 		private readonly Node _root;
@@ -34,6 +34,27 @@ namespace Lapis.IO.NBT
 			_container.Add(_root);
 		}
 
+		/// <summary>
+		/// Creates a duplicate of the tree
+		/// </summary>
+		/// <returns>A copy of the tree</returns>
+		/// <remarks>A deep copy is performed on the tree.</remarks>
+		public object Clone ()
+		{
+			return CloneTree();
+		}
+
+		/// <summary>
+		/// Creates a duplicate of the tree
+		/// </summary>
+		/// <returns>A copy of the tree</returns>
+		/// <remarks>A deep copy is performed on the tree.</remarks>
+		public Tree CloneTree ()
+		{
+			return new Tree(_root.CloneNode());
+		}
+
+		#region Serialization
 		/// <summary>
 		/// Writes the NBT tree structure to a stream using a binary writer
 		/// </summary>
@@ -70,6 +91,7 @@ namespace Lapis.IO.NBT
 			var root = container.FirstOrDefault();
 			return new Tree(root);
 		}
+		#endregion
 
 		/// <summary>
 		/// Generates a string representation of the NBT tree structure
