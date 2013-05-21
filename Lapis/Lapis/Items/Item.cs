@@ -11,7 +11,7 @@ namespace Lapis.Items
 	/// </summary>
 	/// <remarks>An item an be a block or regular item.
 	/// Item IDs start after block IDs.</remarks>
-	public abstract class Item
+	public abstract class Item : IEquatable<Item>, IEquatable<Block>, IComparable<Item>, IComparable<Block>
 	{
 		/// <summary>
 		/// Extra raw data associated with the item
@@ -245,9 +245,45 @@ namespace Lapis.Items
 		/// <returns>True if the item contents are the same or false if they aren't</returns>
 		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).
 		/// This method only compares the types and data.</remarks>
-		protected virtual bool Equals (Item item)
+		public virtual bool Equals (Item item)
 		{
-			return (item.ItemId == ItemId && item._data == _data);
+			if(null != item)
+				return (item.ItemId == ItemId && item._data == _data);
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the item to a block
+		/// </summary>
+		/// <param name="block">Block to compare against</param>
+		/// <returns>Less than 0 if the item is less than the block,
+		/// 0 if the block is the same as the item,
+		/// or greater that 0 if the item is greater than the block.</returns>
+		public int CompareTo (Block block)
+		{
+			if(!ReferenceEquals(null, block))
+			{
+				var val = ItemId.CompareTo((int)block.Type);
+				return (0 == val) ? _data.CompareTo(block.Data) : val;
+			}
+			return 1;
+		}
+
+		/// <summary>
+		/// Compares the item to another item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>Less than 0 if the item is less than <paramref name="item"/>,
+		/// 0 if the items are equal,
+		/// or greater than 0 if the item is greater than <paramref name="item"/></returns>
+		public virtual int CompareTo (Item item)
+		{
+			if(null != item)
+			{
+				var val = ItemId.CompareTo(item.ItemId);
+				return (0 == val) ? _data.CompareTo(item._data) : val;
+			}
+			return 1;
 		}
 
 		/// <summary>

@@ -8,7 +8,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// An item that can be named
 	/// </summary>
-	public abstract class NameableItem : TaggableItem
+	public abstract class NameableItem : TaggableItem, IEquatable<NameableItem>, IComparable<NameableItem>
 	{
 		private readonly string _name;
 		private readonly string[] _lore;
@@ -187,6 +187,78 @@ namespace Lapis.Items
 		#endregion
 
 		/// <summary>
+		/// Checks if an item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).
+		/// This method only compares the types and data.</remarks>
+		public override bool Equals (Item item)
+		{
+			if(base.Equals(item))
+			{
+				var nameable = item as NameableItem;
+				if(null != nameable)
+					return Equals((nameable));
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if an nameable item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).
+		/// This method only compares the types and data.</remarks>
+		public virtual bool Equals (NameableItem item)
+		{
+			if(base.Equals(item))
+			{
+				if(_name == item._name)
+				{
+					if(null != _lore && null != item._lore)
+					{
+						if(_lore.Length == item._lore.Length)
+						{
+							for(var i = 0; i < _lore.Length; ++i)
+								if(_lore[i] != item._lore[i])
+									return false;
+							return true;
+						}
+						return false;
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Compares the item to another item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>Less than 0 if the item is less than <paramref name="item"/>,
+		/// 0 if the items are equal,
+		/// or greater than 0 if the item is greater than <paramref name="item"/></returns>
+		public override int CompareTo (Item item)
+		{
+			return base.CompareTo(item);
+		}
+
+		/// <summary>
+		/// Compares the item to another nameable item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>Less than 0 if the item is less than <paramref name="item"/>,
+		/// 0 if the items are equal,
+		/// or greater than 0 if the item is greater than <paramref name="item"/></returns>
+		public virtual int CompareTo (NameableItem item)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Gets a string representation of the item
 		/// </summary>
 		/// <returns>A string</returns>
@@ -195,6 +267,11 @@ namespace Lapis.Items
 		{
 			var baseString = base.ToString();
 			return (null == _name) ? baseString : String.Join(" ", baseString, _name);
+		}
+
+		public override int GetHashCode ()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
