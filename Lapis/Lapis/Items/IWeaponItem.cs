@@ -3,7 +3,7 @@
 	/// <summary>
 	/// An item that does more damage to mobs
 	/// </summary>
-	public interface IWeaponItem
+	public interface IWeaponItem : IItem
 	{
 		/// <summary>
 		/// Amount of damage done by the weapon

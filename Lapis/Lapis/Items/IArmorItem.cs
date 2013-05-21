@@ -3,7 +3,7 @@
 	/// <summary>
 	/// An item that is a piece of armor
 	/// </summary>
-	public interface IArmorItem
+	public interface IArmorItem : IItem
 	{
 		/// <summary>
 		/// The item's armor type

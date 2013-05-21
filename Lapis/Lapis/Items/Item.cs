@@ -11,7 +11,7 @@ namespace Lapis.Items
 	/// </summary>
 	/// <remarks>An item an be a block or regular item.
 	/// Item IDs start after block IDs.</remarks>
-	public abstract class Item : IEquatable<Item>, IEquatable<Block>, IComparable<Item>, IComparable<Block>
+	public abstract class Item : IItem
 	{
 		/// <summary>
 		/// Extra raw data associated with the item

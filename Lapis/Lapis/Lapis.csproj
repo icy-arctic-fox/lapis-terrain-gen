@@ -299,6 +299,7 @@
     <Compile Include="Items\IArmorItem.cs" />
     <Compile Include="Items\IConsumableItem.cs" />
     <Compile Include="Items\IDyeableItem.cs" />
+    <Compile Include="Items\IItem.cs" />
     <Compile Include="Items\IronArmor.cs" />
     <Compile Include="Items\IronTool.cs" />
     <Compile Include="Items\Item.cs" />

@@ -3,7 +3,7 @@
 	/// <summary>
 	/// An item that can be eaten
 	/// </summary>
-	public interface IConsumableItem
+	public interface IConsumableItem : IItem
 	{
 		/// <summary>
 		/// Number of health points added by consuming the item

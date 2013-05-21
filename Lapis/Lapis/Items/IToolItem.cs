@@ -3,7 +3,7 @@
 	/// <summary>
 	/// An item that can be used for harvesting or mining resources
 	/// </summary>
-	public interface IToolItem
+	public interface IToolItem : IItem
 	{
 		/// <summary>
 		/// Item's tool type

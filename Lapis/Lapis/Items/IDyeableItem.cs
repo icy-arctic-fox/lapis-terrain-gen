@@ -5,7 +5,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// An item that can be dyed
 	/// </summary>
-	public interface IDyeableItem : IEquatable<IDyeableItem>
+	public interface IDyeableItem : IItem, IEquatable<IDyeableItem>
 	{
 		/// <summary>
 		/// Whether or not the item has been dyed
