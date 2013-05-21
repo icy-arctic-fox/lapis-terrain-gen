@@ -303,6 +303,7 @@
     <Compile Include="Items\IronArmor.cs" />
     <Compile Include="Items\IronTool.cs" />
     <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemFactory.cs" />
     <Compile Include="Items\ItemType.cs" />
     <Compile Include="Items\IToolItem.cs" />
     <Compile Include="Items\IWeaponItem.cs" />

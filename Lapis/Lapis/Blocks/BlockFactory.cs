@@ -32,7 +32,6 @@ namespace Lapis.Blocks
 		{
 			lock(_knownBlockTypes)
 			{
-				// TODO: Implement NBT node data constructor
 				_knownBlockTypes[(byte)BlockType.Air]                   = (data, tileData) => new AirBlock();
 				_knownBlockTypes[(byte)BlockType.Stone]                 = (data, tileData) => new StoneBlock();
 				_knownBlockTypes[(byte)BlockType.Grass]                 = (data, tileData) => new GrassBlock();
