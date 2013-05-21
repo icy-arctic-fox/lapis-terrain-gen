@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lapis.IO.NBT;
+using Lapis.Utility;
 
 namespace Lapis.Items
 {
 	/// <summary>
 	/// An item that can be named
 	/// </summary>
-	public abstract class NameableItem : TaggableItem, IEquatable<NameableItem>, IComparable<NameableItem>
+	public abstract class NameableItem : TaggableItem, IEquatable<NameableItem>
 	{
 		private readonly string _name;
 		private readonly string[] _lore;
@@ -235,30 +236,6 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// Compares the item to another item
-		/// </summary>
-		/// <param name="item">Item to compare against</param>
-		/// <returns>Less than 0 if the item is less than <paramref name="item"/>,
-		/// 0 if the items are equal,
-		/// or greater than 0 if the item is greater than <paramref name="item"/></returns>
-		public override int CompareTo (Item item)
-		{
-			return base.CompareTo(item);
-		}
-
-		/// <summary>
-		/// Compares the item to another nameable item
-		/// </summary>
-		/// <param name="item">Item to compare against</param>
-		/// <returns>Less than 0 if the item is less than <paramref name="item"/>,
-		/// 0 if the items are equal,
-		/// or greater than 0 if the item is greater than <paramref name="item"/></returns>
-		public virtual int CompareTo (NameableItem item)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
 		/// Gets a string representation of the item
 		/// </summary>
 		/// <returns>A string</returns>
@@ -269,9 +246,27 @@ namespace Lapis.Items
 			return (null == _name) ? baseString : String.Join(" ", baseString, _name);
 		}
 
+		/// <summary>
+		/// Generates a hash code from the item
+		/// </summary>
+		/// <returns>A hash</returns>
 		public override int GetHashCode ()
 		{
-			throw new NotImplementedException();
+			var hash = base.GetHashCode();
+			if(null != _name)
+			{
+				hash *= 37;
+				hash ^= _name.GetHashCode();
+			}
+			if(null != _lore)
+			{
+				foreach(var line in _lore)
+				{
+					hash *= 37;
+					hash ^= line.GetHashCode();
+				}
+			}
+			return hash;
 		}
 	}
 }

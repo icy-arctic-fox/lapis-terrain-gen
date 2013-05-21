@@ -427,6 +427,21 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// Generates a hash code from the contents of the item
+		/// </summary>
+		/// <returns>A hash</returns>
+		public override int GetHashCode ()
+		{
+			var hash = base.GetHashCode();
+			if(_color.HasValue)
+			{
+				hash *= 37;
+				hash ^= _color.Value;
+			}
+			return hash;
+		}
+
+		/// <summary>
 		/// Makes a color value from its components
 		/// </summary>
 		/// <param name="red">Amount of red</param>

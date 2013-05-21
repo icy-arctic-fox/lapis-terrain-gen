@@ -188,5 +188,20 @@ namespace Lapis.Items
 			var baseString = base.ToString();
 			return (0 >= _enchants.Length) ? baseString : String.Join(" ", baseString, _enchants.Length, "Enchants");
 		}
+
+		/// <summary>
+		/// Generates a hash code from the contents of the item
+		/// </summary>
+		/// <returns>A hash</returns>
+		public override int GetHashCode ()
+		{
+			var hash = base.GetHashCode();
+			foreach(var ench in _enchants)
+			{
+				hash *= 37;
+				hash ^= ench.GetHashCode();
+			}
+			return hash;
+		}
 	}
 }
