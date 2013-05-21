@@ -8,7 +8,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// An item that can be enchanted
 	/// </summary>
-	public abstract class EnchantableItem : NameableItem
+	public abstract class EnchantableItem : NameableItem, IEquatable<EnchantableItem>
 	{
 		private readonly Enchantment[] _enchants;
 
@@ -177,6 +177,43 @@ namespace Lapis.Items
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Checks if an item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).</remarks>
+		public override bool Equals (Item item)
+		{
+			if(base.Equals(item))
+			{
+				var enchantable = item as EnchantableItem;
+				if(null != enchantable)
+					return Equals((enchantable));
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if an item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		public virtual bool Equals (EnchantableItem item)
+		{
+			if(base.Equals(item))
+			{
+				if(_enchants.Length == item._enchants.Length)
+				{
+					for(var i = 0; i < _enchants.Length; ++i)
+						if(_enchants[i] != item._enchants[i])
+							return false;
+					return true;
+				}
+			}
+			return false;
+		}
 
 		/// <summary>
 		/// Gets a string representation of the item

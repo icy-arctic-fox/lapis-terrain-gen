@@ -411,6 +411,36 @@ namespace Lapis.Items
 		#endregion
 
 		/// <summary>
+		/// Checks if an item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).</remarks>
+		public override bool Equals (Item item)
+		{
+			if(base.Equals(item))
+			{
+				var dyeable = item as IDyeableItem;
+				if(null != dyeable)
+					return Equals((dyeable));
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if an item's contents are equal to the current item
+		/// </summary>
+		/// <param name="item">Item to compare against</param>
+		/// <returns>True if the item contents are the same or false if they aren't</returns>
+		public virtual bool Equals (IDyeableItem item)
+		{
+			if(base.Equals(item))
+				return ((!_color.HasValue && !item.Dyed) ||
+					(_color.HasValue && item.Dyed && _color.Value == item.Color));
+			return false;
+		}
+
+		/// <summary>
 		/// Gets a string representation of the item
 		/// </summary>
 		/// <returns>A string</returns>

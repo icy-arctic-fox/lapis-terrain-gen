@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lapis.IO.NBT;
-using Lapis.Utility;
 
 namespace Lapis.Items
 {
@@ -192,8 +191,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="item">Item to compare against</param>
 		/// <returns>True if the item contents are the same or false if they aren't</returns>
-		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).
-		/// This method only compares the types and data.</remarks>
+		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).</remarks>
 		public override bool Equals (Item item)
 		{
 			if(base.Equals(item))
@@ -210,8 +208,6 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="item">Item to compare against</param>
 		/// <returns>True if the item contents are the same or false if they aren't</returns>
-		/// <remarks>Sub-classes should override this method if they have additional properties (such as a taggable item).
-		/// This method only compares the types and data.</remarks>
 		public virtual bool Equals (NameableItem item)
 		{
 			if(base.Equals(item))

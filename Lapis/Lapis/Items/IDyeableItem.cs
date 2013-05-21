@@ -1,9 +1,11 @@
-﻿namespace Lapis.Items
+﻿using System;
+
+namespace Lapis.Items
 {
 	/// <summary>
 	/// An item that can be dyed
 	/// </summary>
-	public interface IDyeableItem
+	public interface IDyeableItem : IEquatable<IDyeableItem>
 	{
 		/// <summary>
 		/// Whether or not the item has been dyed
