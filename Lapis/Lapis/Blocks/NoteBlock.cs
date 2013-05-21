@@ -158,7 +158,7 @@ namespace Lapis.Blocks
 		/// </summary>
 		/// <param name="block">Block to compare against</param>
 		/// <returns>True if the blocks are the same</returns>
-		public override bool Equals (Block block)
+		public override bool Equals (IBlock block)
 		{
 			if(base.Equals(block))
 			{

@@ -1,5 +1,4 @@
-﻿using System;
-using Lapis.Level;
+﻿using Lapis.Level;
 
 namespace Lapis.Blocks
 {
@@ -10,7 +9,7 @@ namespace Lapis.Blocks
 	/// Updating the values in this block object will not update them in the chunk.
 	/// This class should be used to retrieve block information from a chunk and construct block information before storing it in a chunk.
 	/// All sub-classes of this base class must be immutable.</remarks>
-	public abstract class Block : IEquatable<Block>, IComparable<Block>
+	public abstract class Block : IBlock
 	{
 		/// <summary>
 		/// Raw data associated with the block
@@ -112,22 +111,24 @@ namespace Lapis.Blocks
 		/// <returns>True if the block contents are the same or false if they aren't</returns>
 		/// <remarks>Sub-classes should override this method if they have additional properties (such as a tile entity).
 		/// This method only compares the types and data.</remarks>
-		public virtual bool Equals (Block block)
+		public virtual bool Equals (IBlock block)
 		{
-			return (block.Type == Type && block._data == _data);
+			return (block.Type == Type && block.Data == _data);
 		}
 
 		/// <summary>
 		/// Compares the block to another block
 		/// </summary>
 		/// <param name="block">Block to compare against</param>
-		/// <returns>Less than 0 if <paramref name="block"/> is less than the current one, 0 if they're equal, or greater than 0 if <paramref name="block"/> is greater</returns>
-		public virtual int CompareTo (Block block)
+		/// <returns>Less than 0 if the current block is less than <paramref name="block"/>,
+		/// 0 if they're equal,
+		/// or greater than 0 if the current block is greater than <paramref name="block"/></returns>
+		public virtual int CompareTo (IBlock block)
 		{
 			if(null != block)
 			{
 				var val = Type.CompareTo(block.Type);
-				return (0 == val) ? _data.CompareTo(block._data) : val;
+				return (0 == val) ? _data.CompareTo(block.Data) : val;
 			}
 			return 1;
 		}

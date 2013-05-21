@@ -3,7 +3,7 @@
 	/// <summary>
 	/// A block that redstone current originates from
 	/// </summary>
-	public interface IRedstoneSourceBlock
+	public interface IRedstoneSourceBlock : IBlock
 	{
 		/// <summary>
 		/// Whether or not the block is powered and giving off a redstone current
