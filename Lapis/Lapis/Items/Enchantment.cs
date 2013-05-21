@@ -1,11 +1,12 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Lapis.Items
 {
 	/// <summary>
 	/// Information about an enchantment
 	/// </summary>
-	public struct Enchantment
+	public struct Enchantment : IEquatable<Enchantment>, IComparable<Enchantment>
 	{
 		private readonly EnchantmentType _type;
 		private readonly short _level;
@@ -64,6 +65,29 @@ namespace Lapis.Items
 			return (enchA._type != enchB._type || enchA._level != enchB._level);
 		}
 		#endregion
+
+		/// <summary>
+		/// Compares the enchantment to another one to see if they're equal
+		/// </summary>
+		/// <param name="other">Enchantment to compare against</param>
+		/// <returns>True if the enchantments are the same</returns>
+		public bool Equals (Enchantment other)
+		{
+			return this == other;
+		}
+
+		/// <summary>
+		/// Compares the enchantment to another one
+		/// </summary>
+		/// <param name="other">Enchantment to compare against</param>
+		/// <returns>Less than 0 if the enchantment is less than <paramref name="other"/>,
+		/// 0 if the enchantments are the same,
+		/// or greater than 0 if the enchantment is greater than <paramref name="other"/></returns>
+		public int CompareTo (Enchantment other)
+		{
+			var val = _type.CompareTo(other);
+			return (0 == val) ? _level.CompareTo(other) : val;
+		}
 
 		/// <summary>
 		/// Compares another object to the enchantment to check if they're equal
