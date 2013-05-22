@@ -9,14 +9,19 @@ namespace Lapis.Items
 	/// </summary>
 	public abstract class LeatherArmor : DamageableItem, IArmorItem, IDyeableItem
 	{
-		private readonly int? _color;
+		/// <summary>
+		/// Default color of leather
+		/// </summary>
+		public const int DefaultColor = 0xa06540;
+
+		private readonly int _color;
 
 		/// <summary>
 		/// Whether or not the leather armor has been dyed
 		/// </summary>
 		public bool Dyed
 		{
-			get { return _color.HasValue; }
+			get { return _color != DefaultColor; }
 		}
 
 		/// <summary>
@@ -26,7 +31,7 @@ namespace Lapis.Items
 		/// Red &lt;&lt; 16 | Green &lt;&lt; 8 | Blue</remarks>
 		public int Color
 		{
-			get { return _color.HasValue ? _color.Value : 0; }
+			get { return _color; }
 		}
 
 		/// <summary>
@@ -63,7 +68,7 @@ namespace Lapis.Items
 		/// </summary>
 		protected LeatherArmor ()
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -83,7 +88,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage)
 			: base(damage)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -106,7 +111,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage, int repairCost)
 			: base(damage, repairCost)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -130,7 +135,7 @@ namespace Lapis.Items
 		protected LeatherArmor (string name, IEnumerable<string> lore)
 			: base(name, lore)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -155,7 +160,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage, string name, IEnumerable<string> lore)
 			: base(damage, name, lore)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -182,7 +187,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage, int repairCost, string name, IEnumerable<string> lore)
 			: base(damage, repairCost, name, lore)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -208,7 +213,7 @@ namespace Lapis.Items
 		protected LeatherArmor (IEnumerable<Enchantment> enchantments)
 			: base(enchantments)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -233,7 +238,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage, IEnumerable<Enchantment> enchantments)
 			: base(damage, enchantments)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -260,7 +265,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
 			: base(damage, repairCost, enchantments)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -288,7 +293,7 @@ namespace Lapis.Items
 		protected LeatherArmor (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(enchantments, name, lore)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -333,7 +338,7 @@ namespace Lapis.Items
 		protected LeatherArmor (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(damage, enchantments, name, lore)
 		{
-			_color = null;
+			_color = DefaultColor;
 		}
 
 		/// <summary>
@@ -361,7 +366,7 @@ namespace Lapis.Items
 		protected LeatherArmor (Node node)
 			: base(node)
 		{
-			_color = null;
+			_color = DefaultColor;
 
 			var rootNode = (CompoundNode)node;
 			if(rootNode.Contains(TagNodeName))
@@ -384,7 +389,7 @@ namespace Lapis.Items
 		#endregion
 
 		#region Validation
-		private static int? validateColorNode (CompoundNode displayNode)
+		private static int validateColorNode (CompoundNode displayNode)
 		{
 			if(displayNode.Contains(ColorNodeName))
 			{
@@ -392,7 +397,7 @@ namespace Lapis.Items
 				if(null != colorNode)
 					return colorNode.Value;
 			}
-			return null;
+			return DefaultColor;
 		}
 		#endregion
 
@@ -404,8 +409,8 @@ namespace Lapis.Items
 		protected override void InsertIntoDisplayData (CompoundNode displayNode)
 		{
 			base.InsertIntoDisplayData(displayNode);
-			if(_color.HasValue)
-				displayNode.Add(new IntNode(ColorNodeName, _color.Value));
+			if(Dyed)
+				displayNode.Add(new IntNode(ColorNodeName, _color));
 		}
 		#endregion
 		#endregion
@@ -435,8 +440,8 @@ namespace Lapis.Items
 		public virtual bool Equals (IDyeableItem item)
 		{
 			if(base.Equals(item))
-				return ((!_color.HasValue && !item.Dyed) ||
-					(_color.HasValue && item.Dyed && _color.Value == item.Color));
+				return ((!Dyed && !item.Dyed) ||
+					(Dyed && item.Dyed && _color == item.Color));
 			return false;
 		}
 
@@ -448,9 +453,9 @@ namespace Lapis.Items
 		public override string ToString ()
 		{
 			var baseString = base.ToString();
-			if(_color.HasValue)
+			if(Dyed)
 			{
-				var colorString = _color.Value.ToString("x6");
+				var colorString = _color.ToString("x6");
 				return String.Join(" ", baseString, colorString);
 			}
 			return baseString;
@@ -463,10 +468,10 @@ namespace Lapis.Items
 		public override int GetHashCode ()
 		{
 			var hash = base.GetHashCode();
-			if(_color.HasValue)
+			if(Dyed)
 			{
 				hash *= 37;
-				hash ^= _color.Value;
+				hash ^= _color;
 			}
 			return hash;
 		}
