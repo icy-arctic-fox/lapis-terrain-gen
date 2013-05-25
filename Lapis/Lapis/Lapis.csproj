@@ -396,6 +396,7 @@
     <Compile Include="Items\IronHelmetItem.cs" />
     <Compile Include="Items\IronHoeItem.cs" />
     <Compile Include="Items\IronIngotItem.cs" />
+    <Compile Include="Items\IronItem.cs" />
     <Compile Include="Items\IronLeggingsItem.cs" />
     <Compile Include="Items\IronPickaxeItem.cs" />
     <Compile Include="Items\IronShovelItem.cs" />

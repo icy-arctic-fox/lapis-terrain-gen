@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class IronHelmetItem : EnchantableItem
+	public class IronHelmetItem : IronArmor
 	{
 		/// <summary>
 		/// Numerical ID of the item
@@ -17,10 +17,33 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// Type of armor
+		/// </summary>
+		public override ArmorType ArmorType
+		{
+			get { return ArmorType.Helmet; }
+		}
+
+		/// <summary>
+		/// Maximum amount of damage the armor can absorb
+		/// </summary>
+		public override short MaxUses
+		{
+			get { return 166; }
+		}
+
+		/// <summary>
+		/// Amount of protection that the armor provides
+		/// </summary>
+		public override byte Protection
+		{
+			get { return 2; }
+		}
+
+		/// <summary>
 		/// Creates a new iron helmet item
 		/// </summary>
 		public IronHelmetItem ()
-			: base(0)
 		{
 			// ...
 		}
@@ -28,9 +51,20 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new iron helmet item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
-		protected IronHelmetItem (short data)
-			: base(data)
+		/// <param name="damage">Amount of damage the item has taken</param>
+		public IronHelmetItem (short damage)
+			: base(damage)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new iron helmet item with a repair cost
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		public IronHelmetItem (short damage, int repairCost)
+			: base(damage, repairCost)
 		{
 			// ...
 		}
@@ -41,7 +75,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		public IronHelmetItem (string name, IEnumerable<string> lore)
-			: base(0, name, lore)
+			: base(name, lore)
 		{
 			// ...
 		}
@@ -49,11 +83,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new iron helmet item with no enchantments
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected IronHelmetItem (short data, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+		public IronHelmetItem (short damage, string name, IEnumerable<string> lore)
+			: base(damage, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new iron helmet item with tag data
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		public IronHelmetItem (short damage, int repairCost, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, name, lore)
 		{
 			// ...
 		}
@@ -64,7 +111,7 @@ namespace Lapis.Items
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public IronHelmetItem (IEnumerable<Enchantment> enchantments)
-			: base(0, enchantments)
+			: base(enchantments)
 		{
 			// ...
 		}
@@ -72,11 +119,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted iron helmet item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected IronHelmetItem (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		public IronHelmetItem (short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted iron helmet item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		public IronHelmetItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, repairCost, enchantments)
 		{
 			// ...
 		}
@@ -89,7 +149,7 @@ namespace Lapis.Items
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public IronHelmetItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(0, enchantments, name, lore)
+			: base(enchantments, name, lore)
 		{
 			// ...
 		}
@@ -97,13 +157,28 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted iron helmet item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected IronHelmetItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		public IronHelmetItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted iron helmet item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		public IronHelmetItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, enchantments, name, lore)
 		{
 			// ...
 		}

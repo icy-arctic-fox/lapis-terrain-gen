@@ -64,6 +64,11 @@ namespace Lapis.Items
 		public abstract ArmorType ArmorType { get; }
 
 		/// <summary>
+		/// Amount of protection that the armor provides (0 - 20)
+		/// </summary>
+		public abstract byte Protection { get; }
+
+		/// <summary>
 		/// Creates a new leather armor item
 		/// </summary>
 		protected LeatherArmor ()
