@@ -11,11 +11,16 @@ namespace Lapis.Items
 	public abstract class IronItem : DamageableItem
 	{
 		/// <summary>
+		/// Maximum number of times the item can be used
+		/// </summary>
+		public const int MaxUseCount = 251;
+
+		/// <summary>
 		/// Maximum number of uses the item has
 		/// </summary>
 		public override short MaxUses
 		{
-			get { return 251; }
+			get { return MaxUseCount; }
 		}
 
 		/// <summary>

@@ -476,7 +476,7 @@
     <Compile Include="Items\WoodPickaxeItem.cs" />
     <Compile Include="Items\WoodShovelItem.cs" />
     <Compile Include="Items\WoodSwordItem.cs" />
-    <Compile Include="Items\WoodTool.cs" />
+    <Compile Include="Items\WoodItem.cs" />
     <Compile Include="Items\WrittenBookItem.cs" />
     <Compile Include="Level\BiomeType.cs" />
     <Compile Include="Level\BlockRef.cs" />

@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class WoodShovelItem : EnchantableItem
+	public class WoodShovelItem : WoodItem, IToolItem
 	{
 		/// <summary>
 		/// Numerical ID of the item
@@ -17,10 +17,17 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// Type of tool
+		/// </summary>
+		public ToolType ToolType
+		{
+			get { return ToolType.Shovel; }
+		}
+
+		/// <summary>
 		/// Creates a new wood shovel item
 		/// </summary>
 		public WoodShovelItem ()
-			: base(0)
 		{
 			// ...
 		}
@@ -28,9 +35,20 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new wood shovel item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
-		protected WoodShovelItem (short data)
-			: base(data)
+		/// <param name="damage">Amount of damage the item has taken</param>
+		public WoodShovelItem (short damage)
+			: base(damage)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood shovel item with a repair cost
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		public WoodShovelItem (short damage, int repairCost)
+			: base(damage, repairCost)
 		{
 			// ...
 		}
@@ -41,7 +59,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		public WoodShovelItem (string name, IEnumerable<string> lore)
-			: base(0, name, lore)
+			: base(name, lore)
 		{
 			// ...
 		}
@@ -49,11 +67,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new wood shovel item with no enchantments
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected WoodShovelItem (short data, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+		public WoodShovelItem (short damage, string name, IEnumerable<string> lore)
+			: base(damage, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new wood shovel item with tag data
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		public WoodShovelItem (short damage, int repairCost, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, name, lore)
 		{
 			// ...
 		}
@@ -64,7 +95,7 @@ namespace Lapis.Items
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public WoodShovelItem (IEnumerable<Enchantment> enchantments)
-			: base(0, enchantments)
+			: base(enchantments)
 		{
 			// ...
 		}
@@ -72,11 +103,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted wood shovel item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected WoodShovelItem (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		public WoodShovelItem (short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted wood shovel item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		public WoodShovelItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, repairCost, enchantments)
 		{
 			// ...
 		}
@@ -89,7 +133,7 @@ namespace Lapis.Items
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public WoodShovelItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(0, enchantments, name, lore)
+			: base(enchantments, name, lore)
 		{
 			// ...
 		}
@@ -97,13 +141,28 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted wood shovel item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected WoodShovelItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		public WoodShovelItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted wood shovel item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		public WoodShovelItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, enchantments, name, lore)
 		{
 			// ...
 		}
