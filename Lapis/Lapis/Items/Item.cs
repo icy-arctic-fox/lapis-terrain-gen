@@ -94,6 +94,7 @@ namespace Lapis.Items
 		/// Creates a new item from NBT data
 		/// </summary>
 		/// <param name="node">Node containing information about the item</param>
+		/// <remarks>The node data returned by GetNbtData() is the format expected for <paramref name="node"/>.</remarks>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidDataException">Thrown if the structure of the node is invalid</exception>
 		protected Item (Node node)
