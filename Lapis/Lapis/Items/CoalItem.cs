@@ -17,6 +17,14 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// Whether or not the coal is charcoal
+		/// </summary>
+		public bool IsCharcoal
+		{
+			get { return 0 != _data; }
+		}
+
+		/// <summary>
 		/// Creates a new coal item
 		/// </summary>
 		public CoalItem ()
@@ -28,9 +36,9 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new coal item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
-		protected CoalItem (short data)
-			: base(data)
+		/// <param name="charcoal">Whether or not the coal is charcoal</param>
+		public CoalItem (bool charcoal)
+			: base(charcoal ? (short)1 : (short)0)
 		{
 			// ...
 		}
@@ -49,11 +57,11 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new coal item with no enchantments
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="charcoal">Whether or not the coal is charcoal</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected CoalItem (short data, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+		public CoalItem (bool charcoal, string name, IEnumerable<string> lore)
+			: base(charcoal ? (short)1 : (short)0, name, lore)
 		{
 			// ...
 		}
@@ -72,11 +80,11 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted coal item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="charcoal">Whether or not the coal is charcoal</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected CoalItem (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		public CoalItem (bool charcoal, IEnumerable<Enchantment> enchantments)
+			: base(charcoal ? (short)1 : (short)0, enchantments)
 		{
 			// ...
 		}
@@ -97,13 +105,13 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted coal item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="charcoal">Whether or not the coal is charcoal</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected CoalItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		public CoalItem (bool charcoal, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(charcoal ? (short)1 : (short)0, enchantments, name, lore)
 		{
 			// ...
 		}
