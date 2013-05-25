@@ -170,7 +170,10 @@ Disc11
 WaitDisc
 );
 
+mkdir(OUTPUT_DIR) or die "Failed to create output directory - $!\n" unless(-d OUTPUT_DIR);
+
 foreach my $item (@items)	{
+	my $friendly  = idToFriendly($item);
 	my $className = $item . 'Item';
 	my $fileName  = OUTPUT_DIR . $className . '.cs';
 	open(ITEM, '>', $fileName) or die "Failed to create $fileName - $!\n";
@@ -182,7 +185,8 @@ namespace Lapis.Items
 		/// <summary>
 		/// Numerical ID of the item
 		/// </summary>
-		public short ItemId
+		/// <remarks>This value is always ItemType.$item</remarks>
+		public override short ItemId
 		{
 			get { return (short)ItemType.$item; }
 		}
@@ -190,4 +194,11 @@ namespace Lapis.Items
 }
 END_ITEM_CLASS
 	close(ITEM);
+}
+
+sub idToFriendly	{
+	my($id) = @_;
+
+	my @parts = $id =~ /[A-Z](?:[A-Z]+|[a-z]*)(?=$|[A-Z])/g;
+	return "@parts";
 }
