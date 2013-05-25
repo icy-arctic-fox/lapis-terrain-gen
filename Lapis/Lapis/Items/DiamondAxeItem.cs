@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class DiamondAxeItem : EnchantableItem
+	public class DiamondAxeItem : DiamondBaseItem, IToolItem, IWeaponItem
 	{
 		/// <summary>
 		/// Numerical ID of the item
@@ -17,10 +17,25 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// Type of tool
+		/// </summary>
+		public ToolType ToolType
+		{
+			get { return ToolType.Axe; }
+		}
+
+		/// <summary>
+		/// Amount of damage that the weapon does
+		/// </summary>
+		public int WeaponDamage
+		{
+			get { return 3; } // TODO: This value might be wrong
+		}
+
+		/// <summary>
 		/// Creates a new diamond axe item
 		/// </summary>
 		public DiamondAxeItem ()
-			: base(0)
 		{
 			// ...
 		}
@@ -28,9 +43,20 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new diamond axe item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
-		protected DiamondAxeItem (short data)
-			: base(data)
+		/// <param name="damage">Amount of damage the item has taken</param>
+		public DiamondAxeItem (short damage)
+			: base(damage)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new diamond axe item with a repair cost
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		public DiamondAxeItem (short damage, int repairCost)
+			: base(damage, repairCost)
 		{
 			// ...
 		}
@@ -41,7 +67,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		public DiamondAxeItem (string name, IEnumerable<string> lore)
-			: base(0, name, lore)
+			: base(name, lore)
 		{
 			// ...
 		}
@@ -49,11 +75,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new diamond axe item with no enchantments
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected DiamondAxeItem (short data, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+		public DiamondAxeItem (short damage, string name, IEnumerable<string> lore)
+			: base(damage, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new diamond axe item with tag data
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		public DiamondAxeItem (short damage, int repairCost, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, name, lore)
 		{
 			// ...
 		}
@@ -64,7 +103,7 @@ namespace Lapis.Items
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public DiamondAxeItem (IEnumerable<Enchantment> enchantments)
-			: base(0, enchantments)
+			: base(enchantments)
 		{
 			// ...
 		}
@@ -72,11 +111,24 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted diamond axe item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected DiamondAxeItem (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		public DiamondAxeItem (short damage, IEnumerable<Enchantment> enchantments)
+			: base(damage, enchantments)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted diamond axe item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		public DiamondAxeItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+			: base(damage, repairCost, enchantments)
 		{
 			// ...
 		}
@@ -89,7 +141,7 @@ namespace Lapis.Items
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public DiamondAxeItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(0, enchantments, name, lore)
+			: base(enchantments, name, lore)
 		{
 			// ...
 		}
@@ -97,13 +149,28 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted diamond axe item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected DiamondAxeItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		public DiamondAxeItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, enchantments, name, lore)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new enchanted diamond axe item
+		/// </summary>
+		/// <param name="damage">Amount of damage the item has taken</param>
+		/// <param name="repairCost">Additional levels required to repair the item</param>
+		/// <param name="enchantments">Collection of enchantments the item has</param>
+		/// <param name="name">Visible name of the item</param>
+		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
+		public DiamondAxeItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(damage, repairCost, enchantments, name, lore)
 		{
 			// ...
 		}

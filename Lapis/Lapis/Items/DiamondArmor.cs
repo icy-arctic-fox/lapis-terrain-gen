@@ -7,7 +7,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// Armor made out of diamond
 	/// </summary>
-	public abstract class DiamondArmor : DamageableItem, IArmorItem
+	public abstract class DiamondArmor : DiamondBaseItem, IArmorItem
 	{
 		/// <summary>
 		/// The item's armor type

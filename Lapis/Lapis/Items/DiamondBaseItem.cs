@@ -23,11 +23,6 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// The item's tool type
-		/// </summary>
-		public abstract ToolType ToolType { get; }
-
-		/// <summary>
 		/// Creates a new diamond item
 		/// </summary>
 		protected DiamondBaseItem ()

@@ -29,7 +29,7 @@ namespace Lapis.Items
 		/// </summary>
 		public int WeaponDamage
 		{
-			get { return 2; }
+			get { return 2; } // TODO: This value might be wrong
 		}
 
 		/// <summary>
