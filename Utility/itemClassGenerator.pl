@@ -314,7 +314,7 @@ END_ITEM_CLASS
 
 	my $spaces = ' ' x ($maxLength - length($item));
 	print SNIPPET<<END_SNIPPET;
-				_knownItemTypes[ItemType.$item]$spaces = (itemData) => new $className(itemData);
+				_knownItemTypes[ItemType.$item]$spaces = itemData => new $className(itemData);
 END_SNIPPET
 }
 close(SNIPPET);

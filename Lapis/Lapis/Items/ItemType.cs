@@ -133,7 +133,7 @@
 		GlisteringMelon = 382,
 		SpawnEgg = 383,
 		EnchantingBottle = 384,
-		FireChart = 385,
+		FireCharge = 385,
 		BookAndQuill = 386,
 		WrittenBook = 387,
 		Emerald = 388,
