@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class IronPickaxeItem : IronItem, IToolItem
+	public class IronPickaxeItem : IronBaseItem, IToolItem
 	{
 		/// <summary>
 		/// Numerical ID of the item

@@ -44,7 +44,7 @@ namespace Lapis.Items
 				_knownItemTypes[ItemType.WoodSword]          = itemData => new WoodSwordItem(itemData);
 				_knownItemTypes[ItemType.WoodShovel]         = itemData => new WoodShovelItem(itemData);
 				_knownItemTypes[ItemType.WoodPickaxe]        = itemData => new WoodPickaxeItem(itemData);
-				_knownItemTypes[ItemType.WoodAxe]            = itemData => new WoodAxeItem(itemData);
+				_knownItemTypes[ItemType.WoodAxe]            = itemData => new WoodBaseAxeItem(itemData);
 				_knownItemTypes[ItemType.StoneSword]         = itemData => new StoneSwordItem(itemData);
 				_knownItemTypes[ItemType.StoneShovel]        = itemData => new StoneShovelItem(itemData);
 				_knownItemTypes[ItemType.StonePickaxe]       = itemData => new StonePickaxeItem(itemData);

@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class WoodAxeItem : WoodItem, IToolItem, IWeaponItem
+	public class WoodBaseAxeItem : WoodBaseItem, IToolItem, IWeaponItem
 	{
 		/// <summary>
 		/// Numerical ID of the item
@@ -35,7 +35,7 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new wood axe item
 		/// </summary>
-		public WoodAxeItem ()
+		public WoodBaseAxeItem ()
 		{
 			// ...
 		}
@@ -44,7 +44,7 @@ namespace Lapis.Items
 		/// Creates a new wood axe item
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
-		public WoodAxeItem (short damage)
+		public WoodBaseAxeItem (short damage)
 			: base(damage)
 		{
 			// ...
@@ -55,7 +55,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
-		public WoodAxeItem (short damage, int repairCost)
+		public WoodBaseAxeItem (short damage, int repairCost)
 			: base(damage, repairCost)
 		{
 			// ...
@@ -66,7 +66,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		public WoodAxeItem (string name, IEnumerable<string> lore)
+		public WoodBaseAxeItem (string name, IEnumerable<string> lore)
 			: base(name, lore)
 		{
 			// ...
@@ -78,7 +78,7 @@ namespace Lapis.Items
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		public WoodAxeItem (short damage, string name, IEnumerable<string> lore)
+		public WoodBaseAxeItem (short damage, string name, IEnumerable<string> lore)
 			: base(damage, name, lore)
 		{
 			// ...
@@ -91,7 +91,7 @@ namespace Lapis.Items
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		public WoodAxeItem (short damage, int repairCost, string name, IEnumerable<string> lore)
+		public WoodBaseAxeItem (short damage, int repairCost, string name, IEnumerable<string> lore)
 			: base(damage, repairCost, name, lore)
 		{
 			// ...
@@ -102,7 +102,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		public WoodAxeItem (IEnumerable<Enchantment> enchantments)
+		public WoodBaseAxeItem (IEnumerable<Enchantment> enchantments)
 			: base(enchantments)
 		{
 			// ...
@@ -114,7 +114,7 @@ namespace Lapis.Items
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		public WoodAxeItem (short damage, IEnumerable<Enchantment> enchantments)
+		public WoodBaseAxeItem (short damage, IEnumerable<Enchantment> enchantments)
 			: base(damage, enchantments)
 		{
 			// ...
@@ -127,7 +127,7 @@ namespace Lapis.Items
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		public WoodAxeItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+		public WoodBaseAxeItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
 			: base(damage, repairCost, enchantments)
 		{
 			// ...
@@ -140,7 +140,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		public WoodAxeItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+		public WoodBaseAxeItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(enchantments, name, lore)
 		{
 			// ...
@@ -154,7 +154,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		public WoodAxeItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+		public WoodBaseAxeItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(damage, enchantments, name, lore)
 		{
 			// ...
@@ -169,7 +169,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		public WoodAxeItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+		public WoodBaseAxeItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(damage, repairCost, enchantments, name, lore)
 		{
 			// ...
@@ -182,7 +182,7 @@ namespace Lapis.Items
 		/// <remarks>The node data returned by GetNbtData() is the format expected for <paramref name="node"/>.</remarks>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidDataException">Thrown if the structure of the node is invalid</exception>
-		public WoodAxeItem (Node node)
+		public WoodBaseAxeItem (Node node)
 			: base(node)
 		{
 			// ...

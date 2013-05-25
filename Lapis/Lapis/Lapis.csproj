@@ -338,7 +338,7 @@
     <Compile Include="Items\DiamondPickaxeItem.cs" />
     <Compile Include="Items\DiamondShovelItem.cs" />
     <Compile Include="Items\DiamondSwordItem.cs" />
-    <Compile Include="Items\DiamondTool.cs" />
+    <Compile Include="Items\DiamondBaseItem.cs" />
     <Compile Include="Items\DiodeItem.cs" />
     <Compile Include="Items\Disc11Item.cs" />
     <Compile Include="Items\Disc13Item.cs" />
@@ -381,7 +381,7 @@
     <Compile Include="Items\GoldPickaxeItem.cs" />
     <Compile Include="Items\GoldShovelItem.cs" />
     <Compile Include="Items\GoldSwordItem.cs" />
-    <Compile Include="Items\GoldTool.cs" />
+    <Compile Include="Items\GoldBaseItem.cs" />
     <Compile Include="Items\GunpowderItem.cs" />
     <Compile Include="Items\HopperCartItem.cs" />
     <Compile Include="Items\IArmorItem.cs" />
@@ -396,12 +396,11 @@
     <Compile Include="Items\IronHelmetItem.cs" />
     <Compile Include="Items\IronHoeItem.cs" />
     <Compile Include="Items\IronIngotItem.cs" />
-    <Compile Include="Items\IronItem.cs" />
+    <Compile Include="Items\IronBaseItem.cs" />
     <Compile Include="Items\IronLeggingsItem.cs" />
     <Compile Include="Items\IronPickaxeItem.cs" />
     <Compile Include="Items\IronShovelItem.cs" />
     <Compile Include="Items\IronSwordItem.cs" />
-    <Compile Include="Items\IronTool.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemFactory.cs" />
     <Compile Include="Items\ItemFrameItem.cs" />
@@ -459,7 +458,7 @@
     <Compile Include="Items\StonePickaxeItem.cs" />
     <Compile Include="Items\StoneShovelItem.cs" />
     <Compile Include="Items\StoneSwordItem.cs" />
-    <Compile Include="Items\StoneItem.cs" />
+    <Compile Include="Items\StoneBaseItem.cs" />
     <Compile Include="Items\StradDiscItem.cs" />
     <Compile Include="Items\SugarCaneItem.cs" />
     <Compile Include="Items\SugarItem.cs" />
@@ -476,7 +475,7 @@
     <Compile Include="Items\WoodPickaxeItem.cs" />
     <Compile Include="Items\WoodShovelItem.cs" />
     <Compile Include="Items\WoodSwordItem.cs" />
-    <Compile Include="Items\WoodItem.cs" />
+    <Compile Include="Items\WoodBaseItem.cs" />
     <Compile Include="Items\WrittenBookItem.cs" />
     <Compile Include="Level\BiomeType.cs" />
     <Compile Include="Level\BlockRef.cs" />
