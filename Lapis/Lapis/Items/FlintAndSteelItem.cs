@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class FlintAndSteelItem : EnchantableItem
+	public class FlintAndSteelItem : DamageableItem
 	{
 		/// <summary>
 		/// Numerical ID of the item
@@ -17,10 +17,17 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
+		/// Maximum number of times that the item can be used
+		/// </summary>
+		public override short MaxUses
+		{
+			get { return 65; }
+		}
+
+		/// <summary>
 		/// Creates a new flint and steel item
 		/// </summary>
 		public FlintAndSteelItem ()
-			: base(0)
 		{
 			// ...
 		}
@@ -28,9 +35,9 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new flint and steel item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
-		protected FlintAndSteelItem (short data)
-			: base(data)
+		/// <param name="uses">Amount of times the item has been used</param>
+		protected FlintAndSteelItem (short uses)
+			: base(uses)
 		{
 			// ...
 		}
@@ -41,7 +48,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		public FlintAndSteelItem (string name, IEnumerable<string> lore)
-			: base(0, name, lore)
+			: base(name, lore)
 		{
 			// ...
 		}
@@ -49,11 +56,11 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new flint and steel item with no enchantments
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="uses">Amount of times the item has been used</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected FlintAndSteelItem (short data, string name, IEnumerable<string> lore)
-			: base(data, name, lore)
+		protected FlintAndSteelItem (short uses, string name, IEnumerable<string> lore)
+			: base(uses, name, lore)
 		{
 			// ...
 		}
@@ -64,7 +71,7 @@ namespace Lapis.Items
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public FlintAndSteelItem (IEnumerable<Enchantment> enchantments)
-			: base(0, enchantments)
+			: base(enchantments)
 		{
 			// ...
 		}
@@ -72,11 +79,11 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted flint and steel item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="uses">Amount of times the item has been used</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected FlintAndSteelItem (short data, IEnumerable<Enchantment> enchantments)
-			: base(data, enchantments)
+		protected FlintAndSteelItem (short uses, IEnumerable<Enchantment> enchantments)
+			: base(uses, enchantments)
 		{
 			// ...
 		}
@@ -89,7 +96,7 @@ namespace Lapis.Items
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
 		public FlintAndSteelItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(0, enchantments, name, lore)
+			: base(enchantments, name, lore)
 		{
 			// ...
 		}
@@ -97,13 +104,13 @@ namespace Lapis.Items
 		/// <summary>
 		/// Creates a new enchanted flint and steel item
 		/// </summary>
-		/// <param name="data">Data value (damage or other information)</param>
+		/// <param name="uses">Amount of times the item has been used</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected FlintAndSteelItem (short data, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
-			: base(data, enchantments, name, lore)
+		protected FlintAndSteelItem (short uses, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+			: base(uses, enchantments, name, lore)
 		{
 			// ...
 		}
