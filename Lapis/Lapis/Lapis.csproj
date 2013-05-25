@@ -459,7 +459,7 @@
     <Compile Include="Items\StonePickaxeItem.cs" />
     <Compile Include="Items\StoneShovelItem.cs" />
     <Compile Include="Items\StoneSwordItem.cs" />
-    <Compile Include="Items\StoneTool.cs" />
+    <Compile Include="Items\StoneItem.cs" />
     <Compile Include="Items\StradDiscItem.cs" />
     <Compile Include="Items\SugarCaneItem.cs" />
     <Compile Include="Items\SugarItem.cs" />

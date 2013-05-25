@@ -7,7 +7,7 @@ namespace Lapis.Items
 	/// <summary>
 	/// A tool made out of stone
 	/// </summary>
-	public abstract class StoneTool : DamageableItem, IToolItem
+	public abstract class StoneItem : DamageableItem
 	{
 		/// <summary>
 		/// Maximum number of times the item can be used
@@ -23,14 +23,9 @@ namespace Lapis.Items
 		}
 
 		/// <summary>
-		/// The item's tool type
-		/// </summary>
-		public abstract ToolType ToolType { get; }
-
-		/// <summary>
 		/// Creates a new stone tool item
 		/// </summary>
-		protected StoneTool ()
+		protected StoneItem ()
 		{
 			// ...
 		}
@@ -39,7 +34,7 @@ namespace Lapis.Items
 		/// Creates a new stone tool item
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
-		protected StoneTool (short damage)
+		protected StoneItem (short damage)
 			: base(damage)
 		{
 			// ...
@@ -50,7 +45,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="repairCost">Additional levels required to repair the item</param>
-		protected StoneTool (short damage, int repairCost)
+		protected StoneItem (short damage, int repairCost)
 			: base(damage, repairCost)
 		{
 			// ...
@@ -61,7 +56,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected StoneTool (string name, IEnumerable<string> lore)
+		protected StoneItem (string name, IEnumerable<string> lore)
 			: base(name, lore)
 		{
 			// ...
@@ -73,7 +68,7 @@ namespace Lapis.Items
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected StoneTool (short damage, string name, IEnumerable<string> lore)
+		protected StoneItem (short damage, string name, IEnumerable<string> lore)
 			: base(damage, name, lore)
 		{
 			// ...
@@ -86,7 +81,7 @@ namespace Lapis.Items
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
-		protected StoneTool (short damage, int repairCost, string name, IEnumerable<string> lore)
+		protected StoneItem (short damage, int repairCost, string name, IEnumerable<string> lore)
 			: base(damage, repairCost, name, lore)
 		{
 			// ...
@@ -97,7 +92,7 @@ namespace Lapis.Items
 		/// </summary>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected StoneTool (IEnumerable<Enchantment> enchantments)
+		protected StoneItem (IEnumerable<Enchantment> enchantments)
 			: base(enchantments)
 		{
 			// ...
@@ -109,7 +104,7 @@ namespace Lapis.Items
 		/// <param name="damage">Amount of damage the item has taken</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected StoneTool (short damage, IEnumerable<Enchantment> enchantments)
+		protected StoneItem (short damage, IEnumerable<Enchantment> enchantments)
 			: base(damage, enchantments)
 		{
 			// ...
@@ -122,7 +117,7 @@ namespace Lapis.Items
 		/// <param name="repairCost">Additional levels required to repair the item</param>
 		/// <param name="enchantments">Collection of enchantments the item has</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected StoneTool (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
+		protected StoneItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments)
 			: base(damage, repairCost, enchantments)
 		{
 			// ...
@@ -135,7 +130,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected StoneTool (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+		protected StoneItem (IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(enchantments, name, lore)
 		{
 			// ...
@@ -149,7 +144,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected StoneTool (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+		protected StoneItem (short damage, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(damage, enchantments, name, lore)
 		{
 			// ...
@@ -164,7 +159,7 @@ namespace Lapis.Items
 		/// <param name="name">Visible name of the item</param>
 		/// <param name="lore">Additional description (or "lore") displayed on the item</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enchantments"/> is null</exception>
-		protected StoneTool (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
+		protected StoneItem (short damage, int repairCost, IEnumerable<Enchantment> enchantments, string name, IEnumerable<string> lore)
 			: base(damage, repairCost, enchantments, name, lore)
 		{
 			// ...
@@ -174,7 +169,7 @@ namespace Lapis.Items
 		/// Creates a new stone tool from NBT data
 		/// </summary>
 		/// <param name="node">Node containing information about the item</param>
-		protected StoneTool (Node node)
+		protected StoneItem (Node node)
 			: base(node)
 		{
 			// ...
