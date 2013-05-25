@@ -5,7 +5,7 @@ using Lapis.IO.NBT;
 
 namespace Lapis.Items
 {
-	public class AppleItem : EnchantableItem
+	public class AppleItem : EnchantableItem, IConsumableItem
 	{
 		/// <summary>
 		/// Numerical ID of the item
@@ -14,6 +14,14 @@ namespace Lapis.Items
 		public override short ItemId
 		{
 			get { return (short)ItemType.Apple; }
+		}
+
+		/// <summary>
+		/// Amount of health gained by consuming the item
+		/// </summary>
+		public int HealthModifier
+		{
+			get { return 4; }
 		}
 
 		/// <summary>
